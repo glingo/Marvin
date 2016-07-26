@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        
+        <!-- Give a test service named Service A to the container -->
+        <service id="test.service.a" class="test.com.marvin.app.service.TestServiceA">
+            <argument type="string">Service A</argument>
+            <argument type="number">1</argument>
+        </service>
+        
+        <!-- Give a test service named Service B ( with a reference to Service A ) to the container -->
+        <service id="test.service.b" class="test.com.marvin.app.service.TestServiceB">
+            <argument type="service" id="test.service.a"/>
+            <argument type="string">Service B</argument>
+            <argument type="number">2</argument>
+        </service>
+        
+        <!-- Give a test service  to the container
+                - named Service C 
+                - with a reference to Service A
+                - and a collection as argument
+        -->
+        <service id="test.service.c" class="test.com.marvin.app.service.TestServiceC">
+            <argument type="service" id="test.service.a"/>
+            <argument type="string">Service C</argument>
+            <argument type="number">3</argument>
+            <argument type="collection">
+                <argument type="string">Random string</argument>
+                <argument type="number">42</argument>
+            </argument>
+        </service>
+        
+        <!-- Give a test service with null parameters -->
+        <service id="test.service.b.alpha" class="test.com.marvin.app.service.TestServiceB">
+            <argument type="service" id="test.service.a"/>
+            <argument type="string"/>
+            <argument type="number"/>
+        </service>
+        
+        
+        <!-- No id service definition, 
+                builder will not be able to build a service from this definition 
+        -->
+        <service class="com.marvin.test.app.service.TestServiceA">
+        </service>
+        
+    </services>
+</container>

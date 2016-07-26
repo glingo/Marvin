@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routing>
+    <!--<route name="marvin.home" path="/" controleur="com.marvin.bundle.marvin.controller.DefaultControleur::index"/>-->
+</routing>
