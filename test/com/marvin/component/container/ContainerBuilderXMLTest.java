@@ -18,6 +18,7 @@ public class ContainerBuilderXMLTest {
     public static void main(String[] args) {
         DocumentLoader loader = new DocumentLoader();
         
+        
         try {
             loader.load(null, DocumentLoader.VALIDATION_AUTO, true);
         } catch (Exception ex) {
