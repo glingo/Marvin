@@ -6,6 +6,9 @@
 package com.marvin.component.container;
 
 import com.marvin.component.container.xml.DocumentLoader;
+import com.marvin.component.container.xml.XMLDefinitionReader;
+import com.marvin.component.io.loader.FileSystemResourceLoader;
+import com.marvin.component.io.loader.ResourceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,14 +19,12 @@ import java.util.logging.Logger;
 public class ContainerBuilderXMLTest {
     
     public static void main(String[] args) {
-        DocumentLoader loader = new DocumentLoader();
+        ContainerBuilder builder = new ContainerBuilder();
+        ResourceLoader loader = new FileSystemResourceLoader();
+        XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
         
-        
-        try {
-            loader.load(null, DocumentLoader.VALIDATION_AUTO, true);
-        } catch (Exception ex) {
-            Logger.getLogger(ContainerBuilderXMLTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        reader.loadDefinitions("C:\\Users\\cdi305\\Desktop\\GitHub\\Marvin\\demo\\app\\config\\config.xml");
+        //reader.loadDefinitions("C:\\Users\\cdi305\\Desktop\\GitHub\\Marvin\\demo\\app\\config\\config.xml");
     }
     
 }

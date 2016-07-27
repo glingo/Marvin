@@ -1,5 +1,8 @@
 package com.marvin.component.container.config;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 /**
  *
  * @author cdi305
@@ -93,4 +96,13 @@ public class Definition {
         this.arguments = arguments;
     }
     
+    public void replaceArgument(int index, Object argument) {
+        if(index < this.arguments.length - 1) {
+            this.arguments[index] = argument;
+        }
+    }
+    
+    public void addArgument(Object argument) {
+        Arrays.asList(this.arguments).add(argument);
+    }
 }

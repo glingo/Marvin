@@ -12,5 +12,5 @@ public abstract class ResourceLoader {
     /** Pseudo URL prefix for loading from the class path: "classpath:" */
     String CLASSPATH_URL_PREFIX = ResourceUtils.CLASSPATH_URL_PREFIX;
 
-    abstract IResource load(String location);
+    public abstract IResource load(String location);
 }

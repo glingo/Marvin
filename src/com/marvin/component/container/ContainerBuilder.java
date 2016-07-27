@@ -35,7 +35,7 @@ public class ContainerBuilder {
         this.container = new Container();
     }
 
-    void addDefinition(String id, Definition definition) {
+    public void addDefinition(String id, Definition definition) {
         this.definitions.put(id, definition);
     }
 
