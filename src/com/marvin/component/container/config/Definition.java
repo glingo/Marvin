@@ -1,6 +1,7 @@
 package com.marvin.component.container.config;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -97,12 +98,22 @@ public class Definition {
     }
     
     public void replaceArgument(int index, Object argument) {
+        
+        if(arguments == null) {
+            this.arguments = new Object[index];
+        }
+        
         if(index < this.arguments.length - 1) {
             this.arguments[index] = argument;
         }
     }
     
     public void addArgument(Object argument) {
-        Arrays.asList(this.arguments).add(argument);
+        if(arguments == null) {
+            this.arguments = new Object[0];
+        }
+        ArrayList<Object> t = new ArrayList<>(Arrays.asList(this.arguments));
+        t.add(argument);
+        this.arguments = t.toArray();
     }
 }

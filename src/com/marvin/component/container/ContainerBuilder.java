@@ -61,6 +61,11 @@ public class ContainerBuilder {
     
     public Constructor<Object> resolveConstructor(Definition definition) {
         Class type = ClassLoaderUtil.loadClass(definition.getClassName());
+        
+        if(type == null) {
+            return null;
+        }
+        
         int len = definition.getArguments().length;
         Constructor<Object>[] constructors = type.getConstructors();
 
@@ -82,6 +87,7 @@ public class ContainerBuilder {
         if (constructor != null) {
             try {
                 System.out.println("instanciation du service : " + id);
+                System.out.println("avec les arguments : " + Arrays.toString(arguments));
                 service = constructor.newInstance(arguments);
             } catch (InstantiationException ex) {
                 LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
