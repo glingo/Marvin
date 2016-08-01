@@ -31,8 +31,8 @@ public class MyTest {
 //        Application httpserver = new HTTPServer(kernel);
 //        httpserver.start();
         
-        try {
-            kernel.boot();
+//        try {
+//            kernel.boot();
 //            Container c = (Container) kernel.getContainer().get("container");
 //            IService service = (IService) c.get("test.service.c");
 //            service.sayHello();
@@ -40,9 +40,9 @@ public class MyTest {
 //            Kernel a = (Kernel) c.get("kernel");
 //            System.out.println(c);
 //            System.out.println(a);
-        } catch (Exception ex) {
-            Logger.getLogger(MyTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        } catch (Exception ex) {
+//            Logger.getLogger(MyTest.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         
         // instrumentation (profiling)
