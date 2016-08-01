@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a long by parsing the value as a string
@@ -22,7 +24,9 @@ public class LongParser implements Parser<Long> {
             return null;
         }
 
-        if (!(value instanceof Long)) {
+        if (value instanceof Long) {
+            return (Long) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Long.parseLong(v);

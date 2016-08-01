@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a {@link SqlDate} by parsing a value as a string of form
@@ -21,12 +23,16 @@ public class SqlDateParser implements Parser<java.sql.Date> {
         if (value == null) {
             return null;
         }
-        if (!(value instanceof java.sql.Date)) {
+        
+        if (value instanceof java.sql.Date) {
+            return (java.sql.Date) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return java.sql.Date.valueOf(v);
             }
         }
+        
         return null;
     }
 }

@@ -8,6 +8,8 @@ package com.marvin.component.container.xml;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Reference;
+import com.marvin.component.parser.Parser;
+import com.marvin.component.parser.ParserResolver;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.StringUtils;
 import java.util.concurrent.ExecutionException;
@@ -23,7 +25,7 @@ import org.w3c.dom.NodeList;
  * @author cdi305
  */
 public class XMLDefinitionDocumentReader {
-
+    
     public static final String IMPORT_ELEMENT = "import";
     public static final String SERVICE_ELEMENT = "service";
     public static final String SERVICES_ELEMENT = "services";
@@ -34,6 +36,8 @@ public class XMLDefinitionDocumentReader {
     public static final String REF_ATTRIBUTE = "ref";
     public static final String VALUE_ATTRIBUTE = "value";
 
+    protected ParserResolver parserResolver = new ParserResolver();
+    
     public void registerBeanDefinitions(Document doc, ContainerBuilder builder) {
 //            this.readerContext = readerContext;
 //            logger.debug("Loading bean definitions");
@@ -111,7 +115,8 @@ public class XMLDefinitionDocumentReader {
             try {
                 String value = ele.getAttribute(VALUE_ATTRIBUTE);
                 Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-                return type.cast(value);
+                Parser parser = parserResolver.resolve(type);
+                return parser.parse(value);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
             }

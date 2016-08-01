@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a float by parsing the value as a string
@@ -22,7 +24,9 @@ public class FloatParser implements Parser<Float> {
             return null;
         }
         
-        if (!(value instanceof Float)) {
+        if (value instanceof Float) {
+            return (Float) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Float.parseFloat(v);

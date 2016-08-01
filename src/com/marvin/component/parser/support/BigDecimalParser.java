@@ -1,5 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
 
+import com.marvin.component.parser.Parser;
 import com.marvin.component.parser.Parser;
 import java.math.BigDecimal;
 
@@ -23,7 +24,9 @@ public class BigDecimalParser implements Parser<BigDecimal> {
             return null;
         }
         
-        if (!(value instanceof BigDecimal)) {
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return new BigDecimal(v);

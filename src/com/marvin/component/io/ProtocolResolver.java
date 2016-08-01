@@ -17,7 +17,6 @@ package com.marvin.component.io;
 
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.resource.IResource;
-import com.marvin.component.io.resource.Resource;
 
 /**
  * A resolution strategy for protocol-specific resource handles.

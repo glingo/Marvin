@@ -1,5 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
 
+import com.marvin.component.parser.Parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;

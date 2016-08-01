@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a character by parsing the first character of the value as a
@@ -21,7 +23,9 @@ public class CharacterParser implements Parser<Character> {
         if (value == null) {
             return null;
         }
-        if (!(value instanceof Character)) {
+        if (value instanceof Character) {
+            return (Character) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return v.charAt(0);

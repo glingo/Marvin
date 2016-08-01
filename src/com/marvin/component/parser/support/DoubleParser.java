@@ -1,5 +1,6 @@
-package com.toddfast.util.convert.conversion;
+package com.marvin.component.parser.support;
 
+import com.marvin.component.parser.Parser;
 import com.marvin.component.parser.Parser;
 
 /**
@@ -23,7 +24,9 @@ public class DoubleParser implements Parser<Double> {
             return null;
         }
         
-        if (!(value instanceof Double)) {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Double.parseDouble(v);

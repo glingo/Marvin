@@ -25,15 +25,20 @@ public class ContainerBuilderXMLTest {
         ResourceLoader loader = new FileSystemResourceLoader();
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
 
-        reader.loadDefinitions("C:\\Users\\cdi305\\Desktop\\GitHub\\Marvin\\demo\\app\\config\\config.xml");
-        //reader.loadDefinitions("C:\\Users\\cdi305\\Desktop\\GitHub\\Marvin\\demo\\app\\config\\config.xml");
+//        reader.loadDefinitions("C:\\Users\\cdi305\\Desktop\\GitHub\\Marvin\\demo\\app\\config\\config.xml");
+        reader.loadDefinitions("D:\\sources\\Marvin\\demo\\app\\config\\config.xml");
 
         System.out.println("Liste des definitions");
 
         builder.getDefinitions().forEach((String id, Definition def) -> {
             System.out.println("id : " + id);
             System.out.println("instance : " + def);
-            System.out.println("args : " + Arrays.toString(def.getArguments()));
+            Arrays.stream(def.getArguments()).forEach((Object obj) -> {
+                System.out.println("arg : ");
+                System.out.println(obj);
+                if(obj != null)
+                    System.out.println(obj.getClass());
+            });
         });
         
         System.out.println("Construction du container");

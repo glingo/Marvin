@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a short by parsing the value as a string
@@ -22,7 +24,9 @@ public class ShortParser implements Parser<Short> {
             return null;
         }
         
-        if (!(value instanceof Short)) {
+        if (value instanceof Short) {
+            return (Short) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Short.parseShort(v);

@@ -1,5 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
 
+import com.marvin.component.parser.Parser;
 import java.util.Arrays;
 
 /**
@@ -24,7 +25,9 @@ public class IntegerParser implements Parser<Integer> {
             return null;
         }
         
-        if (!(value instanceof Integer)) {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Integer.parseInt(v);

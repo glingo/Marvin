@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a {@link SqlTimestamp} by parsing a value as a string of form
@@ -21,7 +23,9 @@ public class SqlTimestampParser implements Parser<java.sql.Timestamp> {
         if (value == null) {
             return null;
         }
-        if (!(value instanceof java.sql.Timestamp)) {
+        if (value instanceof java.sql.Timestamp) {
+            return (java.sql.Timestamp) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() == 0) {
                 return java.sql.Timestamp.valueOf(v);

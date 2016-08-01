@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a {@link SqlTime} by parsing a value as a string of form
@@ -21,7 +23,9 @@ public class SqlTimeParser implements Parser<java.sql.Time> {
         if (value == null) {
             return null;
         }
-        if (!(value instanceof java.sql.Time)) {
+        if (value instanceof java.sql.Time) {
+            return (java.sql.Time) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return java.sql.Time.valueOf(v);

@@ -1,5 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
 
+import com.marvin.component.parser.Parser;
 import com.marvin.component.parser.Parser;
 
 /**
@@ -24,7 +25,9 @@ public class BooleanParser implements Parser<Boolean> {
             return null;
         }
         
-        if (!(value instanceof Boolean)) {
+        if(value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
             String v = value.toString();
             if (v.trim().length() != 0) {
                 return Boolean.parseBoolean(v);

@@ -1,4 +1,6 @@
-package com.marvin.component.parser;
+package com.marvin.component.parser.support;
+
+import com.marvin.component.parser.Parser;
 
 /**
  * Converts the value to a string. If the value is a byte or char array, it is
@@ -30,6 +32,8 @@ public class StringParser implements Parser<String> {
             }
         } else if (!(value instanceof String)) {
             return value.toString();
+        } else {
+            return (String) value;
         }
 
         return null;
