@@ -1,6 +1,6 @@
-package com.marvin.pattern.builder.builders;
+package com.marvin.old.pattern.builder.builders;
 
-import com.marvin.pattern.builder.Builder;
+import com.marvin.old.pattern.builder.Builder;
 
 /**
  *

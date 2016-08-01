@@ -5,13 +5,11 @@
  */
 
 import app.service.IService;
-import com.marvin.old.kernel.Kernel;
-//import com.marvin.bundle.framework.server.Server;
-import com.marvin.bundle.framework.console.Console;
-import com.marvin.old.dependency.Container;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import test.app.AppKernel;
+import app.AppKernel;
+import com.marvin.component.container.Container;
+import com.marvin.component.kernel.Kernel;
 
 /**
  *
@@ -23,8 +21,8 @@ public class MyTest {
         
         Kernel kernel = new AppKernel();
         
-        Console console = new Console(kernel);
-        console.start();
+//        Console console = new Console(kernel);
+//        console.start();
 
 //        Server server = new Server(kernel, 46, 47);
 //        server.start();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.pattern.loader;
+package com.marvin.old.pattern.loader;
 
 import com.marvin.component.util.ResourceUtils;
 

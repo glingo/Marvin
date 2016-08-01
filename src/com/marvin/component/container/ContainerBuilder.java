@@ -1,6 +1,7 @@
 package com.marvin.component.container;
 
 import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import com.marvin.old.util.classloader.ClassLoaderUtil;
 import java.lang.reflect.Constructor;
@@ -34,7 +35,7 @@ public class ContainerBuilder {
         this.definitions = new ConcurrentHashMap<>();
         this.container = new Container();
     }
-
+    
     public void addDefinition(String id, Definition definition) {
         this.definitions.put(id, definition);
     }
@@ -51,6 +52,11 @@ public class ContainerBuilder {
                 Reference ref = (Reference) arg;
                 System.out.println("Resolution d'une reference vers : " + ref.getTarget());
                 arg = get(ref.getTarget());
+            }
+            
+            if (arg instanceof Parameter) {
+                Parameter parameter = (Parameter) arg;
+                arg = getParameter(parameter.getKey());
             }
 
             return arg;
@@ -73,7 +79,7 @@ public class ContainerBuilder {
             return len == cstr.getParameterCount();
         };
         
-        return Arrays.stream(constructors).filter(filter).findFirst().get();
+        return Arrays.stream(constructors).filter(filter).findFirst().orElse(type.getEnclosingConstructor());
     }
     
     public Object instanciate(String id, Definition definition){
@@ -120,6 +126,15 @@ public class ContainerBuilder {
         }
 
         return service;
+    }
+    
+    public void addParameter(String key, Object value) {
+        this.container.setParameter(key, value);
+    }
+    
+    public Object getParameter(String key) {
+        System.out.println("Tentative de recuperation du parametre " + key);
+        return this.container.getParameter(key, null);
     }
 
     public Container getContainer() {

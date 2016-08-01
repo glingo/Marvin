@@ -1,6 +1,6 @@
 package com.marvin.bundle.framework;
 
-import com.marvin.old.kernel.bundle.Bundle;
+import com.marvin.component.kernel.bundle.Bundle;
 
 public class FrameWorkBundle extends Bundle {
 

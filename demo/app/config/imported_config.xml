@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    
+    <services>
+        
+        <!-- Give a test service named Service A to the container -->
+        <service id="test.service.imported" class="app.service.TestServiceA">
+            <argument type="java.lang.String" value="Service A imported"/>
+            <argument type="int" value="1"/>
+        </service>
+        
+    </services>
+</container>

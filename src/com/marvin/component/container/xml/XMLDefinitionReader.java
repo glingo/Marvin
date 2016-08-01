@@ -6,6 +6,7 @@
 package com.marvin.component.container.xml;
 
 import com.marvin.component.container.ContainerBuilder;
+import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.resource.IResource;
 import java.io.IOException;
@@ -21,14 +22,15 @@ import org.xml.sax.InputSource;
  */
 public class XMLDefinitionReader {
 
-    protected ResourceLoader resourceLoader;
     protected ContainerBuilder containerBuilder;
     
     protected DocumentLoader documentLoader = new DocumentLoader();
+    protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+    protected XMLReaderContext context;
 
-    public XMLDefinitionReader(ContainerBuilder containerBuilder, ResourceLoader resourceLoader) {
+    public XMLDefinitionReader(ContainerBuilder containerBuilder) {
         this.containerBuilder = containerBuilder;
-        this.resourceLoader = resourceLoader;
+        this.context = new XMLReaderContext(this);
     }
 
     public void loadDefinitions(String location) {
@@ -65,14 +67,32 @@ public class XMLDefinitionReader {
     }
     
     public void registerDefinitions(Document doc, IResource resource) {
-        XMLDefinitionDocumentReader documentReader = new XMLDefinitionDocumentReader();
-        documentReader.registerBeanDefinitions(doc, containerBuilder);
-        
-//        System.out.println(containerBuilder.getDefinitions());
-//        documentReader.
-//        int countBefore = getRegistry().getBeanDefinitionCount();
-//        documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
-//        return getRegistry().getBeanDefinitionCount() - countBefore;
+        XMLDefinitionDocumentReader documentReader = new XMLDefinitionDocumentReader(this.context);
+        documentReader.registerDefinitions(doc, containerBuilder);
     }
 
+    public ContainerBuilder getContainerBuilder() {
+        return containerBuilder;
+    }
+
+    public void setContainerBuilder(ContainerBuilder containerBuilder) {
+        this.containerBuilder = containerBuilder;
+    }
+
+    public DocumentLoader getDocumentLoader() {
+        return documentLoader;
+    }
+
+    public void setDocumentLoader(DocumentLoader documentLoader) {
+        this.documentLoader = documentLoader;
+    }
+
+    public ResourceLoader getResourceLoader() {
+        return resourceLoader;
+    }
+
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+    
 }

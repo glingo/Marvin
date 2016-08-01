@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
+    
+    <parameters>
+        
+        <parameter id="test.parameter.string" type="java.lang.String" value="My parameter string"/>
+
+    </parameters>
+    
+    <import resource="app/config/imported_config.xml" />
+    
     <services>
         
         <!-- Give a test service named Service A to the container -->
@@ -24,9 +33,11 @@
             <argument type="service" ref="test.service.a"/>
             <argument type="java.lang.String" value="Service C"/>
             <argument type="int" value="3"/>
-            <argument type="java.lang.reflect.Array">
-                <argument type="string">Random string</argument>
-                <argument type="number">42</argument>
+            <argument>
+                <set>
+                    <value type="string">Random string</value>
+                    <value type="number">42</value>
+                </set>
             </argument>
         </service>
         
@@ -37,6 +48,19 @@
             <argument type="int"/>
         </service>
         
+         <!-- Give a test service with imported resource -->
+        <service id="test.service.b.alpha.with.import" class="app.service.TestServiceB">
+            <argument type="service" ref="test.service.imported"/>
+            <argument type="java.lang.String"/>
+            <argument type="int"/>
+        </service>
+        
+        <!-- Give a test service with parameter reference -->
+        <service id="test.service.b.alpha.with.import" class="app.service.TestServiceB">
+            <argument type="service" ref="test.service.imported"/>
+            <argument type="parameter" ref="test.parameter.string"/>
+            <argument type="int"/>
+        </service>
         
         <!-- No id service definition, 
                 builder will not be able to build a service from this definition 

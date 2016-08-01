@@ -1,7 +1,7 @@
-package com.marvin.pattern.factory.factories;
+package com.marvin.old.pattern.factory.factories;
 
-import com.marvin.pattern.factory.Factory;
-import com.marvin.pattern.factory.FactoryUtils;
+import com.marvin.old.pattern.factory.Factory;
+import com.marvin.old.pattern.factory.FactoryUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;

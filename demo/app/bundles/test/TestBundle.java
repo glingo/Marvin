@@ -1,6 +1,6 @@
-package test.app.bundles.test;
+package app.bundles.test;
 
-import com.marvin.old.kernel.bundle.Bundle;
+import com.marvin.component.kernel.bundle.Bundle;
 
 public class TestBundle extends Bundle {
 

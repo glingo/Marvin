@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.app;
+package app;
 
+import app.bundles.test.TestBundle;
 import com.marvin.bundle.framework.FrameWorkBundle;
-import test.app.bundles.test.TestBundle;
-import com.marvin.old.kernel.Kernel;
-import com.marvin.old.kernel.bundle.Bundle;
+import com.marvin.component.kernel.Kernel;
+import com.marvin.component.kernel.bundle.Bundle;
 
 /**
  *

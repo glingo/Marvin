@@ -1,6 +1,6 @@
 package com.marvin.component.container.config;
 
-import java.lang.reflect.Array;
+import com.marvin.component.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -112,8 +112,9 @@ public class Definition {
         if(arguments == null) {
             this.arguments = new Object[0];
         }
-        ArrayList<Object> t = new ArrayList<>(Arrays.asList(this.arguments));
-        t.add(argument);
-        this.arguments = t.toArray();
+        this.arguments = ObjectUtils.addObjectToArray(arguments, argument);
+//        ArrayList<Object> t = new ArrayList<>(Arrays.asList(this.arguments));
+//        t.add(argument);
+//        this.arguments = t.toArray();
     }
 }

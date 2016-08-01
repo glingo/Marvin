@@ -3,20 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.pattern.builder;
+package com.marvin.old.pattern.loader;
 
 /**
  *
  * @author cdi305
  * @param <P>
  */
-public abstract class Builder<P> implements IBuilder<P> {
+public abstract class Loader<P> implements ILoader<P>{
     
-    /* The product we build. */
-    protected P product;
-
     @Override
-    public P getProduct() {
-        return this.product;
-    }
+    public abstract P load(String location);
+    
 }

@@ -10,6 +10,7 @@ import app.service.TestServiceA;
 import app.service.TestServiceB;
 import app.service.TestServiceC;
 import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,11 +39,20 @@ public class ContainerBuilderProgrammaticTest {
         Object[] args_C = new Object[]{ref_A, "Service C", 3, collec};
         Definition def_C = new Definition("app.service.TestServiceC", args_C);
         
+        
+        // definition du service test.service.a.with.parameter
+        Parameter p_D = new Parameter("parameter.a");
+        Object[] args_D = new Object[]{p_D, 1};
+        Definition def_D = new Definition("app.service.TestServiceA", args_D);
+        
         ContainerBuilder builder = new ContainerBuilder();
         
         builder.addDefinition("test.service.a", def_A);
         builder.addDefinition("test.service.b", def_B);
         builder.addDefinition("test.service.c", def_C);
+        builder.addDefinition("test.service.a.with.parameter", def_D);
+        
+        builder.getContainer().setParameter("parameter.a", "my parameter A");
         
         builder.build();
         Container container = builder.getContainer();

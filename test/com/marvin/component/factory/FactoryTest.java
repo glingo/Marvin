@@ -8,8 +8,8 @@ package com.marvin.component.factory;
 import app.service.IService;
 import com.marvin.component.Classes;
 import com.marvin.component.Parameters;
-import com.marvin.pattern.factory.IFactory;
-import com.marvin.pattern.factory.factories.FactoryImpl;
+import com.marvin.old.pattern.factory.IFactory;
+import com.marvin.old.pattern.factory.factories.FactoryImpl;
 
 /**
  *

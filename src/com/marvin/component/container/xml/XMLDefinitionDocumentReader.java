@@ -7,12 +7,18 @@ package com.marvin.component.container.xml;
 
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import com.marvin.component.parser.Parser;
 import com.marvin.component.parser.ParserResolver;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.StringUtils;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Document;
@@ -25,11 +31,21 @@ import org.w3c.dom.NodeList;
  * @author cdi305
  */
 public class XMLDefinitionDocumentReader {
-    
+
     public static final String IMPORT_ELEMENT = "import";
     public static final String SERVICE_ELEMENT = "service";
     public static final String SERVICES_ELEMENT = "services";
     public static final String ARGUMENT_ELEMENT = "argument";
+    public static final String PARAMETERS_ELEMENT = "parameters";
+    public static final String PARAMETER_ELEMENT = "parameter";
+    public static final String VALUE_ELEMENT = "value";
+
+    public static final String ARRAY_ELEMENT = "array";
+    public static final String LIST_ELEMENT = "list";
+    public static final String MAP_ELEMENT = "map";
+    public static final String SET_ELEMENT = "set";
+
+    public static final String RESOURCE_ATTRIBUTE = "resource";
     public static final String TYPE_ATTRIBUTE = "type";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String INDEX_ATTRIBUTE = "index";
@@ -37,8 +53,14 @@ public class XMLDefinitionDocumentReader {
     public static final String VALUE_ATTRIBUTE = "value";
 
     protected ParserResolver parserResolver = new ParserResolver();
-    
-    public void registerBeanDefinitions(Document doc, ContainerBuilder builder) {
+
+    protected XMLReaderContext context;
+
+    public XMLDefinitionDocumentReader(XMLReaderContext context) {
+        this.context = context;
+    }
+
+    public void registerDefinitions(Document doc, ContainerBuilder builder) {
 //            this.readerContext = readerContext;
 //            logger.debug("Loading bean definitions");
         Element root = doc.getDocumentElement();
@@ -62,10 +84,13 @@ public class XMLDefinitionDocumentReader {
 
     private void parseDefinitionElement(Element ele, ContainerBuilder builder) {
         if (nodeNameEquals(ele, IMPORT_ELEMENT)) {
-//            importDefinitionResource(ele);
+            importDefinitionResource(ele);
         } else if (nodeNameEquals(ele, SERVICE_ELEMENT)) {
             processDefinition(ele, builder);
-        } else if (nodeNameEquals(ele, SERVICES_ELEMENT)) {
+        } else if (nodeNameEquals(ele, PARAMETER_ELEMENT)) {
+            processParameter(ele, builder);
+        } else if (nodeNameEquals(ele, SERVICES_ELEMENT)
+                || nodeNameEquals(ele, PARAMETERS_ELEMENT)) {
             // recurse
             doRegisterDefinitions(ele, builder);
         }
@@ -82,21 +107,22 @@ public class XMLDefinitionDocumentReader {
     }
 
     private void parseArgumentElement(Element argEle, Definition definition) {
-        String nameAttr = argEle.getAttribute(NAME_ATTRIBUTE);
+//        String nameAttr = argEle.getAttribute(NAME_ATTRIBUTE);
         String indexAttr = argEle.getAttribute(INDEX_ATTRIBUTE);
+
+        Object arg = parseArgumentValue(argEle);
 
         if (StringUtils.hasLength(indexAttr)) {
             try {
                 int index = Integer.parseInt(indexAttr);
-
                 if (index > 0) {
-
+                    definition.replaceArgument(index, arg);
                 }
             } catch (NumberFormatException ex) {
+                System.err.println("Attribute 'index' of tag 'constructor-arg' must be an integer");
 //                error("Attribute 'index' of tag 'constructor-arg' must be an integer", ele);
             }
         } else {
-            Object arg = parseArgumentValue(argEle);
             definition.addArgument(arg);
         }
     }
@@ -104,13 +130,31 @@ public class XMLDefinitionDocumentReader {
     public Object parseArgumentValue(Element ele) {
         String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
 
+        NodeList nl = ele.getChildNodes();
+        Element subElement = null;
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node node = nl.item(i);
+            if (node instanceof Element) {
+                // Child element is what we're looking for.
+                if (subElement != null) {
+                    System.err.println(ele.getNodeName() + " must not contain more than one sub-element");
+                } else {
+                    subElement = (Element) node;
+                }
+            }
+        }
+
         boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
         boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
-        
+
         if (hasRefAttribute) {
             String refName = ele.getAttribute(REF_ATTRIBUTE);
-            Reference ref = new Reference(refName);
-            return ref;
+            switch (typeAttr) {
+                case SERVICE_ELEMENT:
+                    return new Reference(refName);
+                case PARAMETER_ELEMENT:
+                    return new Parameter(refName);
+            }
         } else if (hasValueAttribute) {
             try {
                 String value = ele.getAttribute(VALUE_ATTRIBUTE);
@@ -120,21 +164,117 @@ public class XMLDefinitionDocumentReader {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else if (subElement != null) {
+            return parseSubElement(subElement);
         }
-        
+
         return null;
+    }
+
+    protected void parseCollectionElements(NodeList elementNodes, Collection<Object> target) {
+
+        for (int i = 0; i < elementNodes.getLength(); i++) {
+            Node node = elementNodes.item(i);
+            if (node instanceof Element) {
+                target.add(parseSubElement((Element) node));
+            }
+        }
+    }
+
+    public Set<Object> parseSetElement(Element collectionEle) {
+        NodeList nl = collectionEle.getChildNodes();
+        Set<Object> target = new HashSet<>(nl.getLength());
+        parseCollectionElements(nl, target);
+        return target;
+    }
+
+    public List<Object> parseListElement(Element collectionEle) {
+        NodeList nl = collectionEle.getChildNodes();
+        List<Object> target = new ArrayList<>(nl.getLength());
+        parseCollectionElements(nl, target);
+        return target;
+    }
+
+    public Object parseArrayElement(Element arrayEle) {
+        NodeList nl = arrayEle.getChildNodes();
+        int size = nl.getLength();
+        Object[] target = new Object[size];
+        parseCollectionElements(nl, Arrays.asList(target));
+        return target;
+    }
+
+    public Object parseSubElement(Element ele) {
+        System.err.println(ele.getNodeName());
+        if (nodeNameEquals(ele, ARGUMENT_ELEMENT)) {
+            return parseArrayElement(ele);
+        } else if (nodeNameEquals(ele, ARRAY_ELEMENT)) {
+            return parseArrayElement(ele);
+        } else if (nodeNameEquals(ele, LIST_ELEMENT)) {
+            return parseListElement(ele);
+        } else if (nodeNameEquals(ele, SET_ELEMENT)) {
+            return parseSetElement(ele);
+        } else if (nodeNameEquals(ele, VALUE_ELEMENT)) {
+            System.err.println(VALUE_ELEMENT);
+            return parseValueElement(ele);
+        } else {
+            System.err.println("Unknown property sub-element: [" + ele.getNodeName() + "]");
+            return null;
+        }
+    }
+
+    public Object parseValueElement(Element ele) {
+        // It's a literal value.
+        String value = ele.getTextContent();
+        String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
+
+        try {
+            Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
+            Parser parser = parserResolver.resolve(type);
+            return parser.parse(value);
+        } catch (ClassNotFoundException ex) {
+            return value;
+        }
+    }
+
+    protected void processParameter(Element ele, ContainerBuilder builder) {
+        String id = ele.getAttribute("id");
+        String valueAttr = ele.getAttribute(VALUE_ATTRIBUTE);
+        String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
+
+        if (StringUtils.hasLength(id)) {
+            try {
+                Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
+                Parser parser = parserResolver.resolve(type);
+                builder.addParameter(id, parser.parse(valueAttr));
+            } catch (Exception ex) {
+                Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     protected void processDefinition(Element ele, ContainerBuilder builder) {
         String id = ele.getAttribute("id");
         String name = ele.getAttribute("class");
-        
-        if(StringUtils.hasLength(id)) {
+
+        if (StringUtils.hasLength(id)) {
             Definition definition = new Definition();
             definition.setClassName(name);
             parseArgumentElements(ele, definition);
             builder.addDefinition(id, definition);
         }
+    }
+
+    protected void importDefinitionResource(Element ele) {
+        String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+
+        if (!StringUtils.hasText(location)) {
+            System.err.println("Resource location must not be empty");
+//            getReaderContext().error("Resource location must not be empty", ele);
+            return;
+        }
+
+        this.context.getReader().loadDefinitions(location);
+
     }
 
     public String getNamespaceURI(Node node) {
