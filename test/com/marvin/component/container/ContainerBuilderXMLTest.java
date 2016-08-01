@@ -24,7 +24,7 @@ public class ContainerBuilderXMLTest {
 
         ContainerBuilder builder = new ContainerBuilder();
         XMLDefinitionReader reader = new XMLDefinitionReader(builder);
-        reader.loadDefinitions("app/config/config.xml");
+        reader.read("app/config/config.xml");
 
         System.out.println("-------------------------------------------------");
         System.out.println("Liste des definitions");

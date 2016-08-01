@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
     
+    <parameter id="test.parameter.int" type="int" value="4"/>
+    
     <parameters>
         
         <parameter id="test.parameter.string" type="java.lang.String" value="My parameter string"/>
@@ -29,15 +31,39 @@
                 - with a reference to Service A
                 - and a collection as argument
         -->
-        <service id="test.service.c" class="app.service.TestServiceC">
+        <service id="test.service.c.list" class="app.service.TestServiceC">
             <argument type="service" ref="test.service.a"/>
             <argument type="java.lang.String" value="Service C"/>
             <argument type="int" value="3"/>
             <argument>
-                <set>
-                    <value type="string">Random string</value>
-                    <value type="number">42</value>
-                </set>
+                <list>
+                    <value type="java.lang.String">Random string</value>
+                    <value type="int">42</value>
+                </list>
+            </argument>
+        </service>
+        
+        <service id="test.service.d" class="app.service.TestServiceD">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service C"/>
+            <argument type="int" value="3"/>
+            <argument>
+                <array>
+                    <value type="java.lang.String">Random string</value>
+                    <value type="int">42</value>
+                </array>
+            </argument>
+        </service>
+        
+        <service id="test.service.c.deux" class="app.service.TestServiceC">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service C deux"/>
+            <argument type="int" value="3"/>
+            <argument>
+                <list>
+                    <argument type="java.lang.String" value="Service C deux"/>
+                    <argument type="int" value="3"/>
+                </list>
             </argument>
         </service>
         
@@ -67,6 +93,6 @@
         -->
         <service class="app.service.TestServiceA">
         </service>
-        
+
     </services>
 </container>

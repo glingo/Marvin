@@ -136,7 +136,6 @@ public abstract class Kernel {
 //        this.pool.shutdown();
     }
     
-    
     public void handle(String row, PrintWriter writer) throws Exception {
         // Toute cette partie est la recuperation de la Requette.
         String uri = null;

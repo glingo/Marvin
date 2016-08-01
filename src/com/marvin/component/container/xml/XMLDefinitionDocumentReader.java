@@ -5,22 +5,24 @@
  */
 package com.marvin.component.container.xml;
 
-import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.config.Definition;
-import com.marvin.component.container.config.Parameter;
-import com.marvin.component.container.config.Reference;
-import com.marvin.component.parser.Parser;
-import com.marvin.component.parser.ParserResolver;
-import com.marvin.component.util.ClassUtils;
-import com.marvin.component.util.StringUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.marvin.component.container.ContainerBuilder;
+import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Parameter;
+import com.marvin.component.container.config.Reference;
+import com.marvin.component.io.xml.XMLDocumentReader;
+import com.marvin.component.io.xml.XMLReaderContext;
+import com.marvin.component.parser.Parser;
+import com.marvin.component.util.ClassUtils;
+import com.marvin.component.util.StringUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,9 +32,8 @@ import org.w3c.dom.NodeList;
  *
  * @author cdi305
  */
-public class XMLDefinitionDocumentReader {
+public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
-    public static final String IMPORT_ELEMENT = "import";
     public static final String SERVICE_ELEMENT = "service";
     public static final String SERVICES_ELEMENT = "services";
     public static final String ARGUMENT_ELEMENT = "argument";
@@ -45,19 +46,14 @@ public class XMLDefinitionDocumentReader {
     public static final String MAP_ELEMENT = "map";
     public static final String SET_ELEMENT = "set";
 
-    public static final String RESOURCE_ATTRIBUTE = "resource";
     public static final String TYPE_ATTRIBUTE = "type";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String INDEX_ATTRIBUTE = "index";
     public static final String REF_ATTRIBUTE = "ref";
     public static final String VALUE_ATTRIBUTE = "value";
 
-    protected ParserResolver parserResolver = new ParserResolver();
-
-    protected XMLReaderContext context;
-
     public XMLDefinitionDocumentReader(XMLReaderContext context) {
-        this.context = context;
+        super(context);
     }
 
     public void registerDefinitions(Document doc, ContainerBuilder builder) {
@@ -81,11 +77,10 @@ public class XMLDefinitionDocumentReader {
 //        postProcessXml(root); 
 
     }
-
+    
     private void parseDefinitionElement(Element ele, ContainerBuilder builder) {
-        if (nodeNameEquals(ele, IMPORT_ELEMENT)) {
-            importDefinitionResource(ele);
-        } else if (nodeNameEquals(ele, SERVICE_ELEMENT)) {
+        parseElement(ele);
+        if (nodeNameEquals(ele, SERVICE_ELEMENT)) {
             processDefinition(ele, builder);
         } else if (nodeNameEquals(ele, PARAMETER_ELEMENT)) {
             processParameter(ele, builder);
@@ -197,25 +192,24 @@ public class XMLDefinitionDocumentReader {
 
     public Object parseArrayElement(Element arrayEle) {
         NodeList nl = arrayEle.getChildNodes();
-        int size = nl.getLength();
-        Object[] target = new Object[size];
-        parseCollectionElements(nl, Arrays.asList(target));
-        return target;
+//        int size = nl.getLength();
+//        Object[] target = new Object[size];
+        ArrayList<Object> l = new ArrayList();
+        parseCollectionElements(nl, l);
+        return l.toArray();
     }
 
     public Object parseSubElement(Element ele) {
-        System.err.println(ele.getNodeName());
-        if (nodeNameEquals(ele, ARGUMENT_ELEMENT)) {
-            return parseArrayElement(ele);
-        } else if (nodeNameEquals(ele, ARRAY_ELEMENT)) {
+        if (nodeNameEquals(ele, ARRAY_ELEMENT)) {
             return parseArrayElement(ele);
         } else if (nodeNameEquals(ele, LIST_ELEMENT)) {
             return parseListElement(ele);
         } else if (nodeNameEquals(ele, SET_ELEMENT)) {
             return parseSetElement(ele);
         } else if (nodeNameEquals(ele, VALUE_ELEMENT)) {
-            System.err.println(VALUE_ELEMENT);
             return parseValueElement(ele);
+        } else if (nodeNameEquals(ele, ARGUMENT_ELEMENT)) {
+            return parseArgumentValue(ele);
         } else {
             System.err.println("Unknown property sub-element: [" + ele.getNodeName() + "]");
             return null;
@@ -226,7 +220,7 @@ public class XMLDefinitionDocumentReader {
         // It's a literal value.
         String value = ele.getTextContent();
         String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
-
+        
         try {
             Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
             Parser parser = parserResolver.resolve(type);
@@ -246,7 +240,7 @@ public class XMLDefinitionDocumentReader {
                 Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
                 Parser parser = parserResolver.resolve(type);
                 builder.addParameter(id, parser.parse(valueAttr));
-            } catch (Exception ex) {
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -264,30 +258,6 @@ public class XMLDefinitionDocumentReader {
         }
     }
 
-    protected void importDefinitionResource(Element ele) {
-        String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
-
-        if (!StringUtils.hasText(location)) {
-            System.err.println("Resource location must not be empty");
-//            getReaderContext().error("Resource location must not be empty", ele);
-            return;
-        }
-
-        this.context.getReader().loadDefinitions(location);
-
-    }
-
-    public String getNamespaceURI(Node node) {
-        return node.getNamespaceURI();
-    }
-
-    public String getLocalName(Node node) {
-        return node.getLocalName();
-    }
-
-    public boolean nodeNameEquals(Node node, String desiredName) {
-        return desiredName.equals(node.getNodeName()) || desiredName.equals(getLocalName(node));
-    }
 
 //    public boolean isDefaultNamespace(String namespaceUri) {
 //        return (!StringUtils.hasLength(namespaceUri) || BEANS_NAMESPACE_URI.equals(namespaceUri));

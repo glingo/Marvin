@@ -13,7 +13,9 @@ public class StringParser implements Parser<String> {
     public Object[] getTypeKeys() {
         return new Object[]{
             String.class,
-            String.class.getName()
+            String.class.getName(),
+            "string",
+            "String"
         };
     }
 

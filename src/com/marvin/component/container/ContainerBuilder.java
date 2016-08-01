@@ -50,7 +50,7 @@ public class ContainerBuilder {
 
             if (arg instanceof Reference) {
                 Reference ref = (Reference) arg;
-                System.out.println("Resolution d'une reference vers : " + ref.getTarget());
+//                System.out.println("Resolution d'une reference vers : " + ref.getTarget());
                 arg = get(ref.getTarget());
             }
             
@@ -92,8 +92,8 @@ public class ContainerBuilder {
         // instatiation
         if (constructor != null) {
             try {
-                System.out.println("instanciation du service : " + id);
-                System.out.println("avec les arguments : " + Arrays.toString(arguments));
+//                System.out.println("instanciation du service : " + id);
+//                System.out.println("avec les arguments : " + Arrays.toString(arguments));
                 service = constructor.newInstance(arguments);
             } catch (InstantiationException ex) {
                 LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
@@ -107,19 +107,19 @@ public class ContainerBuilder {
 
         }
         
-        System.out.println("resultat de l'instanciation : " + service);
+//        System.out.println("resultat de l'instanciation : " + service);
         return service;
     }
 
     public Object get(String id) {
-        System.out.println("Tentative de recuperation du service " + id);
+//        System.out.println("Tentative de recuperation du service " + id);
         Object service;
         
         try {
             service = this.container.get(id);
         } catch (ContainerException ex) {
             // The service has not been instatiate yet, look into definition registry ?
-            System.out.println("Le service n'est pas encore prêt, recherche dans les definitions");
+//            System.out.println("Le service n'est pas encore prêt, recherche dans les definitions");
             Definition def = this.definitions.get(id);
             service = instanciate(id, def);
             this.container.set(id, service);
@@ -133,7 +133,7 @@ public class ContainerBuilder {
     }
     
     public Object getParameter(String key) {
-        System.out.println("Tentative de recuperation du parametre " + key);
+//        System.out.println("Tentative de recuperation du parametre " + key);
         return this.container.getParameter(key, null);
     }
 

@@ -2,6 +2,6 @@
 
 <routing>
     
-    <route name="default.charger" path="/" controller="test.com.marvin.app.bundles.test.controller.DefaultController::charger" />
+    <route name="default.charger" path="/" controller="app.bundles.test.controller.DefaultController::charger" />
     
 </routing>

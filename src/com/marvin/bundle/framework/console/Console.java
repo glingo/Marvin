@@ -1,7 +1,8 @@
 package com.marvin.bundle.framework.console;
 
-import com.marvin.old.kernel.Kernel;
-import java.io.IOException;
+//import com.marvin.old.kernel.Kernel;
+import com.marvin.component.kernel.Kernel;
+//import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import com.marvin.console.listener.ConsoleSubscriber;

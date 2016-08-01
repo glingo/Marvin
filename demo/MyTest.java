@@ -8,6 +8,7 @@ import app.service.IService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import app.AppKernel;
+import com.marvin.bundle.framework.console.Console;
 import com.marvin.component.container.Container;
 import com.marvin.component.kernel.Kernel;
 
@@ -21,8 +22,8 @@ public class MyTest {
         
         Kernel kernel = new AppKernel();
         
-//        Console console = new Console(kernel);
-//        console.start();
+        Console console = new Console(kernel);
+        console.start();
 
 //        Server server = new Server(kernel, 46, 47);
 //        server.start();
@@ -32,9 +33,9 @@ public class MyTest {
         
         try {
             kernel.boot();
-            Container c = (Container) kernel.getContainer().get("container");
-            IService service = (IService) c.get("test.service.c");
-            service.sayHello();
+//            Container c = (Container) kernel.getContainer().get("container");
+//            IService service = (IService) c.get("test.service.c");
+//            service.sayHello();
             
 //            Kernel a = (Kernel) c.get("kernel");
 //            System.out.println(c);
