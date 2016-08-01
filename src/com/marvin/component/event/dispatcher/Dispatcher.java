@@ -3,6 +3,7 @@ package com.marvin.component.event.dispatcher;
 import com.marvin.component.event.subscriber.SubscriberInterface;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -26,27 +27,17 @@ public abstract class Dispatcher<T> implements DispatcherInterface<T> {
         }
         
         subscribers.forEach((SubscriberInterface<T> subscriber) -> {
-            if(subscriber.support(name)) {
-                this.fire(subscriber, name, event);
+            
+            if (subscriber == null) {
+                return;
             }
+        
+            subscriber.getSubscribedEvents().forEach((String key, Consumer<T> consumer) -> {
+                if(key.equals(name)) {
+                    consumer.accept(event);
+                }
+            });
         });
     }
-    
-    protected void fire(SubscriberInterface<T> subscriber, String name, T event) {
-
-        if (subscriber == null) {
-            return;
-        }
-        
-        if (event == null) {
-            event = this.create();
-        }
-
-//        event.setDispatcher(this);
-        
-        System.out.format("Dispatch event %s\n", name);
-        subscriber.recieve(name, event);
- 
-   }
     
 }

@@ -9,7 +9,8 @@
 
     </parameters>
     
-    <import resource="app/config/imported_config.xml" />
+    <!--<import resource="app/config/imported_config.xml" />-->
+    <import resource="config/imported_config.xml" />
     
     <services>
         

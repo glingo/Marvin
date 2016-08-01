@@ -5,27 +5,11 @@
  */
 package com.marvin.component.io.xml;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.config.Definition;
-import com.marvin.component.container.config.Parameter;
-import com.marvin.component.container.config.Reference;
-import com.marvin.component.parser.Parser;
 import com.marvin.component.parser.ParserResolver;
-import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.StringUtils;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *

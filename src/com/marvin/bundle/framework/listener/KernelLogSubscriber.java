@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  *
  * @author Dr.Who
  */
-public class KernelLogSubscriber  implements SubscriberInterface<Event> {
+public class KernelLogSubscriber implements SubscriberInterface<Event> {
 
     @Override
     public void recieve(String name, Event event) {

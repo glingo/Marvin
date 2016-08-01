@@ -7,6 +7,5 @@ import java.util.function.Consumer;
 public interface SubscriberInterface<T> {
 
     Map<String, Consumer<T>> getSubscribedEvents();
-    void recieve(String name, T recieve);
-    boolean support(String name);
+    
 }

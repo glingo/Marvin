@@ -22,16 +22,26 @@ import org.xml.sax.InputSource;
  */
 public abstract class XMLReader {
     
-    protected DocumentLoader documentLoader = new DocumentLoader();
-    protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+    protected DocumentLoader documentLoader;
+    protected ResourceLoader resourceLoader;
     protected XMLReaderContext context;
-
+    
     public XMLReader() {
         this.context = new XMLReaderContext(this);
+        this.resourceLoader = new DefaultResourceLoader();
+        this.documentLoader = new DocumentLoader();
+    }
+
+    public XMLReader(ResourceLoader resourceLoader, DocumentLoader documentLoader) {
+        this.context = new XMLReaderContext(this);
+        this.resourceLoader = resourceLoader;
+        this.documentLoader = documentLoader;
     }
     
-    public XMLReader(XMLReaderContext context) {
+    public XMLReader(XMLReaderContext context, ResourceLoader resourceLoader, DocumentLoader documentLoader) {
         this.context = context;
+        this.resourceLoader = resourceLoader;
+        this.documentLoader = documentLoader;
     }
     
     public void read(String location) {

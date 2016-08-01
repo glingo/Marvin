@@ -5,11 +5,10 @@
  */
 package com.marvin.component.container.xml;
 
-import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +25,11 @@ public class XMLDefinitionReader extends XMLReader {
 
     public XMLDefinitionReader(ContainerBuilder containerBuilder) {
         super();
+        this.containerBuilder = containerBuilder;
+    }
+    
+    public XMLDefinitionReader(ContainerBuilder containerBuilder, ResourceLoader loader) {
+        super(loader, new DocumentLoader());
         this.containerBuilder = containerBuilder;
     }
 
