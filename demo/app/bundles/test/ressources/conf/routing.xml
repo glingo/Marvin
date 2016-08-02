@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<routing>
-    <route controleur="com.marvin.bundles.menu.controller.DefaultControleur" type="annotation" />
-</routing>

@@ -5,9 +5,10 @@
  */
 package com.marvin.component;
 
-import app.service.TestServiceA;
-import app.service.TestServiceB;
-import app.service.TestServiceC;
+import com.marvin.service.TestServiceA;
+import com.marvin.service.TestServiceB;
+import com.marvin.service.TestServiceC;
+
 
 /**
  *

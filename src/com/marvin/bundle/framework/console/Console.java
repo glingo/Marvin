@@ -17,7 +17,15 @@ public class Console {
     
     public void start() {
         try {
+            
+            System.out.println("==============================================");
+            System.out.println("==                MARVIN                    ==");
+            System.out.println("==              Console v0.1                ==");
+            System.out.println("==============================================");
+            
             this.kernel.handle(System.in, System.out, System.err);
+            
+            System.out.println("==============================================");
         } catch (Exception ex) {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }

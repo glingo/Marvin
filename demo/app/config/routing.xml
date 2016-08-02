@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<routing>
-    
-    <route name="default.charger" path="/" controller="app.bundles.test.controller.DefaultController::charger" />
-    
-</routing>

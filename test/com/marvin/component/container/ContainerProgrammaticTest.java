@@ -5,11 +5,11 @@
  */
 package com.marvin.component.container;
 
-import app.service.IService;
-import app.service.TestServiceA;
-import app.service.TestServiceB;
-import app.service.TestServiceC;
 import com.marvin.component.Services;
+import com.marvin.service.IService;
+import com.marvin.service.TestServiceA;
+import com.marvin.service.TestServiceB;
+import com.marvin.service.TestServiceC;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

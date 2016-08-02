@@ -5,13 +5,13 @@
  */
 package com.marvin.component.container;
 
-import app.service.Service;
-import app.service.TestServiceA;
-import app.service.TestServiceB;
-import app.service.TestServiceC;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
+import com.marvin.service.IService;
+import com.marvin.service.TestServiceA;
+import com.marvin.service.TestServiceB;
+import com.marvin.service.TestServiceC;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -59,9 +59,9 @@ public class ContainerBuilderProgrammaticTest {
         
         try {
             
-            Service a = container.get("test.service.a", TestServiceA.class);
-            Service b = container.get("test.service.b", TestServiceB.class);
-            Service c = container.get("test.service.c", TestServiceC.class);
+            IService a = container.get("test.service.a", TestServiceA.class);
+            IService b = container.get("test.service.b", TestServiceB.class);
+            IService c = container.get("test.service.c", TestServiceC.class);
             
             System.out.println(a);
             System.out.println(b);
