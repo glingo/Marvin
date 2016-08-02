@@ -111,8 +111,8 @@ public abstract class Kernel {
         ContainerBuilder builder = new ContainerBuilder();
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
         
-        reader.read("config/parameters.xml");
-        reader.read("config/services.xml");
+        reader.read("resources/parameters.xml");
+        reader.read("resources/services.xml");
         
         this.bundles.values().forEach((Bundle bundle) -> {
             bundle.build(builder);
@@ -138,7 +138,7 @@ public abstract class Kernel {
 
         this.router = new Router();
         XMLRouteReader reader = new XMLRouteReader(router, loader);
-        reader.read("config/routing.xml");
+        reader.read("resources/routing.xml");
 
         // Inject the router as a service
         container.set("router", this.router);
@@ -150,6 +150,9 @@ public abstract class Kernel {
     }
 
     public void handle(String row, PrintWriter writer) throws Exception {
+        
+        this.boot();
+        
         // Toute cette partie est la recuperation de la Requette.
         String uri = null;
         Matcher matcher = Pattern.compile("^([A-Z]+) (\\p{Graph}+) ?((HTTP/[0-9\\.]+)?)$").matcher(row);
@@ -165,7 +168,6 @@ public abstract class Kernel {
         }
 
         if (uri != null) {
-            this.boot();
 
             Route route = this.router.find(uri);
 
@@ -179,6 +181,7 @@ public abstract class Kernel {
                 return;
             }
 
+            
             Controller controller = this.resolver.createController(route.getController());
 
             if (controller == null) {
@@ -190,7 +193,9 @@ public abstract class Kernel {
                 ((ContainerAwareInterface) controller.getHolder()).setContainer(container);
             }
 
+            this.container.set("print_writer", writer);
             controller.run();
+            this.container.set("print_writer", null);
         }
 
         writer.flush();
@@ -200,6 +205,7 @@ public abstract class Kernel {
     public void handle(BufferedReader reader, PrintWriter writer) throws Exception {
 
         String line = reader.readLine();
+        
 
         while (line != null && !"".equals(line) && !System.lineSeparator().equals(line) && !line.equals("quit")) {
             this.handle(line, writer);

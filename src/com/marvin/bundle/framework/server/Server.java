@@ -33,11 +33,11 @@ public class Server {
             terminate();
 
         } catch (Exception e) {
-//            if (!isStopped()) {
-//                System.out.println("Erreur lors de l'accepation de la connection.");
-//                System.err.println(e.getMessage());
-//            }
-//            e.printStackTrace();
+            if (!isStopped()) {
+                System.out.println("Erreur lors de l'accepation de la connection.");
+                System.err.println(e.getMessage());
+            }
+            e.printStackTrace();
             System.exit(-1);
         }
     }
@@ -86,10 +86,10 @@ public class Server {
         
 //        System.out.println("Server socket opened ... ");
 
-//        System.out.println("Server listening ");
-//        System.out.println(this.socket.getInetAddress());
-//        System.out.println(this.socket.getLocalPort());
-//        System.out.println(this.socket.getLocalSocketAddress());
+        System.out.println("Server listening ");
+        System.out.println(this.socket.getInetAddress());
+        System.out.println(this.socket.getLocalPort());
+        System.out.println(this.socket.getLocalSocketAddress());
     }
 
     public int getPort() {

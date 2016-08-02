@@ -69,17 +69,21 @@ public class Container implements IContainer {
         // reference to the id are case-sensitives
         id = id.toLowerCase();
         
-        // inject service in map of services if it is not already set
-        this.services.putIfAbsent(id, service);
-        
         // in case of null object
         if(null == service) {
             // remove it from map
             this.services.remove(id);
+            return;
         }
+        
+        // inject service in map of services if it is not already set
+        this.services.putIfAbsent(id, service);
+        
     }
     
-    /** @see IContainer#get(java.lang.String) */
+    /**
+     * @see IContainer#get(java.lang.String)  
+     */
     @Override
     public Object get(String id) throws ContainerException {
         
