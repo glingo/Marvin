@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.bundle.framework.listener;
+package com.marvin.bundle.debug.listener;
 
 import com.marvin.bundle.framework.console.event.ConsoleEvent;
 import com.marvin.old.event.Event;

@@ -22,7 +22,7 @@ public class Definition {
     
     protected String[] aliases;
     
-    protected Object[] arguments;
+    protected Object[] arguments = new Object[]{};
 
     public Definition() {}
     

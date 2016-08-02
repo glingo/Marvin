@@ -68,9 +68,13 @@ public abstract class Kernel {
         
         ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
 
-        this.initializeContainer(loader);
         this.initializeBundles();
+        this.initializeContainer(loader);
         this.initializeRouter(loader);
+        
+        this.bundles.values().forEach((Bundle bundle) -> {
+            bundle.setContainer(container);
+        });
 
         this.booted = true;
 
@@ -107,36 +111,35 @@ public abstract class Kernel {
         ContainerBuilder builder = new ContainerBuilder();
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
         
-//        reader.read("app/config/parameters.xml");
-//        reader.read("app/config/config.xml");
         reader.read("config/parameters.xml");
-        reader.read("config/config.xml");
+        reader.read("config/services.xml");
+        
+        this.bundles.values().forEach((Bundle bundle) -> {
+            bundle.build(builder);
+        });
         
         builder.build();
+        
         this.container = builder.getContainer();
 
         // Inject the kernel as a service
         this.container.set("kernel", this);
         // Inject the container as a service
         this.container.set("container", container);
-        // Inject the kernel as a service
-//        this.container.set("logger", this.logger);
         // Inject an event dispatcher
         this.container.set("event_dispatcher", this.dispatcher);
         // Inject a thread_pool
         this.container.set("thread_pool", Executors.newFixedThreadPool(THREAD));
+        // Inject the logger as a service
+//        this.container.set("logger", this.logger);
     }
 
     protected void initializeRouter(ResourceLoader loader) {
 
-//        Router router = new Router();
         this.router = new Router();
         XMLRouteReader reader = new XMLRouteReader(router, loader);
         reader.read("config/routing.xml");
 
-//        RouterLoader loader = new RouterLoader(locator, builder);
-//        loader.load("routing.xml");
-//        this.router = builder.build();
         // Inject the router as a service
         container.set("router", this.router);
     }
@@ -164,17 +167,22 @@ public abstract class Kernel {
         if (uri != null) {
             this.boot();
 
-            Route route = this.router.find(row);
+            Route route = this.router.find(uri);
 
-            if (route == null || route.getController() == null) {
-                writer.format("Sorry we could find a route for %s\n", row);
+            if (route == null) {
+                writer.format("Sorry we could find a route for %s\n", uri);
+                return;
+            }
+            
+            if(route.getController() == null) {
+                writer.format("There is no Controller for %s\n", uri);
                 return;
             }
 
             Controller controller = this.resolver.createController(route.getController());
 
             if (controller == null) {
-                writer.format("No controller set for %s\n", row);
+                writer.format("No controller set for %s\n", uri);
                 return;
             }
             

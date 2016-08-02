@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.marvin.component.kernel.Kernel;
-//import com.marvin.old.kernel.Kernel;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;

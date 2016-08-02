@@ -15,6 +15,8 @@ public class Console {
     public void start() {
         try {
             
+            this.kernel.boot();
+            
             System.out.println("==============================================");
             System.out.println("==                MARVIN                    ==");
             System.out.println("==              Console v0.1                ==");

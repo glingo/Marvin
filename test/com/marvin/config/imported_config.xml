@@ -4,7 +4,7 @@
     <services>
         
         <!-- Give a test service named Service A to the container -->
-        <service id="test.service.imported" class="app.service.TestServiceA">
+        <service id="test.service.imported" class="com.marvin.service.TestServiceA">
             <argument type="java.lang.String" value="Service A imported"/>
             <argument type="int" value="1"/>
         </service>

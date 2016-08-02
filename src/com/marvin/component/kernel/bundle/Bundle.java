@@ -5,11 +5,13 @@
  */
 package com.marvin.component.kernel.bundle;
 
+import com.marvin.component.container.ContainerBuilder;
+import com.marvin.component.container.awareness.ContainerAware;
+
 /**
- *
  * @author Dr.Who
  */
-public abstract class Bundle {
+public abstract class Bundle extends ContainerAware {
     
     /**
      * Boots the Bundle.
@@ -18,6 +20,14 @@ public abstract class Bundle {
     public Bundle boot(){
 //        System.out.format("bundle is booting %s\n", this);
         return this;
+    }
+    
+    /**
+     * Build the Bundle.
+     * @param builder
+     */
+    public void build(ContainerBuilder builder){
+        
     }
     
 
