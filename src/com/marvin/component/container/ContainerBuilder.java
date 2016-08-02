@@ -6,7 +6,6 @@ import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import com.marvin.component.util.ObjectUtils;
-import java.lang.reflect.Array;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -116,8 +114,8 @@ public class ContainerBuilder {
         // instatiation
         if (constructor != null) {
             try {
-                System.out.println("instanciation du service : " + id);
-                System.out.println("avec les arguments : " + Arrays.toString(arguments));
+//                System.out.println("instanciation du service : " + id);
+//                System.out.println("avec les arguments : " + Arrays.toString(arguments));
                 service = constructor.newInstance(arguments);
                 
                 if(service != null ) {
