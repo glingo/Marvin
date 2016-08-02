@@ -5,7 +5,8 @@
  */
 package com.marvin.component.container;
 
-import com.marvin.component.Services;
+import com.marvin.component.container.exception.ContainerException;
+import com.marvin.service.Services;
 import com.marvin.service.IService;
 import com.marvin.service.TestServiceA;
 import com.marvin.service.TestServiceB;

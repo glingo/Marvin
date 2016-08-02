@@ -1,11 +1,14 @@
 package com.marvin.component.container;
 
+import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
-import com.marvin.old.util.classloader.ClassLoaderUtil;
+import com.marvin.component.util.ClassUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -66,20 +69,22 @@ public class ContainerBuilder {
     }
     
     public Constructor<Object> resolveConstructor(Definition definition) {
-        Class type = ClassLoaderUtil.loadClass(definition.getClassName());
-        
-        if(type == null) {
-            return null;
+        try {
+            Class type = Class.forName(definition.getClassName());
+            
+            int len = definition.getArguments().length;
+            Constructor<Object>[] constructors = type.getConstructors();
+            
+            Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
+                return len == cstr.getParameterCount();
+            };
+            
+            return Arrays.stream(constructors).filter(filter).findFirst().orElse(type.getEnclosingConstructor());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        int len = definition.getArguments().length;
-        Constructor<Object>[] constructors = type.getConstructors();
-
-        Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
-            return len == cstr.getParameterCount();
-        };
-        
-        return Arrays.stream(constructors).filter(filter).findFirst().orElse(type.getEnclosingConstructor());
+        return null;
     }
     
     public Object instanciate(String id, Definition definition){

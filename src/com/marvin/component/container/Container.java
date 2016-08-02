@@ -5,7 +5,7 @@
  */
 package com.marvin.component.container;
 
-import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.exception.ContainerException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -35,10 +35,12 @@ public class Container implements IContainer {
 // *                        CORE methods                                   *
 // *************************************************************************
     
+    @Override
     public Object getParameter(String key, Object def){
         return this.parameters.getOrDefault(key, def);
     }
     
+    @Override
     public Object getParameter(String key){
         return this.parameters.get(key);
     }

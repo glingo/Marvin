@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.factory;
 
-import com.marvin.component.Classes;
-import com.marvin.component.Parameters;
+import com.marvin.service.Classes;
+import com.marvin.service.Parameters;
 import com.marvin.old.pattern.factory.IFactory;
 import com.marvin.old.pattern.factory.factories.FactoryImpl;
 import com.marvin.service.IService;

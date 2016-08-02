@@ -1,5 +1,7 @@
 package com.marvin.component.container;
 
+import com.marvin.component.container.exception.ContainerException;
+
 /**
  *
  * @author caill
@@ -34,4 +36,9 @@ public interface IContainer {
     Object get(String id) throws ContainerException;
     
     <T> T get(String id, Class<T> type) throws ContainerException;
+    
+    Object getParameter(String key, Object def);
+    
+    Object getParameter(String key);
+    
 }

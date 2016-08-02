@@ -8,12 +8,12 @@ import java.util.logging.Logger;
 
 public class Controller {
 
-    protected Object controller;
+    protected Object holder;
     protected Method action;
 
-    public Controller(Object controller, Method action) {
+    public Controller(Object holder, Method action) {
         super();
-        this.controller = controller;
+        this.holder = holder;
         this.action = action;
     }
 
@@ -21,7 +21,7 @@ public class Controller {
         synchronized (this) {
             long start = new Date().getTime();
             try {
-                this.action.invoke(this.controller);
+                this.action.invoke(this.holder);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -31,4 +31,19 @@ public class Controller {
         }
     }
 
+    public Object getHolder() {
+        return holder;
+    }
+
+    public Method getAction() {
+        return action;
+    }
+
+    public void setAction(Method action) {
+        this.action = action;
+    }
+
+    public void setHolder(Object holder) {
+        this.holder = holder;
+    }
 }

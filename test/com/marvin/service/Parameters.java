@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component;
+package com.marvin.service;
 
 import java.util.ArrayList;
 

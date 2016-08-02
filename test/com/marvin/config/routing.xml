@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routing>
+    
+<!--    <route name="demo.homepage" path="/" controller="app.bundles.test.controller.DefaultController::charger" />
+    <route name="demo.container.use" path="/container" controller="app.bundles.test.controller.TestController::test" />-->
+    
+</routing>

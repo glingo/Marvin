@@ -15,6 +15,7 @@ public class MyEventDispatcherTest {
         EventDispatcher dispatcher = new EventDispatcher();
         
         dispatcher.addSubscriber(new MyEventSubscriber());
+        dispatcher.addSubscriber(new MySecondEventSubscriber());
         
         dispatcher.dispatch(Events.START, new Event());
         dispatcher.dispatch(Events.BEFORE_LOAD, new Event());

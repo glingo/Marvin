@@ -5,6 +5,7 @@
  */
 package com.marvin.component.container;
 
+import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;

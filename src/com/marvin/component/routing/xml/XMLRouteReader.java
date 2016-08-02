@@ -5,6 +5,7 @@
  */
 package com.marvin.component.routing.xml;
 
+import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.xml.XMLDefinitionDocumentReader;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.DefaultResourceLoader;
@@ -29,6 +30,12 @@ public class XMLRouteReader extends XMLReader {
     protected Router router;
 
     public XMLRouteReader(Router router) {
+        super();
+        this.router = router;
+    }
+    
+    public XMLRouteReader(Router router, ResourceLoader loader) {
+        super(loader, new DocumentLoader());
         this.router = router;
     }
     

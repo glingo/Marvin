@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    
+    <parameter id="test.parameter.int" type="int" value="4"/>
+    
+    <parameters>
+        
+        <parameter id="test.parameter.string" type="java.lang.String" value="My parameter string"/>
+
+    </parameters>
+    
+    <!--<import resource="app/config/imported_config.xml" />-->
+    <import resource="com/marvin/config/imported_config.xml" />
+    
+    <services>
+        
+        <!-- Give a test service named Service A to the container -->
+        <service id="test.service.a" class="com.marvin.service.TestServiceA">
+            <argument type="java.lang.String" value="Service A"/>
+            <argument type="int" value="1"/>
+        </service>
+        
+        <!-- Give a test service named Service B ( with a reference to Service A ) to the container -->
+        <service id="test.service.b" class="com.marvin.service.TestServiceB">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service B"/>
+            <argument type="int" value="2"/>
+        </service>
+        
+        <!-- Give a test service  to the container
+                - named Service C 
+                - with a reference to Service A
+                - and a collection as argument
+        -->
+        <service id="test.service.c.list" class="com.marvin.service.TestServiceC">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service C"/>
+            <argument type="int" value="3"/>
+            <argument>
+                <list>
+                    <value type="java.lang.String">Random string</value>
+                    <value type="int">42</value>
+                </list>
+            </argument>
+        </service>
+        
+        <service id="test.service.d" class="com.marvin.service.TestServiceD">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service C"/>
+            <argument type="int" value="3"/>
+            <argument>
+                <array>
+                    <value type="java.lang.String">Random string</value>
+                    <value type="int">42</value>
+                </array>
+            </argument>
+        </service>
+        
+        <service id="test.service.c.deux" class="com.marvin.service.TestServiceC">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service C deux"/>
+            <argument type="int" value="3"/>
+            <argument>
+                <list>
+                    <argument type="java.lang.String" value="Service C deux"/>
+                    <argument type="int" value="3"/>
+                </list>
+            </argument>
+        </service>
+        
+        <!-- Give a test service with null parameters -->
+        <service id="test.service.b.alpha" class="com.marvin.service.TestServiceB">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String"/>
+            <argument type="int"/>
+        </service>
+        
+         <!-- Give a test service with imported resource -->
+        <service id="test.service.b.alpha.with.import" class="com.marvin.service.TestServiceB">
+            <argument type="service" ref="test.service.imported"/>
+            <argument type="java.lang.String"/>
+            <argument type="int"/>
+        </service>
+        
+        <!-- Give a test service with parameter reference -->
+        <service id="test.service.b.alpha.with.import" class="com.marvin.service.TestServiceB">
+            <argument type="service" ref="test.service.imported"/>
+            <argument type="parameter" ref="test.parameter.string"/>
+            <argument type="int"/>
+        </service>
+        
+        <!-- No id service definition, 
+                builder will not be able to build a service from this definition 
+        -->
+        <service class="com.marvin.service.TestServiceA">
+        </service>
+
+    </services>
+</container>

@@ -5,7 +5,7 @@
  */
 package com.marvin.component.kernel.controller;
 
-import com.marvin.old.util.classloader.ClassLoaderUtil;
+import com.marvin.component.util.ClassUtils;
 import java.lang.reflect.Method;
 
 /**
@@ -29,17 +29,9 @@ public class ControllerResolver {
         String className = split[0];
         String methodName = split[1];
 
-        Class<?> clazz = ClassLoaderUtil.loadClass(className);
+        Class<?> clazz = ClassUtils.resolveClassName(className, null);
 
-        if (null == clazz) {
-            throw new Exception(String.format("Class '%s' does not exist.", className));
-        }
-        
-        Method action = clazz.getDeclaredMethod(methodName);
-        
-        if (action == null) {
-            throw new Exception(String.format("Nor action found for %s", methodName));
-        }
+        Method action = ClassUtils.getMethod(clazz, methodName, new Class[]{});
 
         return new Controller(this.instantiateController(clazz), action);
     }
