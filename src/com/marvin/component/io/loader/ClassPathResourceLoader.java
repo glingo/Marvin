@@ -6,7 +6,7 @@
 package com.marvin.component.io.loader;
 
 import com.marvin.component.io.resource.ClassPathResource;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 import com.marvin.component.util.Assert;
 
 /**

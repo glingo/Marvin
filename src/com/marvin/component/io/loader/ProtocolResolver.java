@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.marvin.component.io;
+package com.marvin.component.io.loader;
 
 import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 
 /**
  * A resolution strategy for protocol-specific resource handles.

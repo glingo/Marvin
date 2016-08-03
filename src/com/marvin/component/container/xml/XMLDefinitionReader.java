@@ -7,7 +7,7 @@ package com.marvin.component.container.xml;
 
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
 import java.util.logging.Level;

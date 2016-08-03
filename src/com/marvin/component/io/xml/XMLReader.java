@@ -8,7 +8,7 @@ package com.marvin.component.io.xml;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 
 import java.io.IOException;
 import java.io.InputStream;

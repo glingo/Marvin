@@ -10,7 +10,7 @@ import com.marvin.component.container.xml.XMLDefinitionDocumentReader;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
 import com.marvin.component.routing.Router;

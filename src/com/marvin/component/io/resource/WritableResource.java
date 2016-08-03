@@ -15,6 +15,7 @@
  */
 package com.marvin.component.io.resource;
 
+import com.marvin.component.io.IResource;
 import java.io.IOException;
 import java.io.OutputStream;
 

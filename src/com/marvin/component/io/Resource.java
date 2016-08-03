@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component.io.resource;
+package com.marvin.component.io;
 
 import com.marvin.component.util.Assert;
 import com.marvin.component.util.ResourceUtils;

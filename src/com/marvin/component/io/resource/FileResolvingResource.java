@@ -1,5 +1,6 @@
 package com.marvin.component.io.resource;
 
+import com.marvin.component.io.Resource;
 import com.marvin.component.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;

@@ -5,6 +5,7 @@
  */
 package com.marvin.component.io.resource;
 
+import com.marvin.component.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 

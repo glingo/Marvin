@@ -1,7 +1,7 @@
 package com.marvin.component.io.loader;
 
 import com.marvin.component.io.resource.FileSystemResource;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 
 /**
  *

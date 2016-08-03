@@ -1,8 +1,7 @@
 package com.marvin.component.io.loader;
 
-import com.marvin.component.io.ProtocolResolver;
 import com.marvin.component.io.resource.ClassPathResource;
-import com.marvin.component.io.resource.IResource;
+import com.marvin.component.io.IResource;
 import com.marvin.component.io.resource.UrlResource;
 import com.marvin.component.util.Assert;
 import com.marvin.component.util.ClassUtils;
