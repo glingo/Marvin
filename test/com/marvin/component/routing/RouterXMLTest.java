@@ -17,7 +17,7 @@ public class RouterXMLTest {
     public static void main(String[] args) {
         Router router = new Router();
         XMLRouteReader reader = new XMLRouteReader(router);
-        reader.read("app/config/routing.xml");
+        reader.read("com/marvin/resources/config/routing.xml");
         
         router.routes.forEach((String name, Route route) -> {
             System.out.println(name + " :: " + route.getPath() + " :: " + route.getController());

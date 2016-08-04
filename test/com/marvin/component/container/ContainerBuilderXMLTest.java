@@ -24,7 +24,7 @@ public class ContainerBuilderXMLTest {
 
         ContainerBuilder builder = new ContainerBuilder();
         XMLDefinitionReader reader = new XMLDefinitionReader(builder);
-        reader.read("com/marvin/config/config.xml");
+        reader.read("com/marvin/resources/config/services.xml");
 
         System.out.println("-------------------------------------------------");
         System.out.println("Liste des definitions");
