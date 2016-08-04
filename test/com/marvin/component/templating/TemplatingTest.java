@@ -22,7 +22,7 @@ public class TemplatingTest {
 
     public static void main(String[] args) {
         try {
-            Engine engine = new Engine.Builder().build();
+            Engine engine = new EngineBuilder().build();
             Template compiledTemplate = engine.getTemplate("com/marvin/resources/view/test.view");
             
             Map<String, Object> context = new HashMap<>();

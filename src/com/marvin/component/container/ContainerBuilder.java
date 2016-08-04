@@ -5,10 +5,14 @@ import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
+import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
+import com.marvin.component.util.ReflectionUtils;
+import com.marvin.component.util.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,8 +51,9 @@ public class ContainerBuilder {
         this.definitions.put(id, definition);
     }
 
-    public void build() {
+    public Container build() {
         this.definitions.keySet().forEach(this::get);
+        return this.container;
     }
 
     public Object resolveArgument(Object arg) {
@@ -70,7 +75,7 @@ public class ContainerBuilder {
                     .map(this::resolveArgument)
                     .collect(Collectors.toCollection(HashSet::new));
         }
-        
+
         if (ObjectUtils.isArray(arg)) {
             Object[] array = (Object[]) arg;
             arg = Arrays.stream(array)
@@ -107,35 +112,47 @@ public class ContainerBuilder {
     public Object instanciate(String id, Definition definition) {
         Object service = null;
 
-        // resolution des arguments
-        Object[] arguments = resolveArguments(definition.getArguments());
-        Constructor<Object> constructor = resolveConstructor(definition);
-
-        // instatiation
-        if (constructor != null) {
+        if (StringUtils.hasLength(definition.getFactoryName())) {
             try {
+                Class factory = ClassUtils.resolveClassName(definition.getFactoryName(), null);
+                Method method = ClassUtils.getMethod(factory, definition.getFactoryMethodName(), new Class[]{});
+                service = ReflectionUtils.invokeMethod(method, factory.newInstance());
+
+            } catch (IllegalArgumentException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
+            // resolution des arguments
+            Object[] arguments = resolveArguments(definition.getArguments());
+            Constructor<Object> constructor = resolveConstructor(definition);
+
+            // instatiation
+            if (constructor != null) {
+                try {
 //                System.out.println("instanciation du service : " + id);
 //                System.out.println("avec les arguments : " + Arrays.toString(arguments));
-                service = constructor.newInstance(arguments);
-                
-                if(service != null ) {
-                    if (service instanceof ContainerAwareInterface) {
-                        ((ContainerAwareInterface) service).setContainer(container);
-                    }
+                    service = constructor.newInstance(arguments);
 
-                    this.container.set(id, service);
+                } catch (InstantiationException ex) {
+                    LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
+                } catch (IllegalAccessException ex) {
+                    LOG.log(Level.WARNING, "IllegalAccessException, we can not access to the constructor", ex);
+                } catch (IllegalArgumentException ex) {
+                    LOG.log(Level.WARNING, "IllegalArgumentException, Oops something's wrong in arguments", ex);
+                } catch (InvocationTargetException ex) {
+                    LOG.log(Level.WARNING, "InvocationTargetException, Oops something's wrong in constructor invocation", ex);
                 }
-                
-            } catch (InstantiationException ex) {
-                LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
-            } catch (IllegalAccessException ex) {
-                LOG.log(Level.WARNING, "IllegalAccessException, we can not access to the constructor", ex);
-            } catch (IllegalArgumentException ex) {
-                LOG.log(Level.WARNING, "IllegalArgumentException, Oops something's wrong in arguments", ex);
-            } catch (InvocationTargetException ex) {
-                LOG.log(Level.WARNING, "InvocationTargetException, Oops something's wrong in constructor invocation", ex);
+
+            }
+        }
+        
+        if (service != null) {
+            if (service instanceof ContainerAwareInterface) {
+                ((ContainerAwareInterface) service).setContainer(container);
             }
 
+            this.container.set(id, service);
         }
 
 //        System.out.println("resultat de l'instanciation : " + service);
@@ -152,11 +169,16 @@ public class ContainerBuilder {
             // The service has not been instatiate yet, look into definition registry ?
 //            System.out.println("Le service n'est pas encore prêt, recherche dans les definitions");
             Definition def = this.definitions.get(id);
-            if(def != null)
+            if (def != null) {
                 service = instanciate(id, def);
+            }
         }
 
         return service;
+    }
+
+    public void set(String id, Object service) {
+        this.container.set(id, service);
     }
 
     public void addParameter(String key, Object value) {

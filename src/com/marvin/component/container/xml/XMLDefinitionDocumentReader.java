@@ -248,14 +248,32 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
     protected void processDefinition(Element ele, ContainerBuilder builder) {
         String id = ele.getAttribute("id");
-        String name = ele.getAttribute("class");
 
-        if (StringUtils.hasLength(id)) {
-            Definition definition = new Definition();
-            definition.setClassName(name);
-            parseArgumentElements(ele, definition);
-            builder.addDefinition(id, definition);
+        if (!StringUtils.hasLength(id)) {
+            return;
         }
+        
+        Definition definition = new Definition();
+        
+        String className = ele.getAttribute("class");
+        String factoryMethod = ele.getAttribute("factoryMethod");
+        String factory = ele.getAttribute("factory");
+        
+        if (StringUtils.hasLength(factoryMethod)) {
+            definition.setFactoryMethodName(factoryMethod);
+        }
+        
+        boolean hasFactory = StringUtils.hasLength(factory);
+        
+        if (hasFactory) {
+            definition.setFactoryName(factory);
+        } else if(StringUtils.hasLength(factoryMethod)) {
+            definition.setFactoryName(className);
+        }
+        
+        definition.setClassName(className);
+        parseArgumentElements(ele, definition);
+        builder.addDefinition(id, definition);
     }
 
 

@@ -82,6 +82,7 @@ public class Container implements IContainer {
     }
     
     /**
+     * @throws com.marvin.component.container.exception.ContainerException
      * @see IContainer#get(java.lang.String)  
      */
     @Override

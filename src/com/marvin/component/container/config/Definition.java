@@ -12,6 +12,7 @@ public class Definition {
     
     protected String className;
     
+    protected String factoryName;
     protected String factoryMethodName;
     
     protected String parentName;
@@ -114,5 +115,13 @@ public class Definition {
 //        ArrayList<Object> t = new ArrayList<>(Arrays.asList(this.arguments));
 //        t.add(argument);
 //        this.arguments = t.toArray();
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public String getFactoryName() {
+        return factoryName;
     }
 }

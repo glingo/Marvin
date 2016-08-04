@@ -11,11 +11,11 @@ package com.marvin.component.templating.loader;
 import java.io.Reader;
 
 /**
- * Interface used to find templates for Pebble. Different implementations can
+ * Interface used to find templates. Different implementations can
  * use different techniques for finding templates such as looking on the
  * classpath, looking in a database, using a servlet context, etc.
  *
- * @author mbosecke
+ * @param <T>
  *
  */
 public interface Loader<T> {
@@ -27,8 +27,7 @@ public interface Loader<T> {
      * @param cacheKey
      *           the cache key to use to load create the reader.
      * @return A reader object
-     * @throws LoaderException
-     *             If template can not be found
+     * @throws Exception If template can not be found
      */
     Reader getReader(T cacheKey) throws Exception;
 

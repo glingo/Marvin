@@ -55,6 +55,7 @@ public class PrettyPrintNodeVisitor extends AbstractNodeVisitor {
         output.append(message.toUpperCase()).append("\n");
     }
 
+    @Override
     public String toString() {
         return output.toString();
     }
@@ -62,6 +63,7 @@ public class PrettyPrintNodeVisitor extends AbstractNodeVisitor {
     /**
      * Default method used for unknown nodes such as nodes from a user provided
      * extension.
+     * @param node
      */
     @Override
     public void visit(Node node) {

@@ -118,20 +118,19 @@ public abstract class Kernel {
             bundle.build(builder);
         });
         
-        builder.build();
-        
-        this.container = builder.getContainer();
-
         // Inject the kernel as a service
-        this.container.set("kernel", this);
+        builder.set("kernel", this);
         // Inject the container as a service
-        this.container.set("container", container);
+        builder.set("container", container);
         // Inject an event dispatcher
-        this.container.set("event_dispatcher", this.dispatcher);
+        builder.set("event_dispatcher", this.dispatcher);
         // Inject a thread_pool
-        this.container.set("thread_pool", Executors.newFixedThreadPool(THREAD));
+        builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
         // Inject the logger as a service
 //        this.container.set("logger", this.logger);
+        
+        this.container = builder.build();
+
     }
 
     protected void initializeRouter(ResourceLoader loader) {
