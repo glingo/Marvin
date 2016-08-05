@@ -1,7 +1,7 @@
 package com.marvin.component.templating.extension.escaper;
 
-import com.marvin.component.templating.Template;
-import com.marvin.component.templating.TemplateInterface;
+import com.marvin.component.templating.template.Template;
+import com.marvin.component.templating.template.TemplateInterface;
 import com.marvin.component.templating.extension.NodeVisitor;
 import com.marvin.component.templating.extension.NodeVisitorFactory;
 

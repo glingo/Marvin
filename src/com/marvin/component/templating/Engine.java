@@ -10,6 +10,7 @@
  */
 package com.marvin.component.templating;
 
+import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.Extension;
 import com.marvin.component.templating.extension.ExtensionRegistry;
 import com.marvin.component.templating.lexer.Lexer;

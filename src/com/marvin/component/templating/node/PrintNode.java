@@ -8,8 +8,8 @@
  ******************************************************************************/
 package com.marvin.component.templating.node;
 
-import com.marvin.component.templating.EvaluationContext;
-import com.marvin.component.templating.Template;
+import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import com.marvin.component.templating.node.expression.Expression;
 import com.marvin.component.util.ObjectUtils;

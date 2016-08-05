@@ -10,8 +10,8 @@ package com.marvin.component.templating.node;
 
 import java.io.Writer;
 
-import com.marvin.component.templating.EvaluationContext;
-import com.marvin.component.templating.Template;
+import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 
 public class AutoEscapeNode extends AbstractRenderableNode {

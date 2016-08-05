@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.marvin.component.templating.extension;
 
-import com.marvin.component.templating.Template;
+import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.node.ArgumentsNode;
 import com.marvin.component.templating.node.AutoEscapeNode;
 import com.marvin.component.templating.node.BlockNode;

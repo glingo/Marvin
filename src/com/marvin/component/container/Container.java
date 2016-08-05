@@ -34,29 +34,7 @@ public class Container implements IContainer {
 // *************************************************************************
 // *                        CORE methods                                   *
 // *************************************************************************
-    
-    @Override
-    public Object getParameter(String key, Object def){
-        return this.parameters.getOrDefault(key, def);
-    }
-    
-    @Override
-    public Object getParameter(String key){
-        return this.parameters.get(key);
-    }
-    
-    public void setParameter(String key, Object value) {
-        this.parameters.put(key, value);
-    }
 
-    public ConcurrentMap<String, Object> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(ConcurrentMap<String, Object> parameters) {
-        this.parameters = parameters;
-    }
-    
     /** @see IContainer#get(java.lang.String) */
     @Override
     public void set(String id, Object service) {
@@ -95,7 +73,7 @@ public class Container implements IContainer {
         }
         
         // check if container have this service
-        if(!this.services.containsKey(id)) {
+        if(!this.contains(id)) {
             // the service does not exists throw an exception
             String msg = String.format("Service %s not found in container.", id);
             throw new ContainerException(msg);
@@ -108,6 +86,10 @@ public class Container implements IContainer {
     @Override
     public <T> T get(String id, Class<T> type) throws ContainerException {
         return (T) this.get(id);
+    }
+    
+    public boolean contains(String id){
+        return this.services.containsKey(id);
     }
     
 // *************************************************************************
@@ -128,6 +110,28 @@ public class Container implements IContainer {
 
     public void setServices(ConcurrentMap<String, Object> services) {
         this.services = services;
+    }
+    
+    @Override
+    public Object getParameter(String key, Object def){
+        return this.parameters.getOrDefault(key, def);
+    }
+    
+    @Override
+    public Object getParameter(String key){
+        return this.parameters.get(key);
+    }
+    
+    public void setParameter(String key, Object value) {
+        this.parameters.put(key, value);
+    }
+
+    public ConcurrentMap<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(ConcurrentMap<String, Object> parameters) {
+        this.parameters = parameters;
     }
     
 }

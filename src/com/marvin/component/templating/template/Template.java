@@ -6,8 +6,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  ******************************************************************************/
-package com.marvin.component.templating;
+package com.marvin.component.templating.template;
 
+import com.marvin.component.templating.Engine;
+import com.marvin.component.templating.FutureWriter;
+import com.marvin.component.templating.scope.ScopeChain;
 import com.marvin.component.templating.extension.escaper.SafeString;
 import com.marvin.component.templating.node.ArgumentsNode;
 import com.marvin.component.templating.node.RootNode;
@@ -140,7 +143,7 @@ public class Template implements TemplateInterface {
 
         EvaluationContext context = new EvaluationContext(this, engine.isStrictVariables(), locale,
                 engine.getExtensionRegistry(), engine.getExecutorService(),
-                new ArrayList<Template>(), scopeChain, null);
+                new ArrayList<>(), scopeChain, null);
         return context;
     }
 
@@ -216,7 +219,7 @@ public class Template implements TemplateInterface {
      * Registers a macro
      *
      * @param macro The macro
-     * @throws PebbleException Throws exception if macro already exists with the same name
+     * @throws Exception Throws exception if macro already exists with the same name
      */
     public void registerMacro(Macro macro) throws Exception {
         if (macros.containsKey(macro.getName())) {

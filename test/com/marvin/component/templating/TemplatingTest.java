@@ -5,6 +5,7 @@
  */
 package com.marvin.component.templating;
 
+import com.marvin.component.templating.template.Template;
 import com.marvin.service.Services;
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -56,7 +56,7 @@ public class ContainerBuilder {
         return this.container;
     }
 
-    public Object resolveArgument(Object arg) {
+    private Object resolveArgument(Object arg) {
 
         if (arg instanceof Reference) {
             Reference ref = (Reference) arg;
@@ -86,11 +86,11 @@ public class ContainerBuilder {
         return arg;
     }
 
-    public Object[] resolveArguments(Object[] arguments) {
+    private Object[] resolveArguments(Object[] arguments) {
         return Arrays.stream(arguments).map(this::resolveArgument).toArray();
     }
 
-    public Constructor<Object> resolveConstructor(Definition definition) {
+    private Constructor<Object> resolveConstructor(Definition definition) {
         try {
             Class type = Class.forName(definition.getClassName());
 
@@ -112,41 +112,37 @@ public class ContainerBuilder {
     public Object instanciate(String id, Definition definition) {
         Object service = null;
 
-        if (StringUtils.hasLength(definition.getFactoryName())) {
-            try {
+        try {
+            // if we have a factory use it to build the service.
+            if (StringUtils.hasLength(definition.getFactoryName())) {
                 Class factory = ClassUtils.resolveClassName(definition.getFactoryName(), null);
                 Method method = ClassUtils.getMethod(factory, definition.getFactoryMethodName(), new Class[]{});
                 service = ReflectionUtils.invokeMethod(method, factory.newInstance());
 
-            } catch (IllegalArgumentException | InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
+            } else {
 
-            // resolution des arguments
-            Object[] arguments = resolveArguments(definition.getArguments());
-            Constructor<Object> constructor = resolveConstructor(definition);
+                // resolution des arguments
+                Object[] arguments = resolveArguments(definition.getArguments());
+                Constructor<Object> constructor = resolveConstructor(definition);
 
-            // instatiation
-            if (constructor != null) {
-                try {
-//                System.out.println("instanciation du service : " + id);
-//                System.out.println("avec les arguments : " + Arrays.toString(arguments));
+                // instatiation
+                if (constructor != null) {
+                    //System.out.println("instanciation du service : " + id);
+                    //System.out.println("avec les arguments : " + Arrays.toString(arguments));
                     service = constructor.newInstance(arguments);
-
-                } catch (InstantiationException ex) {
-                    LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
-                } catch (IllegalAccessException ex) {
-                    LOG.log(Level.WARNING, "IllegalAccessException, we can not access to the constructor", ex);
-                } catch (IllegalArgumentException ex) {
-                    LOG.log(Level.WARNING, "IllegalArgumentException, Oops something's wrong in arguments", ex);
-                } catch (InvocationTargetException ex) {
-                    LOG.log(Level.WARNING, "InvocationTargetException, Oops something's wrong in constructor invocation", ex);
                 }
-
             }
+
+        } catch (InstantiationException ex) {
+            LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
+        } catch (IllegalAccessException ex) {
+            LOG.log(Level.WARNING, "IllegalAccessException, we can not access to the constructor", ex);
+        } catch (IllegalArgumentException ex) {
+            LOG.log(Level.WARNING, "IllegalArgumentException, Oops something's wrong in arguments", ex);
+        } catch (InvocationTargetException ex) {
+            LOG.log(Level.WARNING, "InvocationTargetException, Oops something's wrong in constructor invocation", ex);
         }
-        
+
         if (service != null) {
             if (service instanceof ContainerAwareInterface) {
                 ((ContainerAwareInterface) service).setContainer(container);
@@ -154,8 +150,7 @@ public class ContainerBuilder {
 
             this.container.set(id, service);
         }
-
-//        System.out.println("resultat de l'instanciation : " + service);
+        
         return service;
     }
 
@@ -167,7 +162,6 @@ public class ContainerBuilder {
             service = this.container.get(id);
         } catch (ContainerException ex) {
             // The service has not been instatiate yet, look into definition registry ?
-//            System.out.println("Le service n'est pas encore prêt, recherche dans les definitions");
             Definition def = this.definitions.get(id);
             if (def != null) {
                 service = instanciate(id, def);

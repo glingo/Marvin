@@ -1,6 +1,6 @@
 package com.marvin.component.templating.extension.core;
 
-import com.marvin.component.templating.Template;
+import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import com.marvin.component.templating.extension.NodeVisitorFactory;
 

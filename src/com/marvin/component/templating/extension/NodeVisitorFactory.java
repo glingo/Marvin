@@ -1,6 +1,6 @@
 package com.marvin.component.templating.extension;
 
-import com.marvin.component.templating.Template;
+import com.marvin.component.templating.template.Template;
 
 /**
  * The node visitor factory creates {@link NodeVisitor}s.

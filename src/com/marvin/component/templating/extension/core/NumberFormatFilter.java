@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
-import com.marvin.component.templating.EvaluationContext;
+import com.marvin.component.templating.template.EvaluationContext;
 import com.marvin.component.templating.extension.Filter;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

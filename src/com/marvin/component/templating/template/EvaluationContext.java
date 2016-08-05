@@ -8,9 +8,13 @@
  * that was distributed with this source code.
  *****************************************************************************
  */
-package com.marvin.component.templating;
+package com.marvin.component.templating.template;
 
+import com.marvin.component.templating.template.Template;
+import com.marvin.component.templating.template.Hierarchy;
+import com.marvin.component.templating.scope.ScopeChain;
 import com.marvin.component.templating.extension.ExtensionRegistry;
+import com.marvin.component.templating.scope.ScopeChain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

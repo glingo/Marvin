@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.marvin.component.templating.extension.i18n;
 
-import com.marvin.component.templating.EvaluationContext;
+import com.marvin.component.templating.template.EvaluationContext;
 import com.marvin.component.templating.extension.Function;
 import java.text.MessageFormat;
 import java.util.*;
