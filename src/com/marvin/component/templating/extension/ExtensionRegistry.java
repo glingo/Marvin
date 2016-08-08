@@ -6,121 +6,116 @@ import com.marvin.component.templating.tokenParser.TokenParser;
 import java.util.*;
 
 /**
- * Storage for the extensions and the components retrieved
- * from the various extensions.
- * <p>
- * Created by mitch_000 on 2015-11-28.
+ * Storage for the extensions and the components retrieved from the various
+ * extensions.
  */
 public class ExtensionRegistry {
 
     /**
      * Extensions
      */
-    private HashMap<Class<? extends Extension>, Extension> extensions = new HashMap<>();
+    private final HashMap<Class<? extends Extension>, Extension> extensions = new HashMap<>();
 
     /**
      * Unary operators used during the lexing phase.
      */
-    private Map<String, UnaryOperator> unaryOperators = new HashMap<>();
+    private final Map<String, UnaryOperator> unaryOperators = new HashMap<>();
 
     /**
      * Binary operators used during the lexing phase.
      */
-    private Map<String, BinaryOperator> binaryOperators = new HashMap<>();
+    private final Map<String, BinaryOperator> binaryOperators = new HashMap<>();
 
     /**
      * Token parsers used during the parsing phase.
      */
-    private Map<String, TokenParser> tokenParsers = new HashMap<>();
+    private final Map<String, TokenParser> tokenParsers = new HashMap<>();
 
     /**
      * Node visitors available during the parsing phase.
      */
-    private List<NodeVisitorFactory> nodeVisitors = new ArrayList<>();
+    private final List<NodeVisitorFactory> nodeVisitors = new ArrayList<>();
 
     /**
      * Filters used during the evaluation phase.
      */
-    private Map<String, Filter> filters = new HashMap<>();
+    private final Map<String, Filter> filters = new HashMap<>();
 
     /**
      * Tests used during the evaluation phase.
      */
-    private Map<String, Test> tests = new HashMap<>();
+    private final Map<String, Test> tests = new HashMap<>();
 
     /**
      * Functions used during the evaluation phase.
      */
-    private Map<String, Function> functions = new HashMap<>();
+    private final Map<String, Function> functions = new HashMap<>();
 
     /**
      * Global variables available during the evaluation phase.
      */
-    private Map<String, Object> globalVariables = new HashMap<>();
+    private final Map<String, Object> globalVariables = new HashMap<>();
 
     public ExtensionRegistry(Collection<? extends Extension> extensions) {
-
-        for (Extension extension : extensions) {
-            this.extensions.put(extension.getClass(), extension);
-
-            // token parsers
-            List<TokenParser> tokenParsers = extension.getTokenParsers();
-            if (tokenParsers != null) {
-                for (TokenParser tokenParser : tokenParsers) {
-                    this.tokenParsers.put(tokenParser.getTag(), tokenParser);
-                }
-            }
-
-            // binary operators
-            List<BinaryOperator> binaryOperators = extension.getBinaryOperators();
-            if (binaryOperators != null) {
-                for (BinaryOperator operator : binaryOperators) {
-                    if (!this.binaryOperators.containsKey(operator.getSymbol())) { // disallow overriding core operators
-                        this.binaryOperators.put(operator.getSymbol(), operator);
-                    }
-                }
-            }
-
-            // unary operators
-            List<UnaryOperator> unaryOperators = extension.getUnaryOperators();
-            if (unaryOperators != null) {
-                for (UnaryOperator operator : unaryOperators) {
-                    if (!this.unaryOperators.containsKey(operator.getSymbol())) { // disallow override core operators
-                        this.unaryOperators.put(operator.getSymbol(), operator);
-                    }
-                }
-            }
-
-            // filters
-            Map<String, Filter> filters = extension.getFilters();
-            if (filters != null) {
-                this.filters.putAll(filters);
-            }
-
-            // tests
-            Map<String, Test> tests = extension.getTests();
-            if (tests != null) {
-                this.tests.putAll(tests);
-            }
-
-            // tests
-            Map<String, Function> functions = extension.getFunctions();
-            if (functions != null) {
-                this.functions.putAll(functions);
-            }
-
-            // global variables
-            Map<String, Object> globalVariables = extension.getGlobalVariables();
-            if (globalVariables != null) {
-                this.globalVariables.putAll(globalVariables);
-            }
-
-            // node visitors
-            List<NodeVisitorFactory> nodeVisitors = extension.getNodeVisitors();
-            if (nodeVisitors != null) {
-                this.nodeVisitors.addAll(nodeVisitors);
-            }
+        addExtensions(extensions);
+    }
+    
+    private void addExtensions(Collection<? extends Extension> extensions) {
+        extensions.stream().forEach(this::addExtension);
+    }
+    
+    private void addExtension(Extension extension) {
+        
+        List<TokenParser> tParsers = extension.getTokenParsers();
+        if (tParsers != null) {
+            tParsers.stream().forEach((tokenParser) -> {
+                this.tokenParsers.put(tokenParser.getTag(), tokenParser);
+            });
         }
+        // binary operators
+        List<BinaryOperator> bOperators = extension.getBinaryOperators();
+        if (bOperators != null) {
+            bOperators.stream().filter((operator) -> (!this.binaryOperators.containsKey(operator.getSymbol()))).forEach((operator) -> {
+                // disallow overriding core operators
+                this.binaryOperators.put(operator.getSymbol(), operator);
+            });
+        }
+        // unary operators
+        List<UnaryOperator> uOperators = extension.getUnaryOperators();
+        if (uOperators != null) {
+            uOperators.stream().filter((operator) -> (!this.unaryOperators.containsKey(operator.getSymbol()))).forEach((operator) -> {
+                // disallow override core operators
+                this.unaryOperators.put(operator.getSymbol(), operator);
+            });
+        }
+        // filters
+        Map<String, Filter> efilters = extension.getFilters();
+        if (efilters != null) {
+            this.filters.putAll(efilters);
+        }
+        // tests
+        Map<String, Test> etests = extension.getTests();
+        if (etests != null) {
+            this.tests.putAll(etests);
+        }
+        // tests
+        Map<String, Function> efunctions = extension.getFunctions();
+        if (efunctions != null) {
+            this.functions.putAll(efunctions);
+        }
+        // global variables
+        Map<String, Object> eglobalVariables = extension.getGlobalVariables();
+        if (eglobalVariables != null) {
+            this.globalVariables.putAll(eglobalVariables);
+        }
+        
+        List<NodeVisitorFactory> nVisitors = extension.getNodeVisitors();
+        
+        if (nVisitors != null) {
+            this.nodeVisitors.addAll(nVisitors);
+        }
+        
+        this.extensions.put(extension.getClass(), extension);
     }
 
     public Filter getFilter(String name) {
@@ -154,17 +149,4 @@ public class ExtensionRegistry {
     public Map<String, TokenParser> getTokenParsers() {
         return this.tokenParsers;
     }
-
-    /*
-    @SuppressWarnings("unchecked")
-    public <T extends Extension> T getExtension(Class<T> clazz) {
-        return (T) this.extensions.get(clazz);
-    }
-
-
-
-    public HashMap<Class<? extends Extension>, Extension> getExtensions() {
-        return extensions;
-    }
-    */
 }

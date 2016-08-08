@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.scope;
 
 import java.util.HashMap;
@@ -39,7 +31,7 @@ public class Scope {
      * @param isLocal    Whether this scope is local or not
      */
     public Scope(Map<String, Object> backingMap, boolean isLocal) {
-        this.backingMap = backingMap == null ? new HashMap<String, Object>() : backingMap;
+        this.backingMap = backingMap == null ? new HashMap<>() : backingMap;
         this.isLocal = isLocal;
     }
 

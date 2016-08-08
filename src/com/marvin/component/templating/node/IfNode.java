@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
 import com.marvin.component.templating.template.EvaluationContext;
@@ -34,8 +26,7 @@ public class IfNode extends AbstractRenderableNode {
     }
 
     @Override
-    public void render(Template self, Writer writer, EvaluationContext context) throws Exception,
-            IOException {
+    public void render(Template self, Writer writer, EvaluationContext context) throws Exception {
 
         boolean satisfied = false;
         for (Pair<Expression<?>, BodyNode> ifStatement : conditionsWithBodies) {

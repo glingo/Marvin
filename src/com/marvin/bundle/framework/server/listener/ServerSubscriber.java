@@ -1,24 +1,12 @@
 package com.marvin.bundle.framework.server.listener;
 
 import com.marvin.bundle.framework.server.event.ServerEvent;
-import com.marvin.old.event.Event;
-import com.marvin.old.event.subscriber.SubscriberInterface;
+import com.marvin.component.event.subscriber.SubscriberInterface;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class ServerSubscriber implements SubscriberInterface<ServerEvent> {
-
-    @Override
-    public void recieve(String name, ServerEvent recieve) {
-        System.out.println("event");
-    }
-
-    @Override
-    public boolean support(String name) {
-        System.out.println(name);
-        return name.matches("^server_(.)");
-    }
 
     @Override
     public Map<String, Consumer<ServerEvent>> getSubscribedEvents() {
@@ -27,7 +15,7 @@ public class ServerSubscriber implements SubscriberInterface<ServerEvent> {
         return map;
     }
     
-    private void test(Event event){
+    private void test(ServerEvent event){
         System.out.println("test");
     }
 

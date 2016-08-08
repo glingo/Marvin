@@ -28,8 +28,6 @@ import com.marvin.component.templating.node.PrintNode;
 import com.marvin.component.templating.node.RootNode;
 import com.marvin.component.templating.node.SetNode;
 import com.marvin.component.templating.node.TextNode;
-import com.marvin.component.templating.node.expression.Expression;
-import javafx.util.Pair;
 
 /**
  * A base node visitor that can be extended for the sake of using it's
@@ -60,14 +58,14 @@ public class AbstractNodeVisitor implements NodeVisitor {
     @Override
     public void visit(ArgumentsNode node) {
         if (node.getNamedArgs() != null) {
-            for (Node arg : node.getNamedArgs()) {
+            node.getNamedArgs().stream().forEach((arg) -> {
                 arg.accept(this);
-            }
+            });
         }
         if (node.getPositionalArgs() != null) {
-            for (Node arg : node.getPositionalArgs()) {
+            node.getPositionalArgs().stream().forEach((arg) -> {
                 arg.accept(this);
-            }
+            });
         }
     }
 
@@ -83,9 +81,9 @@ public class AbstractNodeVisitor implements NodeVisitor {
 
     @Override
     public void visit(BodyNode node) {
-        for (Node child : node.getChildren()) {
+        node.getChildren().stream().forEach((child) -> {
             child.accept(this);
-        }
+        });
     }
 
     @Override

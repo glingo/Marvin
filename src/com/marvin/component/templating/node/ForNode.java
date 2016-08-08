@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
 import com.marvin.component.templating.template.EvaluationContext;
@@ -43,7 +35,7 @@ public class ForNode extends AbstractRenderableNode {
     @Override
     public void render(Template self, Writer writer, EvaluationContext context) throws Exception {
         Object iterableEvaluation = iterableExpression.evaluate(self, context);
-        Iterable<?> iterable = null;
+        Iterable<?> iterable;
 
         if (iterableEvaluation == null) {
             return;
@@ -79,7 +71,7 @@ public class ForNode extends AbstractRenderableNode {
             int length = getIteratorSize(iterableEvaluation);
             int index = 0;
 
-            Map<String, Object> loop = null;
+            Map<String, Object> loop = new HashMap<>();
 
             boolean usingExecutorService = context.getExecutorService() != null;
 
@@ -92,7 +84,6 @@ public class ForNode extends AbstractRenderableNode {
                  * get it's own distinct copy of the context.
                  */
                 if (index == 0 || usingExecutorService) {
-                    loop = new HashMap<>();
                     loop.put("first", index == 0);
                     loop.put("last", index == length - 1);
                     loop.put("length", length);
@@ -169,31 +160,25 @@ public class ForNode extends AbstractRenderableNode {
                 return new ArrayList<>(0);
             }
 
-            result = new Iterable<Object>() {
-
+            result = () -> new Iterator<Object>() {
+                
+                private int index = 0;
+                
+                private final int length = Array.getLength(obj);
+                
                 @Override
-                public Iterator<Object> iterator() {
-                    return new Iterator<Object>() {
-
-                        private int index = 0;
-
-                        private final int length = Array.getLength(obj);
-
-                        @Override
-                        public boolean hasNext() {
-                            return index < length;
-                        }
-
-                        @Override
-                        public Object next() {
-                            return Array.get(obj, index++);
-                        }
-
-                        @Override
-                        public void remove() {
-                            throw new UnsupportedOperationException();
-                        }
-                    };
+                public boolean hasNext() {
+                    return index < length;
+                }
+                
+                @Override
+                public Object next() {
+                    return Array.get(obj, index++);
+                }
+                
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
                 }
             };
         }

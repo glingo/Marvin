@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
 import com.marvin.component.templating.extension.Filter;
@@ -20,7 +12,6 @@ public class SortFilter implements Filter {
         return null;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public List<Comparable> apply(Object input, Map<String, Object> args) {
         if (input == null) {

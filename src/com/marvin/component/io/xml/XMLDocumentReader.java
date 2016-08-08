@@ -5,6 +5,7 @@
  */
 package com.marvin.component.io.xml;
 
+import com.marvin.component.parser.DelegatingParser;
 import com.marvin.component.parser.ParserResolver;
 import com.marvin.component.util.StringUtils;
 
@@ -20,7 +21,8 @@ public class XMLDocumentReader {
     public static final String IMPORT_ELEMENT = "import";
     public static final String RESOURCE_ATTRIBUTE = "resource";
 
-    protected ParserResolver parserResolver = new ParserResolver();
+    protected final ParserResolver parserResolver = new ParserResolver();
+    protected DelegatingParser parser = new DelegatingParser(parserResolver);
     protected XMLReaderContext context;
 
     public XMLDocumentReader(XMLReaderContext context) {

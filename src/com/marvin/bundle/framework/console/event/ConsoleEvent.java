@@ -1,7 +1,7 @@
 package com.marvin.bundle.framework.console.event;
 
-import com.marvin.old.event.Event;
 import com.marvin.bundle.framework.console.Console;
+import com.marvin.component.event.Event;
 
 public class ConsoleEvent extends Event {
 

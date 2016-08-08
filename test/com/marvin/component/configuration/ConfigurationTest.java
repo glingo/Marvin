@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.old.parser;
+package com.marvin.component.configuration;
 
 /**
  *
- * @author Dr.Who
- * @param <P>
- * @param <R>
+ * @author cdi305
  */
-public abstract class Parser<P, R> {
+public class ConfigurationTest {
     
-    public abstract R parse(P parsable) throws Exception;
 }

@@ -1,7 +1,6 @@
 package com.marvin.component.routing;
 
 import com.marvin.component.routing.config.Route;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -21,10 +20,6 @@ public class Router {
         return routes.values().stream().filter((Route filtered) -> {
             return filtered.getPath().matches(path);
         }).findFirst().orElse(null);
-    }
-    
-    public Map<String, Route> all() {
-        return this.routes;
     }
 
     public ConcurrentMap<String, Route> getRoutes() {

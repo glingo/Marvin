@@ -5,9 +5,8 @@
  */
 package com.marvin.bundle.debug.listener;
 
-import com.marvin.bundle.framework.console.event.ConsoleEvent;
-import com.marvin.old.event.Event;
-import com.marvin.old.event.subscriber.SubscriberInterface;
+import com.marvin.component.event.Event;
+import com.marvin.component.event.subscriber.SubscriberInterface;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -17,18 +16,6 @@ import java.util.function.Consumer;
  * @author Dr.Who
  */
 public class KernelLogSubscriber implements SubscriberInterface<Event> {
-
-    @Override
-    public void recieve(String name, Event event) {
-        System.out.println("KernelLogListener");
-        System.out.format("event : %s\n", event);
-    }
-
-    @Override
-    public boolean support(String name) {
-        System.out.println(name);
-        return name.matches("(.*)");
-    }
 
     @Override
     public Map<String, Consumer<Event>> getSubscribedEvents() {

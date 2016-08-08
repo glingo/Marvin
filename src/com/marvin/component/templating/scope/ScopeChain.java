@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.scope;
 
 import java.util.HashMap;
@@ -14,16 +6,17 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * A stack data structure used to represent the scope of variables that are currently accessible. Pushing a new scope
- * will allow the template to add variables with names of pre-existing variables without
- * overriding the originals; to access the original variables you would pop the scope again.
+ * A stack data structure used to represent the scope of variables that are currently accessible. 
+ * Pushing a new scope will allow the template to add variables with names of pre-existing variables 
+ * without overriding the originals; 
+ * to access the original variables you would pop the scope again.
  */
 public class ScopeChain {
 
     /**
      * The stack of scopes
      */
-    private LinkedList<Scope> stack = new LinkedList<>();
+    private final LinkedList<Scope> stack = new LinkedList<>();
 
     /**
      * Constructs an empty scope chain without any known scopes.
@@ -57,9 +50,10 @@ public class ScopeChain {
     public ScopeChain deepCopy() {
         ScopeChain copy = new ScopeChain();
 
-        for (Scope originalScope : stack) {
+        stack.stream().forEach((originalScope) -> {
             copy.stack.add(originalScope.shallowCopy());
-        }
+        });
+        
         return copy;
     }
 
@@ -67,7 +61,7 @@ public class ScopeChain {
      * Adds an empty non-local scope to the scope chain
      */
     public void pushScope() {
-        pushScope(new HashMap<String, Object>());
+        pushScope(new HashMap<>());
     }
 
     /**

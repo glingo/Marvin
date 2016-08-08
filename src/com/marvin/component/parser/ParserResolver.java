@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.parser;
 
 import com.marvin.component.parser.support.BigDecimalParser;
@@ -46,6 +41,12 @@ public class ParserResolver {
             new SqlTimestampParser(),
             new StringParser()
         };
+    }
+    
+    public boolean support(Object toParse) {
+        return Arrays.stream(parsers).anyMatch((Parser parser)->{
+            return Arrays.asList(parser.getTypeKeys()).contains(toParse);
+        });
     }
     
     public Parser resolve(Object toParse) {

@@ -5,7 +5,7 @@
  */
 package com.marvin.bundle.framework.server.event;
 
-import com.marvin.old.event.Event;
+import com.marvin.component.event.Event;
 import java.net.Socket;
 
 /**

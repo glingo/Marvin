@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.old.templating;
+package com.marvin.component.configuration.node;
 
 /**
  *
- * @author Dr.Who
+ * @author cdi305
  */
-public class Renderer {
+public interface NodeParentInterface extends NodeInterface {
     
 }

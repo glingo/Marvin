@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.escaper;
 
 import com.marvin.component.templating.extension.Filter;
@@ -41,10 +33,12 @@ public class EscapeFilter implements Filter {
         strategies.put("url_param", Escape::uriParam);
     }
 
+    @Override
     public List<String> getArgumentNames() {
         return argumentNames;
     }
 
+    @Override
     public Object apply(Object inputObject, Map<String, Object> args) {
         if (inputObject == null || inputObject instanceof SafeString) {
             return inputObject;

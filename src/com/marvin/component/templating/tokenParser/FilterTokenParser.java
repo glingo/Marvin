@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.tokenParser;
 
 import com.marvin.component.templating.node.BodyNode;
@@ -15,7 +7,6 @@ import com.marvin.component.templating.node.expression.Expression;
 import com.marvin.component.templating.node.expression.FilterExpression;
 import com.marvin.component.templating.node.expression.RenderableNodeExpression;
 import com.marvin.component.templating.parser.Parser;
-import com.marvin.component.templating.parser.StoppingCondition;
 import com.marvin.component.templating.token.Token;
 import com.marvin.component.templating.token.TokenStream;
 import com.marvin.component.templating.token.Type;

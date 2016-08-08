@@ -154,8 +154,8 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             try {
                 String value = ele.getAttribute(VALUE_ATTRIBUTE);
                 Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-                Parser parser = parserResolver.resolve(type);
-                return parser.parse(value);
+//                Parser parser = parserResolver.resolve(type);
+                return parser.parse(type, value);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -223,8 +223,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         
         try {
             Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-            Parser parser = parserResolver.resolve(type);
-            return parser.parse(value);
+            return parser.parse(type, value);
         } catch (ClassNotFoundException ex) {
             return value;
         }
@@ -238,8 +237,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         if (StringUtils.hasLength(id)) {
             try {
                 Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-                Parser parser = parserResolver.resolve(type);
-                builder.addParameter(id, parser.parse(valueAttr));
+                builder.addParameter(id, parser.parse(type, valueAttr));
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
             }

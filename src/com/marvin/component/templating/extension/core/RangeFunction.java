@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
 import com.marvin.component.templating.extension.Function;
@@ -19,10 +11,12 @@ import java.util.Map;
  * @author Eric Bussieres
  */
 public class RangeFunction implements Function {
+    
     public static final String FUNCTION_NAME = "range";
     private static final String PARAM_END = "end";
     private static final String PARAM_INCREMENT = "increment";
     private static final String PARAM_START = "start";
+    
     private final List<String> argumentNames = new ArrayList<>();
 
     public RangeFunction() {

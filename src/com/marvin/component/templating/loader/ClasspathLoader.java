@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.loader;
 
 import com.marvin.component.util.PathUtils;
@@ -29,7 +21,7 @@ public class ClasspathLoader implements Loader<String> {
 
     private String charset = "UTF-8";
 
-    private char expectedSeparator = '/';
+    private final char expectedSeparator = '/';
 
     private final ClassLoader rcl;
 
@@ -44,10 +36,9 @@ public class ClasspathLoader implements Loader<String> {
     @Override
     public Reader getReader(String templateName) throws Exception {
 
-        InputStreamReader isr = null;
         Reader reader = null;
-
-        InputStream is = null;
+        InputStreamReader isr;
+        InputStream is;
 
         // append the prefix and make sure prefix ends with a separator character
         StringBuilder path = new StringBuilder(128);
@@ -61,9 +52,13 @@ public class ClasspathLoader implements Loader<String> {
                 path.append(expectedSeparator);
             }
         }
+        
         path.append(templateName);
-        if (getSuffix() != null)
+        
+        if (getSuffix() != null) {
             path.append(getSuffix());
+        }
+        
         String location = path.toString();
         logger.log(Level.FINE, "Looking for template in {}.", location);
 

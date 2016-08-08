@@ -1,7 +1,7 @@
 package com.marvin.bundle.framework.server.event;
 
-import com.marvin.old.event.Event;
 import com.marvin.bundle.framework.server.Server;
+import com.marvin.component.event.Event;
 
 public class ServerEvent extends Event {
 

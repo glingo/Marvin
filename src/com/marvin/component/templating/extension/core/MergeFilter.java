@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
 import com.marvin.component.templating.extension.Filter;
@@ -45,7 +37,7 @@ public class MergeFilter implements Filter {
             return mergeAsMap((Map<?, ?>) input, items);
         } else if (input instanceof List) {
             return mergeAsList((List<?>) input, items);
-        } else if (input.getClass().isArray()) {
+        } else if (input != null && input.getClass().isArray()) {
             return mergeAsArray(input, items);
         } else {
             throw new IllegalArgumentException("The object being filtered is not a Map/List/Array");
@@ -57,12 +49,12 @@ public class MergeFilter implements Filter {
         Map<Object, Object> output = null;
         if (arg2 instanceof Map) {
             Map<?, ?> collection2 = (Map<?, ?>) arg2;
-            output = new HashMap<Object, Object>(collection1.size() + collection2.size() + 16);
+            output = new HashMap<>(collection1.size() + collection2.size() + 16);
             output.putAll(collection1);
             output.putAll(collection2);
         } else if (arg2 instanceof List) {
             List<?> collection2 = (List<?>) arg2;
-            output = new HashMap<Object, Object>(collection1.size() + collection2.size() + 16);
+            output = new HashMap<>(collection1.size() + collection2.size() + 16);
             output.putAll(collection1);
             for (Object o : collection2) {
                 output.put(o, o);
@@ -79,12 +71,12 @@ public class MergeFilter implements Filter {
         List<Object> output = null;
         if (arg2 instanceof Map) {
             Map<?, ?> collection2 = (Map<?, ?>) arg2;
-            output = new ArrayList<Object>(collection1.size() + collection2.size() + 16);
+            output = new ArrayList<>(collection1.size() + collection2.size() + 16);
             output.addAll(collection1);
             output.addAll(collection2.entrySet());
         } else if (arg2 instanceof List) {
             List<?> collection2 = (List<?>) arg2;
-            output = new ArrayList<Object>(collection1.size() + collection2.size() + 16);
+            output = new ArrayList<>(collection1.size() + collection2.size() + 16);
             output.addAll(collection1);
             output.addAll(collection2);
         } else {

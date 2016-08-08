@@ -52,6 +52,7 @@ public abstract class Kernel {
     abstract protected Bundle[] registerBundles();
 
     public Kernel() {
+        
     }
     
     public Kernel(boolean debug) {
@@ -79,26 +80,26 @@ public abstract class Kernel {
         this.booted = true;
 
         this.dispatcher.dispatch(KernelEvents.AFTER_LOAD, new KernelEvent(this));
-
-        if(debug) {
-            
-            System.out.println("\n\n\nKernel booted");
-
-            System.out.println("----------------Liste des services----------------");
-            this.getContainer().getServices().forEach((String id, Object service) -> {
-                System.out.println(id + ": " + service);
-            });
-
-            System.out.println("-----------------Liste des routes-----------------");
-            this.router.getRoutes().forEach((String name, Route route) -> {
-                System.out.print("name : " + name);
-                System.out.print(", controller : " + route.getController());
-                System.out.print(", path : " + route.getPath());
-                System.out.println();
-            });
-            
-            System.out.println("\n\n\n");
-        }
+//
+//        if(debug) {
+//            
+//            System.out.println("\n\n\nKernel booted");
+//
+//            System.out.println("----------------Liste des services----------------");
+//            this.getContainer().getServices().forEach((String id, Object service) -> {
+//                System.out.println(id + ": " + service);
+//            });
+//
+//            System.out.println("-----------------Liste des routes-----------------");
+//            this.router.getRoutes().forEach((String name, Route route) -> {
+//                System.out.print("name : " + name);
+//                System.out.print(", controller : " + route.getController());
+//                System.out.print(", path : " + route.getPath());
+//                System.out.println();
+//            });
+//            
+//            System.out.println("\n\n\n");
+//        }
     }
 
     protected void initializeBundles() {
@@ -109,14 +110,11 @@ public abstract class Kernel {
     protected void initializeContainer(ResourceLoader loader) {
 
         ContainerBuilder builder = new ContainerBuilder();
+        
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
         
         reader.read("resources/parameters.xml");
         reader.read("resources/services.xml");
-        
-        this.bundles.values().forEach((Bundle bundle) -> {
-            bundle.build(builder);
-        });
         
         // Inject the kernel as a service
         builder.set("kernel", this);
@@ -128,6 +126,10 @@ public abstract class Kernel {
         builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
         // Inject the logger as a service
 //        this.container.set("logger", this.logger);
+        
+        this.bundles.values().forEach((Bundle bundle) -> {
+            bundle.build(builder);
+        });
         
         this.container = builder.build();
 
@@ -180,8 +182,7 @@ public abstract class Kernel {
                 return;
             }
 
-            
-            Controller controller = this.resolver.createController(route.getController());
+            Controller controller = this.resolver.resolveController(route.getController());
 
             if (controller == null) {
                 writer.format("No controller set for %s\n", uri);

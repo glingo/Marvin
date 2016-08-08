@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.loader;
 
 import com.marvin.component.util.PathUtils;
@@ -30,15 +22,12 @@ public class FileLoader implements Loader<String> {
 
     private String charset = "UTF-8";
 
-    private char expectedSeparator = '/';
-
     @Override
     public Reader getReader(String templateName) throws Exception {
 
-        InputStreamReader isr = null;
         Reader reader = null;
-
         InputStream is = null;
+        InputStreamReader isr;
 
         // add the prefix and ensure the prefix ends with a separator character
         StringBuilder path = new StringBuilder("");

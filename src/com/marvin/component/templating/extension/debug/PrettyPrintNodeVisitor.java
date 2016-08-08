@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.debug;
 
 import com.marvin.component.templating.template.Template;
@@ -37,21 +29,24 @@ import com.marvin.component.templating.node.expression.UnaryExpression;
 
 public class PrettyPrintNodeVisitor extends AbstractNodeVisitor {
 
-    public PrettyPrintNodeVisitor(Template template) {
-        super(template);
-    }
-
-    private StringBuilder output = new StringBuilder();
-
+    private final StringBuilder output;
     private int level = 0;
 
+    public PrettyPrintNodeVisitor(Template template) {
+        super(template);
+        this.output = new StringBuilder();
+    }
+
     private void write(String message) {
+        
         for (int i = 0; i < level - 1; i++) {
             output.append("| ");
         }
+        
         if (level > 0) {
             output.append("|-");
         }
+        
         output.append(message.toUpperCase()).append("\n");
     }
 

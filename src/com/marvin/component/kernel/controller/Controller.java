@@ -20,11 +20,15 @@ public class Controller {
     public void run() {
         synchronized (this) {
             long start = new Date().getTime();
+            
             try {
+                
                 this.action.invoke(this.holder);
+                
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
             long end = new Date().getTime();
             System.out.format("Controller executed in %s ms\n", end - start);
 

@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.old.templating;
+package com.marvin.component.configuration;
+
+import com.marvin.component.configuration.builder.TreeBuilder;
 
 /**
  *
- * @author Dr.Who
+ * @author cdi305
  */
-public class Template {
+public interface ConfigurationInterface {
     
-    protected String template = "";
+    TreeBuilder getConfigTreeBuilder();
     
 }

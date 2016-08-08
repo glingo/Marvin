@@ -14,12 +14,16 @@ import java.lang.reflect.Method;
  */
 public class ControllerResolver {
     
-    protected Object instantiateController(Class<?> controller) throws Exception{
+    protected Object instantiateController(Class<?> controller) throws Exception {
         return controller.newInstance();
     }
     
-    public Controller createController(String name) throws Exception
-    {
+    protected Controller createController(Class cl, Method meth) throws Exception {
+        return new Controller(this.instantiateController(cl), meth);
+    }
+    
+    public Controller resolveController(String name) throws Exception {
+    
         if (false == name.contains("::")) {
             throw new Exception(String.format("Unable to find controller '%s'.", name));
         }
@@ -28,11 +32,11 @@ public class ControllerResolver {
         
         String className = split[0];
         String methodName = split[1];
-
+        
         Class<?> clazz = ClassUtils.resolveClassName(className, null);
-
+        
         Method action = ClassUtils.getMethod(clazz, methodName, new Class[]{});
 
-        return new Controller(this.instantiateController(clazz), action);
+        return createController(clazz, action);
     }
 }

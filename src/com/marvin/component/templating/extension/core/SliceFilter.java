@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
 import com.marvin.component.templating.extension.Filter;
@@ -39,12 +31,11 @@ public class SliceFilter implements Filter {
         // argument parsing
         Object argFrom = args.get("fromIndex");
 
-        if (argFrom == null) {
-            // defaults to 0
-            argFrom = Long.valueOf(0);
+        if (argFrom == null) { // defaults to 0
+            argFrom = (long) 0;
         } else if (!(argFrom instanceof Number)) {
-            throw new IllegalArgumentException("Argument fromIndex must be a number. Actual type: "
-                    + (argFrom == null ? "null" : argFrom.getClass().getName()));
+            String msg = String.format("Argument fromIndex must be a number. Actual type: %s", (argFrom == null ? "null" : argFrom.getClass().getName()));
+            throw new IllegalArgumentException(msg);
         }
         int from = ((Number) argFrom).intValue();
         if (from < 0) {
@@ -57,8 +48,8 @@ public class SliceFilter implements Filter {
             // defaults to input length
             // argTo == null;
         } else if (!(argTo instanceof Number)) {
-            throw new IllegalArgumentException("Argument toIndex must be a number. Actual type: "
-                    + (argTo == null ? "null" : argTo.getClass().getName()));
+            String msg = String.format("Argument fromIndex must be a number. Actual type: %s", (argFrom == null ? "null" : argFrom.getClass().getName()));
+            throw new IllegalArgumentException(msg);
         }
 
         int length;
@@ -69,8 +60,7 @@ public class SliceFilter implements Filter {
         } else if (input instanceof String) {
             length = ((String) input).length();
         } else {
-            throw new IllegalArgumentException(
-                    "Slice filter can only be applied to String, List and array inputs. Actual type was: "
+            throw new IllegalArgumentException("Slice filter can only be applied to String, List and array inputs. Actual type was: "
                             + input.getClass().getName());
         }
         int to;

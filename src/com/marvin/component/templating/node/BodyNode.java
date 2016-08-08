@@ -20,6 +20,13 @@ public class BodyNode extends AbstractRenderableNode {
 
     private final List<RenderableNode> children;
 
+    private static final List<Class<? extends Node>> nodesToRenderInChild = new ArrayList<>();
+
+    static {
+        nodesToRenderInChild.add(SetNode.class);
+        nodesToRenderInChild.add(ImportNode.class);
+    }
+
     /**
      * When a template extends a parent template there are very few nodes in the
      * child that should actually get rendered such as set and import. All
@@ -59,13 +66,6 @@ public class BodyNode extends AbstractRenderableNode {
 
     public void setOnlyRenderInheritanceSafeNodes(boolean onlyRenderInheritanceSafeNodes) {
         this.onlyRenderInheritanceSafeNodes = onlyRenderInheritanceSafeNodes;
-    }
-
-    private static List<Class<? extends Node>> nodesToRenderInChild = new ArrayList<>();
-
-    static {
-        nodesToRenderInChild.add(SetNode.class);
-        nodesToRenderInChild.add(ImportNode.class);
     }
 
 }

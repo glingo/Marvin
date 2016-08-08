@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.extension.core;
 
 import com.marvin.component.templating.extension.AbstractExtension;
@@ -50,6 +42,7 @@ import com.marvin.component.templating.tokenParser.MacroTokenParser;
 import com.marvin.component.templating.tokenParser.ParallelTokenParser;
 import com.marvin.component.templating.tokenParser.SetTokenParser;
 import com.marvin.component.templating.tokenParser.TokenParser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,9 +64,6 @@ public class CoreExtension extends AbstractExtension {
         parsers.add(new MacroTokenParser());
         parsers.add(new ParallelTokenParser());
         parsers.add(new SetTokenParser());
-//        parsers.add(new CacheTokenParser());
-
-        // verbatim tag is implemented directly in the LexerImpl
         return parsers;
     }
 

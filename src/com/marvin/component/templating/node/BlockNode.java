@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
 import com.marvin.component.templating.template.Block;
@@ -32,8 +24,7 @@ public class BlockNode extends AbstractRenderableNode {
     }
 
     @Override
-    public void render(final Template self, Writer writer, EvaluationContext context) throws Exception,
-            IOException {
+    public void render(final Template self, Writer writer, EvaluationContext context) throws Exception {
         self.block(writer, context, name, false);
     }
 
@@ -53,7 +44,6 @@ public class BlockNode extends AbstractRenderableNode {
             @Override
             public void evaluate(Template self, Writer writer, EvaluationContext context) throws Exception, IOException {
                 body.render(self, writer, context);
-
             }
         };
     }
@@ -65,5 +55,5 @@ public class BlockNode extends AbstractRenderableNode {
     public String getName() {
         return name;
     }
-
+    
 }

@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * 
- * Copyright (c) 2014 by Mitchell Bösecke
- * 
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
 import com.marvin.component.templating.template.EvaluationContext;
@@ -14,14 +6,13 @@ import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 public class ParallelNode extends AbstractRenderableNode {
 
-    private final Logger logger = Logger.getLogger(ParallelNode.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ParallelNode.class.getName());
 
     private final BodyNode body;
 
@@ -46,7 +37,7 @@ public class ParallelNode extends AbstractRenderableNode {
         if (es == null) {
 
             if (!hasWarnedAboutNonExistingExecutorService) {
-                logger.info(String.format(
+                LOGGER.info(String.format(
                         "The parallel tag was used [%s:%d] but no ExecutorService was provided. The parallel tag will be ignored "
                                 + "and it's contents will be rendered in sequence with the rest of the template.",
                         self.getName(), getLineNumber()));
@@ -66,16 +57,13 @@ public class ParallelNode extends AbstractRenderableNode {
             final StringWriter newStringWriter = new StringWriter();
             final Writer newFutureWriter = new FutureWriter(newStringWriter);
 
-            Future<String> future = es.submit(new Callable<String>() {
-
-                @Override
-                public String call() throws Exception {
-                    body.render(self, newFutureWriter, contextCopy);
-                    newFutureWriter.flush();
-                    newFutureWriter.close();
-                    return newStringWriter.toString();
-                }
+            Future<String> future = es.submit(() -> {
+                body.render(self, newFutureWriter, contextCopy);
+                newFutureWriter.flush();
+                newFutureWriter.close();
+                return newStringWriter.toString();
             });
+            
             ((FutureWriter) writer).enqueue(future);
         }
     }

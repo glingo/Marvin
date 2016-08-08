@@ -26,7 +26,7 @@ public abstract class AbstractRenderableNode implements RenderableNode {
         return lineNumber;
     }
 
-    public void setLineNumber(int lineNumber) {
+    public final void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
 }

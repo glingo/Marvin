@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
 import com.marvin.component.templating.template.EvaluationContext;
@@ -92,8 +84,7 @@ public class ArgumentsNode implements Node {
                         String msg = String.format("The following named argument does not exist: %s at line %s in file %s", arg.getName(), this.lineNumber, self.getName());
                         throw new Exception(msg);
                     }
-                    Object value = arg.getValueExpression() == null ? null : arg.getValueExpression().evaluate(self,
-                            context);
+                    Object value = arg.getValueExpression() == null ? null : arg.getValueExpression().evaluate(self, context);
                     result.put(arg.getName(), value);
                 }
             }

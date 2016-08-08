@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class DefinedTest extends NullTest {
 
+    @Override
     public boolean apply(Object input, Map<String, Object> args) {
         return !super.apply(input, args);
     }
