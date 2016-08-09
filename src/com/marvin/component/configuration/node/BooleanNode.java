@@ -11,6 +11,10 @@ package com.marvin.component.configuration.node;
  */
 public class BooleanNode extends ScalarNode {
 
+    public BooleanNode(String name) {
+        super(name);
+    }
+        
     public BooleanNode(String name, NodeInterface parent) {
         super(name, parent);
     }

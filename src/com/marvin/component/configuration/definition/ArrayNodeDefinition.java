@@ -9,7 +9,11 @@ import com.marvin.component.configuration.node.NodeParentInterface;
  */
 public class ArrayNodeDefinition extends NodeDefinition {
 
-    public ArrayNodeDefinition(String name, NodeParentInterface parent) {
+     public ArrayNodeDefinition(String name) {
+        super(name);
+    }
+
+    public ArrayNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
 

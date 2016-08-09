@@ -1,6 +1,7 @@
 package com.marvin.component.configuration.definition;
 
 import com.marvin.component.configuration.builder.NodeBuilder;
+import com.marvin.component.configuration.node.NodeParentInterface;
 
 /**
  *
@@ -10,7 +11,9 @@ public interface ParentNodeDefinitionInterface {
     
     NodeBuilder children();
     
-    ParentNodeDefinitionInterface append(NodeDefinition definition);
+//    ParentNodeDefinitionInterface append(NodeDefinition definition);
     
     void setBuilder(NodeBuilder builder);
+    
+    NodeParentInterface end();
 }

@@ -10,7 +10,11 @@ import com.marvin.component.configuration.node.NodeParentInterface;
  */
 public class IntegerNodeDefinition extends NumericNodeDefinition {
 
-    public IntegerNodeDefinition(String name, NodeParentInterface parent) {
+    public IntegerNodeDefinition(String name) {
+        super(name);
+    }
+        
+    public IntegerNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     

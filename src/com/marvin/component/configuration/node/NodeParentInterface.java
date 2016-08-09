@@ -5,10 +5,17 @@
  */
 package com.marvin.component.configuration.node;
 
+import com.marvin.component.configuration.definition.NodeDefinition;
+
 /**
  *
  * @author cdi305
  */
-public interface NodeParentInterface extends NodeInterface {
+public interface NodeParentInterface {
+    
+    NodeParentInterface end();
+    
+    NodeParentInterface append(NodeDefinition definition);
+//    void addChild(Node node);
     
 }

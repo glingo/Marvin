@@ -7,6 +7,7 @@ package com.marvin.component.configuration.builder;
 
 import com.marvin.component.configuration.definition.NodeDefinition;
 import com.marvin.component.configuration.node.NodeInterface;
+import com.marvin.component.configuration.node.NodeParentInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,11 +33,7 @@ public class TreeBuilder {
         
         this.builder = builder;
         
-        try {
-            this.root = this.builder.node(name, type);
-        } catch (Exception ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.root = this.builder.node(name, type);
         
         return this.root;
     }

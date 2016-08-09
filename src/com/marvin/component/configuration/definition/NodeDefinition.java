@@ -17,25 +17,37 @@ public abstract class NodeDefinition {
     protected boolean required;
     protected boolean allowEmptyValue;
     
-    protected NodeParentInterface parent;
+    protected NodeInterface parent;
     protected HashMap<String, Object> attributes;
     protected NodeBuilder builder;
 
-    public NodeDefinition(String name, NodeParentInterface parent) {
+    public NodeDefinition(String name) {
+        this.name = name;
+    }
+        
+    public NodeDefinition(String name, NodeInterface parent) {
         this.name = name;
         this.parent = parent;
     }
     
     public abstract NodeInterface createNode();
-
+    
+//    @Override
+    public NodeInterface end(){
+        return this.parent;
+    }
+    
+//    @Override
     public NodeBuilder children() {
         return builder;
     }
 
+//    @Override
     public void setBuilder(NodeBuilder builder) {
         this.builder = builder;
     }
 
+//    @Override
     public String getName() {
         return name;
     }
@@ -79,11 +91,11 @@ public abstract class NodeDefinition {
     }
 
 //    @Override
-    public NodeParentInterface getParent() {
+    public NodeInterface getParent() {
         return parent;
     }
 
-    public void setParent(NodeParentInterface parent) {
+    public void setParent(NodeInterface parent) {
         this.parent = parent;
     }
 

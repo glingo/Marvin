@@ -10,7 +10,11 @@ import com.marvin.component.configuration.node.ScalarNode;
  */
 public class ScalarNodeDefinition extends VariableNodeDefinition {
 
-    public ScalarNodeDefinition(String name, NodeParentInterface parent) {
+    public ScalarNodeDefinition(String name) {
+        super(name);
+    }
+    
+    public ScalarNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
 

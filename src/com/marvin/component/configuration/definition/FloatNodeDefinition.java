@@ -10,7 +10,11 @@ import com.marvin.component.configuration.node.NodeParentInterface;
  */
 public class FloatNodeDefinition extends NumericNodeDefinition {
 
-    public FloatNodeDefinition(String name, NodeParentInterface parent) {
+    public FloatNodeDefinition(String name) {
+        super(name);
+    }
+    
+    public FloatNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     

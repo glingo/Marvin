@@ -9,7 +9,7 @@ import com.marvin.component.configuration.node.NodeParentInterface;
  */
 public class BooleanNodeDefinition extends ScalarNodeDefinition {
 
-    public BooleanNodeDefinition(String name, NodeParentInterface parent) {
+    public BooleanNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     

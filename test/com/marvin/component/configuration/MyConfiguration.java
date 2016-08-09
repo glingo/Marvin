@@ -20,7 +20,11 @@ public class MyConfiguration implements ConfigurationInterface {
         
         NodeDefinition root = builder.root("montest");
         
-//        root.children().arrayNode("test").end();
+        root
+            .children().arrayNode("test")
+                .children()
+                .end()
+            .end();
         
         return builder;
     }

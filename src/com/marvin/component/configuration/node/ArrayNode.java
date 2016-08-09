@@ -16,6 +16,10 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     protected boolean addIfNotSet = false;
     protected ConcurrentHashMap<String, NodeInterface> children;
     
+    public ArrayNode(String name) {
+        super(name);
+    }
+    
     public ArrayNode(String name, NodeInterface parent) {
         super(name, parent);
     }

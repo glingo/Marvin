@@ -9,7 +9,11 @@ import com.marvin.component.configuration.node.NodeParentInterface;
  */
 public class EnumNodeDefinition extends ScalarNodeDefinition {
 
-    public EnumNodeDefinition(String name, NodeParentInterface parent) {
+    public EnumNodeDefinition(String name) {
+        super(name);
+    }
+    
+    public EnumNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     

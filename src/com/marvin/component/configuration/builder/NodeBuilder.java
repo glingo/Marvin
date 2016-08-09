@@ -6,10 +6,17 @@
 package com.marvin.component.configuration.builder;
 
 import com.marvin.component.configuration.definition.ArrayNodeDefinition;
+import com.marvin.component.configuration.definition.BooleanNodeDefinition;
+import com.marvin.component.configuration.definition.EnumNodeDefinition;
+import com.marvin.component.configuration.definition.FloatNodeDefinition;
+import com.marvin.component.configuration.definition.IntegerNodeDefinition;
 import com.marvin.component.configuration.definition.NodeDefinition;
-import com.marvin.component.configuration.definition.NodeDefinitions;
-import com.marvin.component.configuration.definition.ParentNodeDefinitionInterface;
+import com.marvin.component.configuration.definition.ScalarNodeDefinition;
+import com.marvin.component.configuration.definition.VariableNodeDefinition;
+import com.marvin.component.configuration.node.NodeParentInterface;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,34 +24,49 @@ import java.util.logging.Logger;
  *
  * @author cdi305
  */
-public class NodeBuilder {
+public class NodeBuilder implements NodeParentInterface {
     
-    protected ParentNodeDefinitionInterface parent;
-    
-    public NodeDefinition node(String name, String type) throws Exception{
-        Class<NodeDefinition> cl = NodeDefinitions.getDefinitionClass(type);
-        Constructor<NodeDefinition> ctr = cl.getConstructor(new Class[]{String.class});
-        return ctr.newInstance(name);
+    protected NodeParentInterface parent;
+    protected HashMap<String, Class> definitionMapping;
+
+    public NodeBuilder() {
+        HashMap<String, Class> definitions = new HashMap();
+        definitions.put("variable", VariableNodeDefinition.class);
+        definitions.put("scalar", ScalarNodeDefinition.class);
+        definitions.put("boolean", BooleanNodeDefinition.class);
+        definitions.put("integer", IntegerNodeDefinition.class);
+        definitions.put("float", FloatNodeDefinition.class);
+        definitions.put("array", ArrayNodeDefinition.class);
+        definitions.put("enum", EnumNodeDefinition.class);
+        this.definitionMapping = definitions;
     }
     
-    public ArrayNodeDefinition arrayNode(String name) {
+    public NodeDefinition node(String name, String type) {
+        NodeDefinition node = null;
         try {
-            return (ArrayNodeDefinition) this.node(name, "array");
-        } catch (Exception ex) {
+            Class<NodeDefinition> cl = this.definitionMapping.getOrDefault(type, null);
+            Constructor<NodeDefinition> ctr = cl.getConstructor(new Class[]{String.class});
+            node = ctr.newInstance(name);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(NodeBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return node;
+    }
+    
+    public NodeDefinition arrayNode(String name) {
+        return this.node(name, "array");
     }
 
-    public void setParent(ParentNodeDefinitionInterface parent) {
+    public void setParent(NodeParentInterface parent) {
         this.parent = parent;
     }
     
-    public ParentNodeDefinitionInterface end(){
+    public NodeParentInterface end(){
         return this.parent;
     }
     
-    public NodeBuilder append(NodeDefinition definition) {
+    @Override
+    public NodeParentInterface append(NodeDefinition definition) {
 
         try {
             definition.setBuilder((NodeBuilder) this.clone());

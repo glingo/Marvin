@@ -10,7 +10,11 @@ import com.marvin.component.configuration.node.VariableNode;
  */
 public class VariableNodeDefinition extends NodeDefinition {
 
-    public VariableNodeDefinition(String name, NodeParentInterface parent) {
+    public VariableNodeDefinition(String name) {
+        super(name);
+    }
+    
+    public VariableNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     
@@ -26,5 +30,4 @@ public class VariableNodeDefinition extends NodeDefinition {
         
         return node;
     }
-
 }

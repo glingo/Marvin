@@ -1,5 +1,6 @@
 package com.marvin.component.configuration.definition;
 
+import com.marvin.component.configuration.node.NodeInterface;
 import com.marvin.component.configuration.node.NodeParentInterface;
 
 /**
@@ -11,7 +12,11 @@ public abstract class NumericNodeDefinition extends ScalarNodeDefinition {
     protected Number max;
     protected Number min;
     
-    public NumericNodeDefinition(String name, NodeParentInterface parent) {
+    public NumericNodeDefinition(String name) {
+        super(name);
+    }
+    
+    public NumericNodeDefinition(String name, NodeInterface parent) {
         super(name, parent);
     }
     

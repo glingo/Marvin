@@ -10,6 +10,10 @@ public abstract class Node implements NodeInterface {
     protected NodeInterface parent;
     protected boolean required;
     protected Object[] attributes;
+    
+    public Node(String name) {
+        this.name = name;
+    }
 
     public Node(String name, NodeInterface parent) {
         this.name = name;

@@ -15,6 +15,10 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
     protected boolean allowEmptyValue = true;
     protected Object defaultValue;
     
+    public VariableNode(String name) {
+        super(name);
+    }
+        
     public VariableNode(String name, NodeInterface parent) {
         super(name, parent);
     }
