@@ -1,27 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.marvin.component.configuration.builder;
+package com.marvin.component.config_test.builder;
 
-import com.marvin.component.configuration.builder.definition.NodeDefinition;
-import com.marvin.component.configuration.builder.node.NodeInterface;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.marvin.component.config_test.builder.definition.NodeDefinition;
 
-/**
- *
- * @author cdi305
- */
-public class TreeBuilder extends NodeBuilder {
+public class TreeBuilder {
     
     protected NodeInterface tree;
     protected NodeDefinition root;
     protected NodeBuilder builder;
     
-    public NodeDefinition root(String name) throws Exception {
-        return this.root(name, "array", null);
+    public ParentNodeDefinitionInterface root(String name) throws Exception {
+        return (ParentNodeDefinitionInterface) this.root(name, "array", null);
     }
     
     public NodeDefinition root(String name, String type, NodeBuilder builder) throws Exception {
@@ -33,8 +21,6 @@ public class TreeBuilder extends NodeBuilder {
         this.builder = builder;
         
         this.root = this.builder.node(name, type);
-        
-        this.root.setParent(this);
         
         return this.root;
     }

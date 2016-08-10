@@ -3,16 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component.configuration;
-
-import com.marvin.component.configuration.builder.TreeBuilder;
+package com.marvin.component.configuration.builder.node;
 
 /**
  *
  * @author cdi305
  */
-public interface ConfigurationInterface {
+public interface PrototypeNodeInterface extends NodeInterface {
     
-    TreeBuilder getConfigTreeBuilder() throws Exception;
-    
+    void setName(String name);
 }

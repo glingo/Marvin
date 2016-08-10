@@ -1,14 +1,11 @@
-package com.marvin.component.configuration.builder;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.marvin.component.config_test.builder;
 
-import com.marvin.component.configuration.builder.definition.ArrayNodeDefinition;
-import com.marvin.component.configuration.builder.definition.BooleanNodeDefinition;
-import com.marvin.component.configuration.builder.definition.EnumNodeDefinition;
-import com.marvin.component.configuration.builder.definition.FloatNodeDefinition;
-import com.marvin.component.configuration.builder.definition.IntegerNodeDefinition;
-import com.marvin.component.configuration.builder.definition.NodeDefinition;
-import com.marvin.component.configuration.builder.definition.ParentNodeDefinitionInterface;
-import com.marvin.component.configuration.builder.definition.ScalarNodeDefinition;
-import com.marvin.component.configuration.builder.definition.VariableNodeDefinition;
+import com.marvin.component.config_test.builder.definition.*;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
@@ -16,9 +13,8 @@ import java.util.HashMap;
  *
  * @author cdi305
  */
-public class NodeBuilder implements NodeParentInterface {
+public class NodeBuilder {
     
-    protected NodeParentInterface parent;
     protected HashMap<String, Class> definitionMapping;
 
     public NodeBuilder() {
@@ -31,6 +27,22 @@ public class NodeBuilder implements NodeParentInterface {
         definitions.put("array", ArrayNodeDefinition.class);
         definitions.put("enum", EnumNodeDefinition.class);
         this.definitionMapping = definitions;
+    }
+    
+    public NodeBuilder append(NodeDefinition definition) throws CloneNotSupportedException {
+
+        if(definition instanceof ParentNodeDefinitionInterface) {
+            ParentNodeDefinitionInterface def = (ParentNodeDefinitionInterface) definition;
+            NodeBuilder builder = (NodeBuilder) this.clone();
+            def.setBuilder(builder);
+        }
+
+        if(this.parent != null) {
+            this.parent.append(definition);
+            definition.setParent(this);
+        }
+        
+        return this;
     }
     
     public NodeDefinition node(String name, String type) throws Exception {
@@ -65,38 +77,7 @@ public class NodeBuilder implements NodeParentInterface {
         return this.node(name, "scalar");
     }
     
-    public NodeDefinition arrayNode(String name) throws Exception {
-        return this.node(name, "array");
+    public ParentNodeDefinitionInterface arrayNode(String name) throws Exception {
+        return (ParentNodeDefinitionInterface) this.node(name, "array");
     }
-
-    public void setParent(NodeParentInterface parent) {
-        this.parent = parent;
-    }
-    
-    public NodeParentInterface end(){
-        return this.parent;
-    }
-    
-    public NodeBuilder append(NodeDefinition definition) throws CloneNotSupportedException {
-
-        if(definition instanceof ParentNodeDefinitionInterface) {
-            NodeBuilder builder = (NodeBuilder) this.clone();
-            definition.setBuilder(builder);
-        }
-
-        if(this.parent != null) {
-            this.parent.append(definition);
-            definition.setParent(this);
-        }
-        
-        return this;
-    }
-
-//    @Override
-//    protected Object clone() throws CloneNotSupportedException {
-//        NodeBuilder builder = (NodeBuilder) super.clone();
-//        builder.setParent(null);
-//        return builder;
-//    }
-
 }

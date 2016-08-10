@@ -1,7 +1,9 @@
-package com.marvin.component.configuration;
+package com.marvin.component.config_test;
 
-import com.marvin.component.configuration.builder.TreeBuilder;
-import com.marvin.component.configuration.builder.definition.NodeDefinition;
+import com.marvin.component.config_test.builder.ParentNodeDefinitionInterface;
+import com.marvin.component.config_test.builder.TreeBuilder;
+import com.marvin.component.config_test.builder.definition.ArrayNodeDefinition;
+import com.marvin.component.config_test.builder.definition.NodeDefinition;
 
 /**
  *
@@ -13,7 +15,7 @@ public class MyConfiguration implements ConfigurationInterface {
     public TreeBuilder getConfigTreeBuilder() throws Exception {
         TreeBuilder builder = new TreeBuilder();
         
-        NodeDefinition root = builder.root("montest");
+        ParentNodeDefinitionInterface root = builder.root("montest");
         
         root                        // is a NodeDefinition
             .children()             // return the NodeBuilder

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component.configuration;
+package com.marvin.component.config_test;
 
-import com.marvin.component.configuration.builder.TreeBuilder;
-import com.marvin.component.configuration.builder.node.NodeInterface;
+import com.marvin.component.config_test.builder.NodeInterface;
+import com.marvin.component.config_test.builder.TreeBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
