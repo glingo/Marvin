@@ -1,5 +1,4 @@
 package com.marvin.component.configuration;
-
 import com.marvin.component.configuration.builder.TreeBuilder;
 import com.marvin.component.configuration.builder.definition.NodeDefinition;
 
@@ -15,19 +14,34 @@ public class MyConfiguration implements ConfigurationInterface {
         
         NodeDefinition root = builder.root("montest");
         
-        root                        // is a NodeDefinition
-            .children()             // return the NodeBuilder
+        root
+                
+            .scalarNode("scalar test")
+                .info("Ceci est un scalar test")
+            .end()
+
+            .arrayNode("1st array test")
                 .scalarNode("scalartest")
                     .info("Ceci est un scalar test")
                 .end()
-                .arrayNode("test")      // return a NodeDefinition
-                .info("Ceci est un test")
-                .children()
-                  .scalarNode("scalartest").end()
-                .end();
-//                .children()         // return the NodeBuilder
-//                .end()              // return the parent
-//            .end();                 // return the parent
+                .booleanNode("boolean node")
+                    .info("Ceci est un boolean test")
+                .end()
+            .end()
+
+            .scalarNode("2nd scalar test")
+                .info("Ceci est un scalar test")
+            .end()
+
+            .arrayNode("2nd array test")
+                .scalarNode("scalartest")
+                    .info("Ceci est un scalar test")
+                .end()
+                .booleanNode("boolean node")
+                    .info("Ceci est un boolean test")
+                .end()
+            .end()
+        ;
         
         return builder;
     }

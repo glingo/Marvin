@@ -1,22 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.configuration.builder;
 
 import com.marvin.component.configuration.builder.definition.NodeDefinition;
-import com.marvin.component.configuration.builder.node.NodeInterface;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.marvin.component.configuration.builder.node.Node;
 
-/**
- *
- * @author cdi305
- */
-public class TreeBuilder extends NodeBuilder {
+public class TreeBuilder {
     
-    protected NodeInterface tree;
+    protected Node tree;
     protected NodeDefinition root;
     protected NodeBuilder builder;
     
@@ -33,13 +22,12 @@ public class TreeBuilder extends NodeBuilder {
         this.builder = builder;
         
         this.root = this.builder.node(name, type);
-        
-        this.root.setParent(this);
+        this.builder.setParent(root);
         
         return this.root;
     }
     
-    public NodeInterface buildTree() throws Exception {
+    public Node buildTree() throws Exception {
         
         if(this.root == null) {
             throw new Exception("The configuration tree has no root node.");
@@ -52,5 +40,15 @@ public class TreeBuilder extends NodeBuilder {
         this.tree = this.root.getNode(true);
         return this.tree;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("TreeBuilder : \n");
+        sb.append(this.root);
+        return sb.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 
 }

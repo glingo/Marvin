@@ -1,12 +1,5 @@
 package com.marvin.component.configuration.builder.definition;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
-import com.marvin.component.configuration.builder.node.NodeInterface;
-
-/**
- *
- * @author cdi305
- */
 public abstract class NumericNodeDefinition extends ScalarNodeDefinition {
 
     protected Number max;
@@ -16,9 +9,9 @@ public abstract class NumericNodeDefinition extends ScalarNodeDefinition {
         super(name);
     }
     
-    public NumericNodeDefinition(String name, NodeParentInterface parent) {
-        super(name, parent);
-    }
+//    public NumericNodeDefinition(String name, NodeParentInterface parent) {
+//        super(name, parent);
+//    }
     
     public abstract void max(Number max) throws Exception;
     

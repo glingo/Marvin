@@ -1,26 +1,23 @@
 package com.marvin.component.configuration.builder.definition;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
+import com.marvin.component.configuration.builder.NodeInterface;
 import com.marvin.component.configuration.builder.node.FloatNode;
-import com.marvin.component.configuration.builder.node.NodeInterface;
+import com.marvin.component.configuration.builder.node.Node;
 
-/**
- *
- * @author cdi305
- */
 public class FloatNodeDefinition extends NumericNodeDefinition {
 
     public FloatNodeDefinition(String name) {
         super(name);
     }
     
-    public FloatNodeDefinition(String name, NodeParentInterface parent) {
-        super(name, parent);
-    }
+//    public FloatNodeDefinition(String name, NodeParentInterface parent) {
+//        super(name, parent);
+//    }
     
     @Override
-    protected NodeInterface instatiateNode() {
-        return new FloatNode(getName(), getParent());
+    protected Node instatiateNode() {
+//        return new FloatNode(this.name, this.parent);
+        return new FloatNode(this.name);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.marvin.component.configuration.builder.definition;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
 import com.marvin.component.configuration.builder.NodeBuilder;
-import com.marvin.component.configuration.builder.node.NodeInterface;
+import com.marvin.component.configuration.builder.node.Node;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -15,58 +15,81 @@ public abstract class NodeDefinition {
     protected Object defaultValue;
     protected boolean useDefault;
     protected boolean required;
-    protected boolean allowEmptyValue;
-    protected HashMap<String, Object> attributes;
+    protected boolean allowEmptyValue = true;
+    protected HashMap<String, Object> attributes = new HashMap<>();
     
-    protected NodeParentInterface parent;
-    protected NodeBuilder builder;
+    protected NodeDefinition parent;
+    protected LinkedHashMap<String, NodeDefinition> children;
+    
+    protected NodeBuilder nodeBuilder;
 
     public NodeDefinition(String name) {
         this.name = name;
     }
-
-    public NodeDefinition(String name, NodeParentInterface parent) {
-        this.name = name;
-        this.parent = parent;
-    }
     
-    public abstract NodeInterface createNode();
+//    public NodeDefinition(String name, NodeParentInterface parent) {
+//        this.name = name;
+//        this.parent = parent;
+//    }
     
-//    @Override
-    public NodeParentInterface end(){
+    public NodeDefinition end(){
         return this.parent;
     }
     
-//    @Override
-    public NodeBuilder children() {
-        return this.builder;
+//    public NodeBuilder children() {
+//        return this.getNodeBuilder();
+//    }
+    
+    public NodeDefinition append(NodeDefinition definition) throws CloneNotSupportedException {
+        
+        if(this.children == null) {
+            this.children = new LinkedHashMap<>();
+        }
+        
+        this.children.putIfAbsent(definition.name, definition);
+        definition.setParent(this);
+        return this;
     }
     
-    public NodeInterface getNode(){
-        return this.getNode(false);
+    protected NodeBuilder getNodeBuilder(){
+        if(this.nodeBuilder == null) {
+            this.nodeBuilder = new NodeBuilder();
+            this.nodeBuilder.setParent(this);
+        }
+        
+        return this.nodeBuilder;
     }
     
-    public NodeInterface getNode(boolean forceRoot){
+    public void setBuilder(NodeBuilder builder) {
+        this.nodeBuilder = builder;
+    }
+    
+    public void setParent(NodeDefinition parent){
+        this.parent = parent;
+    }
+    
+    public Node getNode(boolean forceRoot){
         
         if(forceRoot) {
-            this.setParent(null);
+            this.parent = null;
         }
         
         // normalisation
         
         // validation
         
-        NodeInterface node = this.createNode();
+        Node node = this.createNode();
         
         // set attributes
         
         return node;
     }
     
+    public Node getNode(){
+        return this.getNode(false);
+    }
+    
     public NodeDefinition attribute(String key, Object attribute) {
-        if(this.attributes == null) {
-            this.attributes = new HashMap<>();
-        }
         this.attributes.put(key, attribute);
         return this;
     }
@@ -75,54 +98,99 @@ public abstract class NodeDefinition {
         return this.attribute("info", info);
     }
     
-//    @Override
-    public void setBuilder(NodeBuilder builder) {
-        this.builder = builder;
+    public NodeDefinition defaultValue(Object value){
+        this.useDefault = true;
+        this.defaultValue = value;
+        return this;
+    }
+    
+    public NodeDefinition defaultNull(){
+        return this.defaultValue(null);
+    }
+    
+    public NodeDefinition defaultTrue(){
+        return this.defaultValue(true);
+    }
+    
+    public NodeDefinition defaultFalse(){
+        return this.defaultValue(false);
+    }
+    
+    public NodeDefinition required(){
+        this.required = true;
+        return this;
+    }
+    
+    public NodeDefinition cannotBeEmpty(){
+        this.allowEmptyValue = false;
+        return this;
+    }
+    
+    public abstract Node createNode();
+    
+    public VariableNodeDefinition variableNode(String name) throws Exception {
+        return this.getNodeBuilder().variableNode(name);
+    }
+     
+    public EnumNodeDefinition enumNode(String name) throws Exception {
+        return this.getNodeBuilder().enumNode(name);
+    }
+    
+    public FloatNodeDefinition floatNode(String name) throws Exception {
+        return this.getNodeBuilder().floatNode(name);
+    }
+    
+    public IntegerNodeDefinition integerNode(String name) throws Exception {
+        return this.getNodeBuilder().integerNode(name);
+    }
+    
+    public BooleanNodeDefinition booleanNode(String name) throws Exception {
+        return this.getNodeBuilder().booleanNode(name);
+    }
+    
+    public ScalarNodeDefinition scalarNode(String name) throws Exception {
+        return this.getNodeBuilder().scalarNode(name);
+    }
+    
+    public ArrayNodeDefinition arrayNode(String name) throws Exception {
+        return this.getNodeBuilder().arrayNode(name);
+    }
+    
+    private int getRank(){
+        int rank = 0;
+        
+        NodeDefinition current = this;
+        
+        while(current.parent != null) {
+            rank++;
+            current = current.parent;
+        }
+        
+        return rank;
     }
 
-//    @Override
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        
+        int rank = this.getRank();
+        builder.append("|");
+        
+        for (int i = 0; i < rank; i++) {
+            builder.append("-----");
+        }
+        
+        builder.append(this.name);
+        builder.append("\n");
+        
+        if(this.children != null) {
+            this.children.values().forEach((NodeDefinition child) -> {
+                builder.append(child);
+            });
+        }
+        
+        return builder.toString();
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Object getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(Object defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public boolean isUseDefault() {
-        return useDefault;
-    }
-
-    public void setUseDefault(boolean useDefault) {
-        this.useDefault = useDefault;
-    }
-
-    public boolean isAllowEmptyValue() {
-        return allowEmptyValue;
-    }
-
-    public void setAllowEmptyValue(boolean allowEmptyValue) {
-        this.allowEmptyValue = allowEmptyValue;
-    }
-
-    public NodeParentInterface getParent() {
-        return parent;
-    }
-
-    public void setParent(NodeParentInterface parent) {
-        this.parent = parent;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
+    
     
 }

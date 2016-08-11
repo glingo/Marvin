@@ -1,26 +1,23 @@
 package com.marvin.component.configuration.builder.definition;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
+import com.marvin.component.configuration.builder.NodeInterface;
 import com.marvin.component.configuration.builder.node.IntegerNode;
-import com.marvin.component.configuration.builder.node.NodeInterface;
+import com.marvin.component.configuration.builder.node.Node;
 
-/**
- *
- * @author cdi305
- */
 public class IntegerNodeDefinition extends NumericNodeDefinition {
 
     public IntegerNodeDefinition(String name) {
         super(name);
     }
         
-    public IntegerNodeDefinition(String name, NodeParentInterface parent) {
-        super(name, parent);
-    }
+//    public IntegerNodeDefinition(String name, NodeParentInterface parent) {
+//        super(name, parent);
+//    }
     
     @Override
-    protected NodeInterface instatiateNode() {
-        return new IntegerNode(getName(), getParent());
+    protected Node instatiateNode() {
+//        return new IntegerNode(this.name, this.parent);
+        return new IntegerNode(this.name);
     }
     
     

@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component.configuration.builder.node;
+package com.marvin.component.configuration.builder;
 
 /**
  *
  * @author cdi305
  */
-public interface PrototypeNodeInterface extends NodeInterface {
+public interface NodeDefinitionInterface {
     
-    void setName(String name);
+    NodeBuilder children();
+    
+    NodeDefinitionInterface end();
+    
 }

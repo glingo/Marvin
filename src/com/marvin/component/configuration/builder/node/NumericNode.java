@@ -17,7 +17,7 @@ public abstract class NumericNode extends ScalarNode {
         super(name);
     }
     
-    public NumericNode(String name, NodeParentInterface parent) {
+    public NumericNode(String name, Node parent) {
         super(name, parent);
     }
     

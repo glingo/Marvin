@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.marvin.component.configuration;
 
+import com.marvin.component.configuration.builder.NodeInterface;
 import com.marvin.component.configuration.builder.TreeBuilder;
-import com.marvin.component.configuration.builder.node.NodeInterface;
+import com.marvin.component.configuration.builder.node.Node;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +13,16 @@ import java.util.logging.Logger;
  */
 public class ConfigurationTest {
     
-    
     public static void main(String[] args) {
         ConfigurationInterface conf = new MyConfiguration();
         try {
             TreeBuilder builder = conf.getConfigTreeBuilder();
+            
+            System.out.println(builder);
+            
+//            builder.print();
         
-            NodeInterface node = builder.buildTree();
+            Node node = builder.buildTree();
             
             System.out.println(node);
         } catch (Exception ex) {

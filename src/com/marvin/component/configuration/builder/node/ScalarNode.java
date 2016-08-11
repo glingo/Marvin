@@ -17,7 +17,7 @@ public class ScalarNode extends VariableNode {
         super(name);
     }
 
-    public ScalarNode(String name, NodeParentInterface parent) {
+    public ScalarNode(String name, Node parent) {
         super(name, parent);
     }
     

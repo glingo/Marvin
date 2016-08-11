@@ -1,4 +1,4 @@
-package com.marvin.component.config_test.builder;
+package com.marvin.component.configuration.builder;
 
 public interface NodeParentInterface extends NodeInterface {
     

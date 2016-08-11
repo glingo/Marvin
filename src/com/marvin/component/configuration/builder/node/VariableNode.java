@@ -5,8 +5,8 @@
  */
 package com.marvin.component.configuration.builder.node;
 
-import com.marvin.component.configuration.builder.definition.NodeDefinition;
 import com.marvin.component.configuration.builder.NodeParentInterface;
+import com.marvin.component.configuration.builder.PrototypeNodeInterface;
 
 /**
  *
@@ -22,11 +22,10 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
         super(name);
     }
 
-    public VariableNode(String name, NodeParentInterface parent) {
+    public VariableNode(String name, Node parent) {
         super(name, parent);
     }
 
-    @Override
     public boolean hasDefaultValue() {
         return this.defaultValueSet;
     }

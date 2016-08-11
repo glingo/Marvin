@@ -1,39 +1,50 @@
 package com.marvin.component.configuration.builder.node;
 
-import com.marvin.component.config_test.builder.NodeParentInterface;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
  * @author cdi305
  */
-public abstract class Node implements NodeInterface {
+public abstract class Node {
     
     protected String name;
-    protected NodeParentInterface parent;
+    protected Node parent;
     protected boolean required;
-    protected Object[] attributes;
+    protected HashMap<String, Object> attributes;
+    
+    protected LinkedHashMap<String, Node> children;
     
     public Node(String name) {
         this.name = name;
     }
 
-    public Node(String name, NodeParentInterface parent) {
+    public Node(String name, Node parent) {
         this.name = name;
         this.parent = parent;
     }
 
-    @Override
+    public void addChild(Node child){
+        
+        if(this.children == null) {
+            this.children = new LinkedHashMap<>();
+        }
+        
+        this.children.putIfAbsent(child.getName(), child);
+        child.setParent(this);
+    }
+    
     public final String getPath() {
         String path = getName();
         
         if(this.parent != null) {
-//            path = this.getParent().getName() + "." + path;
+            path = this.getParent().getName() + "." + path;
         }
         
         return path;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -42,30 +53,65 @@ public abstract class Node implements NodeInterface {
         this.name = name;
     }
 
-    @Override
     public boolean isRequired() {
         return required;
     }
 
-    @Override
     public void setRequired(boolean required) {
         this.required = required;
     }
 
-    public NodeParentInterface getParent() {
+    public Node getParent() {
         return parent;
     }
 
-    public void setParent(NodeParentInterface parent) {
+    public void setParent(Node parent) {
         this.parent = parent;
     }
 
-    public Object[] getAttributes() {
+    public HashMap<String, Object> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Object[] attributes) {
+    public void setAttributes(HashMap<String, Object> attributes) {
         this.attributes = attributes;
     }
+
+    private int getRank(){
+        int rank = 0;
+        
+        Node current = this;
+        
+        while(current.parent != null) {
+            rank++;
+            current = current.parent;
+        }
+        
+        return rank;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        
+        int rank = this.getRank();
+        builder.append("|");
+        
+        for (int i = 0; i < rank; i++) {
+            builder.append("-----");
+        }
+        
+        builder.append(this.name);
+        builder.append("\n");
+        
+        if(this.children != null) {
+            this.children.values().forEach((Node child) -> {
+                builder.append(child);
+            });
+        }
+        
+        return builder.toString();
+    }
+    
     
 }

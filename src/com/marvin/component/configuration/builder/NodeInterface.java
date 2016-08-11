@@ -1,4 +1,6 @@
-package com.marvin.component.config_test.builder;
+package com.marvin.component.configuration.builder;
+
+import com.marvin.component.configuration.builder.node.Node;
 
 public interface NodeInterface {
     
@@ -12,7 +14,7 @@ public interface NodeInterface {
     
     boolean hasDefaultValue();
     
-    NodeParentInterface getParent();
+    Node getParent();
     
     void setParent(NodeParentInterface parent);
 }
