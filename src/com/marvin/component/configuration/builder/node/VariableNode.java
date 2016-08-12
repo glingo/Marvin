@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.configuration.builder.node;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
 import com.marvin.component.configuration.builder.PrototypeNodeInterface;
+import com.marvin.component.util.ObjectUtils;
+import java.util.function.Supplier;
 
-/**
- *
- * @author cdi305
- */
 public class VariableNode extends Node implements PrototypeNodeInterface {
 
     protected boolean defaultValueSet = false;
@@ -33,6 +25,42 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
     public void setDefaultValue(Object defaultValue) {
         this.defaultValueSet = true;
         this.defaultValue = defaultValue;
+    }
+
+    public Object getDefaultValue() {
+        Object v = defaultValue;
+        
+        if(v instanceof Supplier) {
+            v = ((Supplier) defaultValue).get();
+        }
+        
+        return v;
+    }
+
+    @Override
+    protected void validateType(Object value) {
+        // do nothing
+    }
+
+    @Override
+    protected Object normalizeValue(Object value) {
+        return value;
+    }
+
+    @Override
+    protected Object mergeValues(Object left, Object right) {
+        return right;
+    }
+
+    @Override
+    protected Object finalizeValue(Object value) throws Exception {
+        
+        if(!this.allowEmptyValue && ObjectUtils.isEmpty(value)) {
+            String msg = String.format("The path '%s' cannot contain an empty value, but got %s.", this.getPath(), value);
+            throw new Exception(msg);
+        }
+        
+        return value;
     }
     
 }

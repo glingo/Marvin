@@ -9,39 +9,43 @@ import com.marvin.component.configuration.builder.definition.NodeDefinition;
 public class MyConfiguration implements ConfigurationInterface {
 
     @Override
-    public TreeBuilder getConfigTreeBuilder() throws Exception {
+    public TreeBuilder getConfigTreeBuilder() {
         TreeBuilder builder = new TreeBuilder();
-        
-        NodeDefinition root = builder.root("montest");
-        
-        root
-                
-            .scalarNode("scalar test")
-                .info("Ceci est un scalar test")
-            .end()
+        try {
+            
+            NodeDefinition root = builder.root("montest");
 
-            .arrayNode("1st array test")
-                .scalarNode("scalartest")
+            root
+
+                .scalarNode("scalar test")
                     .info("Ceci est un scalar test")
                 .end()
-                .booleanNode("boolean node")
-                    .info("Ceci est un boolean test")
+
+                .arrayNode("1st array test")
+                    .scalarNode("scalartest")
+                        .info("Ceci est un scalar test")
+                    .end()
+                    .booleanNode("boolean node")
+                        .info("Ceci est un boolean test")
+                    .end()
                 .end()
-            .end()
 
-            .scalarNode("2nd scalar test")
-                .info("Ceci est un scalar test")
-            .end()
-
-            .arrayNode("2nd array test")
-                .scalarNode("scalartest")
+                .scalarNode("2nd scalar test")
                     .info("Ceci est un scalar test")
                 .end()
-                .booleanNode("boolean node")
-                    .info("Ceci est un boolean test")
+
+                .arrayNode("2nd array test")
+                    .scalarNode("scalartest")
+                        .info("Ceci est un scalar test")
+                    .end()
+                    .booleanNode("boolean node")
+                        .info("Ceci est un boolean test")
+                    .end()
                 .end()
-            .end()
-        ;
+            ;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         
         return builder;
     }

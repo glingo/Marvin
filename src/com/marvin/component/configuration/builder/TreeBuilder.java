@@ -46,9 +46,6 @@ public class TreeBuilder {
         StringBuilder sb = new StringBuilder();
         sb.append("TreeBuilder : \n");
         sb.append(this.root);
-        return sb.toString(); //To change body of generated methods, choose Tools | Templates.
+        return sb.toString();
     }
-    
-    
-
 }

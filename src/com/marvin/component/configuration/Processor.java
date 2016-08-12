@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.configuration;
 
 import com.marvin.component.configuration.builder.node.Node;
@@ -10,34 +5,38 @@ import com.marvin.component.util.ObjectUtils;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author cdi305
- */
 public class Processor {
     
-    public void process(Node root, HashMap<String, Object> config) {
+    public Object process(Node root, HashMap<String, Object> config) throws Exception {
         HashMap<String, Object> current = new HashMap<>();
         
-        config.forEach((String name, Object value) -> {
+        config.values().stream().map((Object value) -> {
+            
             // normalize
-            // value = root.normalize(value);
-
-            // merge
-            // current = root.merge(current, value);
+            value = root.normalize(value);
+            try {
+                // merge
+                return root.merge(current, value);
+            } catch (Exception ex) {
+                Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return value;
         
         });
         
         // finalize and return
-        // return root.finalize(current);
+         return root.finalize(current);
     }
     
     
-    public void processConfiguration(ConfigurationInterface configuration, HashMap<String, Object> config) throws Exception{
+    public Object processConfiguration(ConfigurationInterface configuration, HashMap<String, Object> config) throws Exception{
         Node root = configuration.getConfigTreeBuilder().buildTree();
         // call process
-        // return this.process(root, config);
+        return this.process(root, config);
         
     }
     
