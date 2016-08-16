@@ -5,7 +5,7 @@ import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
 
-public class FrameWorkBundle extends Bundle {
+public class FrameworkBundle extends Bundle {
 
     @Override
     public void build(ContainerBuilder builder) {
