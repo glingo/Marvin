@@ -1,17 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.kernel.bundle;
 
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.awareness.ContainerAware;
+import com.marvin.component.container.extension.ExtensionInterface;
+import com.marvin.component.util.ClassUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Dr.Who
  */
 public abstract class Bundle extends ContainerAware {
+    
+    protected ExtensionInterface extension;
     
     /**
      * Boots the Bundle.
@@ -55,7 +56,7 @@ public abstract class Bundle extends ContainerAware {
      */
     public String getName()
     {
-        return this.getClass().getCanonicalName();
+        return this.getClass().getSimpleName().replace("Bundle", "");
     }
     
     /**
@@ -75,6 +76,36 @@ public abstract class Bundle extends ContainerAware {
      */
     protected String getContainerExtensionPath()
     {
-        return String.format("%s.%sExtension.java", this.getNamespace(), this.getName());
+        return String.format("%s.container.%sExtension", this.getNamespace(), this.getName());
+    }
+    
+    protected Class getContainerExtensionClass(){
+        String className = this.getContainerExtensionPath();
+        try {
+            return ClassUtils.forName(className, null);
+        } catch (ClassNotFoundException ex) {
+            return null;
+        }
+    }
+    
+    protected ExtensionInterface createContainerExtension(){
+        Class cl = this.getContainerExtensionClass();
+        
+        if(cl != null) {
+            try {
+                return (ExtensionInterface) cl.newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(Bundle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
+    
+    public ExtensionInterface getContainerExtension(){
+        if(null == this.extension) {
+            this.extension = this.createContainerExtension();
+        }
+        
+        return this.extension;
     }
 }

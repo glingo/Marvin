@@ -11,7 +11,7 @@ public class DebugBundle extends Bundle {
     public void build(ContainerBuilder builder) {
         ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
-        reader.read("config/services.xml");
+        reader.read("resources/config/services.xml");
     }
 
     

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.io.xml;
 
 import com.marvin.component.parser.DelegatingParser;
@@ -12,10 +7,6 @@ import com.marvin.component.util.StringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-/**
- *
- * @author cdi305
- */
 public class XMLDocumentReader {
 
     public static final String IMPORT_ELEMENT = "import";

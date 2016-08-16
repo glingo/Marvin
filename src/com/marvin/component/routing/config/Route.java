@@ -18,7 +18,7 @@ public class Route {
 
     @Override
     public String toString() {
-        return getPath();
+        return getController() + "::" + getPath();
     }
     
     public String getController() {

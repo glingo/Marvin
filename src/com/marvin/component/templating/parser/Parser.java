@@ -1,13 +1,3 @@
-/**
- * *****************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- *****************************************************************************
- */
 package com.marvin.component.templating.parser;
 
 import com.marvin.component.templating.node.BodyNode;
@@ -22,6 +12,7 @@ import com.marvin.component.templating.token.Token;
 import com.marvin.component.templating.token.TokenStream;
 import com.marvin.component.templating.token.Type;
 import com.marvin.component.templating.tokenParser.TokenParser;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,6 +95,7 @@ public class Parser implements ParserInterface {
      *
      * @param stopCondition A stopping condition provided by a token parser
      * @return Node The root node of the generated Abstract Syntax Tree
+     * @throws java.lang.Exception
      */
     @Override
     public BodyNode subparse(StoppingCondition stopCondition) throws Exception {

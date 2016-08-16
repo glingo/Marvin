@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container;
 
 import com.marvin.component.container.exception.ContainerException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/**
- *
- * @author caill
- */
 public class Container implements IContainer {
     
     /** The map where we stack aliases. */
@@ -103,6 +94,10 @@ public class Container implements IContainer {
     public void setAliases(ConcurrentMap<String, String> aliases) {
         this.aliases = aliases;
     }
+    
+    public void addAlias(String id, String alias) {
+        this.aliases.put(id, alias);
+    }
 
     public ConcurrentMap<String, Object> getServices() {
         return services;
@@ -133,5 +128,25 @@ public class Container implements IContainer {
     public void setParameters(ConcurrentMap<String, Object> parameters) {
         this.parameters = parameters;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n  Container \n");
+        
+        builder.append("\n----------------Liste des parametres----------------");
+        this.getParameters().forEach((String id, Object parameter) -> {
+            builder.append("\n").append(id).append(": ").append(parameter);
+        });
+        
+        builder.append("\n----------------Liste des services----------------");
+        this.getServices().forEach((String id, Object service) -> {
+            builder.append("\n").append(id).append(": ").append(service);
+        });
+        
+        
+        builder.append("\n----------------Fin Container----------------");
+        
+        return builder.toString();
+    }
 }

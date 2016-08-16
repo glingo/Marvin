@@ -1,13 +1,3 @@
-/**
- * *****************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- *****************************************************************************
- */
 package com.marvin.component.templating.parser;
 
 import com.marvin.component.templating.node.ArgumentsNode;
@@ -41,6 +31,7 @@ import com.marvin.component.templating.node.operator.UnaryOperator;
 import com.marvin.component.templating.token.Token;
 import com.marvin.component.templating.token.TokenStream;
 import com.marvin.component.templating.token.Type;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +39,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import jdk.nashorn.internal.runtime.ParserException;
 
 /**
  * Parses expressions.
@@ -61,9 +51,9 @@ public class ExpressionParser {
 
     private TokenStream stream;
 
-    private Map<String, BinaryOperator> binaryOperators;
+    private final Map<String, BinaryOperator> binaryOperators;
 
-    private Map<String, UnaryOperator> unaryOperators;
+    private final Map<String, UnaryOperator> unaryOperators;
 
     /**
      * Constructor
@@ -245,7 +235,7 @@ public class ExpressionParser {
      * binary operator. Ex. "var.field", "true", "12", etc.
      *
      * @return NodeExpression The expression that it found.
-     * @throws ParserException Thrown if a parsing error occurs.
+     * @throws Exception Thrown if a parsing error occurs.
      */
     private Expression<?> subparseExpression() throws Exception {
         final Token token = stream.current();
@@ -336,7 +326,7 @@ public class ExpressionParser {
      * @param node The expression that we have already discovered
      * @return Either the original expression that was passed in or a slightly
      * modified version of it, depending on what was discovered.
-     * @throws ParserException Thrown if a parsing error occurs.
+     * @throws Exception Thrown if a parsing error occurs.
      */
     private Expression<?> parsePostfixExpression(Expression<?> node) throws Exception {
         Token current;
@@ -418,7 +408,7 @@ public class ExpressionParser {
      *
      * @param node The expression parsed so far
      * @return NodeExpression The parsed subscript expression
-     * @throws ParserException Thrown if a parsing error occurs.
+     * @throws Exception Thrown if a parsing error occurs.
      */
     private Expression<?> parseBeanAttributeExpression(Expression<?> node) throws Exception {
         TokenStream stream = parser.getStream();
@@ -520,7 +510,7 @@ public class ExpressionParser {
      * This is used for the set tag, the for loop, and in named arguments.
      *
      * @return A variable name
-     * @throws ParserException Thrown if a parsing error occurs.
+     * @throws Exception Thrown if a parsing error occurs.
      */
     public String parseNewVariableName() throws Exception {
 

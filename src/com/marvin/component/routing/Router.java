@@ -29,5 +29,25 @@ public class Router {
     public void setRoutes(ConcurrentMap<String, Route> routes) {
         this.routes = routes;
     }
+
+    @Override
+    public String toString() {
+        
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n  Router \n");
+        
+        builder.append("\n----------------Liste des routes----------------");
+        this.getRoutes().forEach((String id, Route route) -> {
+            builder.append("\n").append(id).append(": ").append(route);
+        });
+        
+        
+        builder.append("\n----------------Fin Router----------------");
+        
+        return builder.toString();
+    }
+    
+    
     
 }

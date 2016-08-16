@@ -1,0 +1,17 @@
+{% extends "./base.html.view" %}
+
+{% block title %}
+    Debug du container
+{% endblock %}
+
+{% block content %}
+
+    <ul>
+        {% for entry in container.services %}
+            <li> 
+                <span>{{ entry.key }}</span>
+                <span>{{ entry.value }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

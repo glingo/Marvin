@@ -5,6 +5,7 @@ import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
+import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
 import com.marvin.component.util.ReflectionUtils;
@@ -16,7 +17,9 @@ import java.lang.reflect.Method;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -36,6 +39,8 @@ public class ContainerBuilder {
      * The map where we stack Definitions.
      */
     protected ConcurrentMap<String, Definition> definitions;
+    
+    protected ConcurrentMap<String, ExtensionInterface> extensions;
 
     /**
      * The Container to build
@@ -44,15 +49,19 @@ public class ContainerBuilder {
 
     public ContainerBuilder() {
         this.definitions = new ConcurrentHashMap<>();
+        this.extensions = new ConcurrentHashMap<>();
         this.container = new Container();
-    }
-
-    public void addDefinition(String id, Definition definition) {
-        this.definitions.put(id, definition);
     }
 
     public Container build() {
         this.definitions.keySet().forEach(this::get);
+        
+        this.extensions.values().forEach((ExtensionInterface extension) -> {
+            extension.load(new HashMap<>(), this);
+        });
+        
+        System.out.println(this.container);
+        
         return this.container;
     }
 
@@ -60,7 +69,6 @@ public class ContainerBuilder {
 
         if (arg instanceof Reference) {
             Reference ref = (Reference) arg;
-//                System.out.println("Resolution d'une reference vers : " + ref.getTarget());
             arg = get(ref.getTarget());
         }
 
@@ -101,7 +109,7 @@ public class ContainerBuilder {
                 return len == cstr.getParameterCount();
             };
 
-            return Arrays.stream(constructors).filter(filter).findFirst().orElse(type.getEnclosingConstructor());
+            return Arrays.stream(constructors).filter(filter).findFirst().orElse(null);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,9 +135,9 @@ public class ContainerBuilder {
 
                 // instatiation
                 if (constructor != null) {
-                    //System.out.println("instanciation du service : " + id);
-                    //System.out.println("avec les arguments : " + Arrays.toString(arguments));
                     service = constructor.newInstance(arguments);
+                } else {
+                    System.out.println("Can not instanciate " + id);
                 }
             }
 
@@ -155,7 +163,6 @@ public class ContainerBuilder {
     }
 
     public Object get(String id) {
-//        System.out.println("Tentative de recuperation du service " + id);
         Object service = null;
 
         try {
@@ -170,18 +177,56 @@ public class ContainerBuilder {
 
         return service;
     }
+    
+    public void merge(ContainerBuilder builder) {
+        this.addDefinitions(builder.getDefinitions());
+        this.addParameters(builder.getParameters());
+        this.addAliases(builder.getAliases());
+        this.addExtensions(builder.getExtensions());
+    }
 
     public void set(String id, Object service) {
         this.container.set(id, service);
+    }
+    
+    public void addAlias(String id, String alias){
+        this.container.addAlias(id, alias);
+    }
+    
+    public void addAliases(Map<String, String> aliases){
+        aliases.forEach(this::addAlias);
+    }
+    
+    public Map<String, String> getAliases(){
+        return this.container.getAliases();
+    }
+    
+    public void addDefinition(String id, Definition definition) {
+        this.definitions.put(id, definition);
+    }
+    
+    public void addDefinitions(Map<String, Definition> definitions) {
+        definitions.forEach(this::addDefinition);
     }
 
     public void addParameter(String key, Object value) {
         this.container.setParameter(key, value);
     }
+    
+    public void addParameters(Map<String, Object> parameters) {
+        parameters.forEach(this::addParameter);
+    }
+    
+    public Map<String, Object> getParameters() {
+        return this.getContainer().getParameters();
+    }
 
     public Object getParameter(String key) {
-//        System.out.println("Tentative de recuperation du parametre " + key);
         return this.container.getParameter(key, null);
+    }
+    
+    public Object getParameter(String key, Object defaultValue) {
+        return this.container.getParameter(key, defaultValue);
     }
 
     public Container getContainer() {
@@ -194,6 +239,30 @@ public class ContainerBuilder {
 
     public void setDefinitions(ConcurrentMap<String, Definition> definitions) {
         this.definitions = definitions;
+    }
+    
+    public Map<String, ExtensionInterface> getExtensions() {
+        return this.extensions;
+    }
+    
+    public void addExtensions(Map<String, ExtensionInterface> extensions) {
+        extensions.values().forEach(this::addExtension);
+    }
+    
+    public void addExtension(ExtensionInterface extension) {
+        this.extensions.putIfAbsent(extension.getAlias(), extension);
+    }
+
+    public void registerExtension(ExtensionInterface extension) {
+        if(extension != null) {
+            this.extensions.putIfAbsent(extension.getAlias(), extension);
+        }
+    }
+    
+    public static String underscore(String id){
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return id.replaceAll(regex, replacement).toLowerCase();
     }
 
 }

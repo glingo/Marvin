@@ -15,6 +15,8 @@ public abstract class Node {
     protected Node parent;
     protected boolean required;
     protected boolean allowOverWrite = true;
+//    protected boolean useDefault = true;
+//    protected Object defaultValue;
     protected HashMap<String, Object> attributes;
     
     protected LinkedHashMap<String, Node> children;
@@ -36,7 +38,7 @@ public abstract class Node {
         return value;
     }
     
-    final public Object normalize(Object value) {
+    final public Object normalize(Object value) throws Exception {
         
         value = this.preNormalize(value);
         
@@ -76,14 +78,16 @@ public abstract class Node {
         
         value = this.finalizeValue(value);
         
-        for (Function<Object, Object> closure : finalValidationClosures) {
-            value = closure.apply(value);
+        if(finalValidationClosures != null) {
+            for (Function<Object, Object> closure : finalValidationClosures) {
+                value = closure.apply(value);
+            }
         }
         
         return value;
     }
     
-    abstract protected void validateType(Object value);
+    abstract protected void validateType(Object value) throws Exception;
     
     abstract protected Object normalizeValue(Object value);
     
@@ -146,6 +150,9 @@ public abstract class Node {
     public void setAllowOverWrite(boolean allowOverWrite) {
         this.allowOverWrite = allowOverWrite;
     }
+    
+    public abstract boolean hasDefaultValue();
+    public abstract Object getDefaultValue();
     
     private int getRank(){
         int rank = 0;

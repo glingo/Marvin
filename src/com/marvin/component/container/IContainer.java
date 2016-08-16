@@ -40,7 +40,7 @@ public interface IContainer {
      * @param id
      * @param type
      * @return 
-     * @throws com.marvin.component.container.exception.ContainerException * 
+     * @throws com.marvin.component.container.exception.ContainerException 
      */
     <T> T get(String id, Class<T> type) throws ContainerException;
     

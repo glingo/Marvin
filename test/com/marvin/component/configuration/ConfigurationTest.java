@@ -18,6 +18,8 @@ public class ConfigurationTest {
         try {
             TreeBuilder builder = conf.getConfigTreeBuilder();
             
+            
+            
             System.out.println(builder);
             
 //            builder.print();

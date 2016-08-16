@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container.xml;
 
 import java.util.ArrayList;
@@ -19,7 +14,6 @@ import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import com.marvin.component.io.xml.XMLDocumentReader;
 import com.marvin.component.io.xml.XMLReaderContext;
-import com.marvin.component.parser.Parser;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.StringUtils;
 
@@ -72,6 +66,11 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             if (node instanceof Element) {
                 Element ele = (Element) node;
                 parseDefinitionElement(ele, builder);
+                
+                if (builder.getExtensions().containsKey(ele.getNodeName())
+                        || builder.getExtensions().containsKey(ele.getLocalName())) {
+                    
+                }
             }
         }
 //        postProcessXml(root); 

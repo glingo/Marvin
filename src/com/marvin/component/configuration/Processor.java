@@ -13,11 +13,14 @@ public class Processor {
     public Object process(Node root, HashMap<String, Object> config) throws Exception {
         HashMap<String, Object> current = new HashMap<>();
         
+        System.out.println("before process" + config);
+            
         config.values().stream().map((Object value) -> {
             
-            // normalize
-            value = root.normalize(value);
+            System.out.println("process" + value);
             try {
+                // normalize
+                value = root.normalize(value);
                 // merge
                 return root.merge(current, value);
             } catch (Exception ex) {
@@ -35,6 +38,8 @@ public class Processor {
     
     public Object processConfiguration(ConfigurationInterface configuration, HashMap<String, Object> config) throws Exception{
         Node root = configuration.getConfigTreeBuilder().buildTree();
+        
+        System.out.println("processConfiguration" + root);
         // call process
         return this.process(root, config);
         

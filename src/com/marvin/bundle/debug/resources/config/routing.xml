@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routing>
+    
+    <route name="debug.container" path="/debug/container" controller="com.marvin.bundle.debug.controller.DebugController::debugContainer" />
+    <route name="debug.container.html" path="/debug/container.html" controller="com.marvin.bundle.debug.controller.DebugController::debugContainerHTML" />
+
+</routing>
