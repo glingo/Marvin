@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
     
-    <framework>
-
-    </framework>
+    <!--<framework test="true"/>-->
     
     <services>
     
@@ -12,7 +10,6 @@
         
         <service id="console" class="com.marvin.bundle.framework.console.Console">
             <argument type="service" ref="kernel"/>
-            <!--<argument type="service" ref="event_dispatcher"/>-->
         </service>
         
         <service id="console.event_listener" class="com.marvin.bundle.framework.console.listener.ConsoleSubscriber">
@@ -23,7 +20,6 @@
             <argument type="service" ref="kernel"/>
             <argument type="int" value="80"/>
             <argument type="int" value="81"/>
-            <!--<argument type="service" ref="event_dispatcher"/>-->
         </service>
         
         <service id="server.event_listener" class="com.marvin.bundle.framework.server.listener.ServerSubscriber">

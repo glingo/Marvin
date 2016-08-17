@@ -31,4 +31,9 @@ public class TestServiceA extends Service {
         System.out.format("j'ai %s ans\n", this.age);
     }
     
+    public void say(String s, int i){
+        System.out.println(s);
+        System.out.println(i);
+    }
+    
 }

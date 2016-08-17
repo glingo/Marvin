@@ -42,10 +42,12 @@ public class ArrayNodeDefinition extends NodeDefinition {
 //            ArrayNode node = new ArrayNode(this.name, this.parent);
             ArrayNode node = new ArrayNode(this.name);
             
-            this.children.values().forEach((NodeDefinition definition) -> {
-                definition.setParent(this);
-                node.addChild(definition.getNode());
-            });
+            if(this.children != null) {
+                this.children.values().forEach((NodeDefinition definition) -> {
+                    definition.setParent(this);
+                    node.addChild(definition.getNode());
+                });
+            }
             
             return node;
         } else {

@@ -42,8 +42,10 @@ public abstract class Node {
         
         value = this.preNormalize(value);
         
-        for (Function<Object, Object> closure : normalizationClosures) {
-            value = closure.apply(value);
+        if(normalizationClosures != null) {
+            for (Function<Object, Object> closure : normalizationClosures) {
+                value = closure.apply(value);
+            }
         }
         
         // replaces with equivalent values
@@ -91,7 +93,7 @@ public abstract class Node {
     
     abstract protected Object normalizeValue(Object value);
     
-    abstract protected Object mergeValues(Object left, Object right);
+    abstract protected Object mergeValues(Object left, Object right) throws Exception;
 
     abstract protected Object finalizeValue(Object value) throws Exception;
     

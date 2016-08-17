@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container.xml;
 
 import com.marvin.component.container.ContainerBuilder;
@@ -10,8 +5,10 @@ import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.IResource;
 import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 

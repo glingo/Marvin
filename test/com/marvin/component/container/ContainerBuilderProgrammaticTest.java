@@ -27,33 +27,34 @@ public class ContainerBuilderProgrammaticTest {
     public static void main(String[] args) {
         
         // definition du service test.service.a
-        Object[] args_A = new Object[]{"Service A", 1};
-        Definition def_A = new Definition("app.service.TestServiceA", args_A);
+        Definition def_A = new Definition();
+        def_A.setClassName("app.service.TestServiceA");
+        def_A.setArguments(new Object[]{"Service A", 1});
         
         // definition du service test.service.b
         Reference ref_A = new Reference("test.service.a");
-        Object[] args_B = new Object[]{ref_A, "Service B", 2};
-        Definition def_B = new Definition("app.service.TestServiceB", args_B);
+        Definition def_B = new Definition();
+        def_B.setClassName("app.service.TestServiceB");
+        def_B.setArguments(new Object[]{ref_A, "Service B", 2});
         
          // definition du service test.service.c
         Collection collec = Arrays.asList("Random string", 42);
-        Object[] args_C = new Object[]{ref_A, "Service C", 3, collec};
-        Definition def_C = new Definition("app.service.TestServiceC", args_C);
-        
+        Definition def_C = new Definition();
+        def_C.setClassName("app.service.TestServiceC");
+        def_C.setArguments(new Object[]{ref_A, "Service C", 3, collec});
         
         // definition du service test.service.a.with.parameter
-        Parameter p_D = new Parameter("parameter.a");
-        Object[] args_D = new Object[]{p_D, 1};
-        Definition def_D = new Definition("app.service.TestServiceA", args_D);
+        Definition def_D = new Definition();
+        def_D.setClassName("app.service.TestServiceA");
+        def_D.setArguments(new Object[]{new Parameter("parameter.a"), 1});
         
         ContainerBuilder builder = new ContainerBuilder();
         
+        builder.addParameter("parameter.a", "my parameter A");
         builder.addDefinition("test.service.a", def_A);
         builder.addDefinition("test.service.b", def_B);
         builder.addDefinition("test.service.c", def_C);
         builder.addDefinition("test.service.a.with.parameter", def_D);
-        
-        builder.getContainer().setParameter("parameter.a", "my parameter A");
         
         builder.build();
         Container container = builder.getContainer();

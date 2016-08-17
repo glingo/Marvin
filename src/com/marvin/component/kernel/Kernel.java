@@ -87,10 +87,7 @@ public abstract class Kernel {
 
     protected void initializeBundles() {
         this.bundles = Arrays.stream(registerBundles())
-            .collect(Collectors.toConcurrentMap(Bundle::getName,
-            (Bundle bundle) -> {
-                return bundle;
-        }));
+            .collect(Collectors.toConcurrentMap(Bundle::getName, (Bundle bundle) -> {return bundle;}));
     }
     
     protected void prepareContainer(ContainerBuilder builder) {
@@ -105,8 +102,6 @@ public abstract class Kernel {
         ContainerBuilder builder = new ContainerBuilder();
         
         this.prepareContainer(builder);
-        
-        System.out.println(builder.getExtensions());
 
         XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
 

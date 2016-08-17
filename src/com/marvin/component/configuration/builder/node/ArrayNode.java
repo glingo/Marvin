@@ -12,6 +12,8 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     protected boolean addIfNotSet = false;
     protected boolean normalizeKeys = true;
     protected boolean removeExtraKeys = true;
+    protected boolean deepMerging = true;
+    protected boolean allowNewKeys = true;
     protected HashMap<String, String> xmlRemapping = new HashMap<>();
     
     public ArrayNode(String name) {
@@ -74,8 +76,42 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     }
 
     @Override
-    protected Object mergeValues(Object left, Object right) {
-        System.out.println("merge values " + left + " / " + right);
+    protected Object mergeValues(Object left, Object right) throws Exception {
+        
+        if(Boolean.FALSE.equals(right)) {
+            return false;
+        }
+        
+        if(Boolean.FALSE.equals(left) || !this.deepMerging) {
+            return right;
+        }
+        
+        return mergeMap((Map) left, (Map) right);
+    }
+    
+    protected Map<String, Object> mergeMap(Map<String, Object> left, Map<String, Object> right) throws Exception{
+        for (Map.Entry<String, Object> entrySet : right.entrySet()) {
+            String key = entrySet.getKey();
+            Object value = entrySet.getValue();
+            
+            // no conflict
+            if(!left.containsKey(key)) {
+                if(!this.allowNewKeys) {
+                    String msg = String.format("You are not allowed to define new elements for path '%s'", this.getPath());
+                    throw new Exception(msg);
+                }
+                
+                left.put(key, value);
+                continue;
+            }
+            
+            if(!this.children.containsKey(key)){
+                throw new Exception("merge() expects a normalized config array.");
+            }
+            
+            left.put(key, this.children.get(key).merge(left.get(key), value));
+        }
+        
         return left;
     }
 
@@ -83,24 +119,26 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     protected Object finalizeValue(Object value) throws Exception {
         HashMap<String, Object> casted = (HashMap<String, Object>) value;
         
-        for(Map.Entry<String, Node> entry : this.children.entrySet()) {
-            String key = entry.getKey();
-            Node child = entry.getValue();
-            
-            if(!casted.containsKey(key)) {
-                if(child.isRequired()) {
-                    String msg = String.format("The child node '%s' at path '%s' must be configured.", key, this.getPath());
-                    throw new Exception(msg);
+        if(this.children != null) {
+            for(Map.Entry<String, Node> entry : this.children.entrySet()) {
+                String key = entry.getKey();
+                Node child = entry.getValue();
+
+                if(!casted.containsKey(key)) {
+                    if(child.isRequired()) {
+                        String msg = String.format("The child node '%s' at path '%s' must be configured.", key, this.getPath());
+                        throw new Exception(msg);
+                    }
+
+                    if(child.hasDefaultValue()) {
+                        casted.put(key, child.getDefaultValue());
+                    }
+
+                    continue;
                 }
-                
-                if(child.hasDefaultValue()) {
-                    casted.put(key, child.getDefaultValue());
-                }
-                
-                continue;
+
+                casted.put(key, child.finalize(casted.get(key)));
             }
-            
-            casted.put(key, child.finalize(casted.get(key)));
         }
         
         return casted;

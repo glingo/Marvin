@@ -10,7 +10,7 @@
     </parameters>
     
     <!--<import resource="app/config/imported_config.xml" />-->
-    <import resource="com/marvin/resources/imported_services.xml" />
+    <import resource="com/marvin/resources/config/imported_services.xml" />
     
     <services>
         
@@ -18,6 +18,11 @@
         <service id="test.service.a" class="com.marvin.service.TestServiceA">
             <argument type="java.lang.String" value="Service A"/>
             <argument type="int" value="1"/>
+            <call name="sayHello"/>
+            <call name="say">
+                <argument type="java.lang.String" value="Service A"/>
+                <argument type="int" value="1"/>
+            </call>
         </service>
         
         <!-- Give a test service named Service B ( with a reference to Service A ) to the container -->

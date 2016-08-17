@@ -1,6 +1,7 @@
 package com.marvin.component.container.config;
 
 import com.marvin.component.util.ObjectUtils;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -13,6 +14,7 @@ public class Definition {
     protected String className;
     
     protected String factoryName;
+    
     protected String factoryMethodName;
     
     protected String parentName;
@@ -23,14 +25,13 @@ public class Definition {
     
     protected String[] aliases;
     
-    protected Object[] arguments = new Object[]{};
+    protected Object[] arguments;
+    
+    protected String[] tags;
+    
+    protected LinkedHashMap<String, Object[]> calls;
 
     public Definition() {}
-    
-    public Definition(String className, Object[] arguments) {
-        this.className = className;
-        this.arguments = arguments;
-    }
     
     public String getScope() {
         return scope;
@@ -111,10 +112,8 @@ public class Definition {
         if(arguments == null) {
             this.arguments = new Object[0];
         }
+        
         this.arguments = ObjectUtils.addObjectToArray(arguments, argument);
-//        ArrayList<Object> t = new ArrayList<>(Arrays.asList(this.arguments));
-//        t.add(argument);
-//        this.arguments = t.toArray();
     }
 
     public void setFactoryName(String factoryName) {
@@ -123,5 +122,54 @@ public class Definition {
 
     public String getFactoryName() {
         return factoryName;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+    
+    public void addTag(String tag) {
+        if(this.tags == null) {
+            this.tags = new String[0];
+        }
+        
+        this.tags = ObjectUtils.addObjectToArray(this.tags, tag);
+    }
+    
+    public boolean hasTag(String name){
+        if(this.tags == null) {
+            return false;
+        }
+        
+        for (String tag : this.tags) {
+            if(name.equals(tag)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public void setCalls(LinkedHashMap<String, Object[]> calls) {
+        this.calls = calls;
+    }
+
+    public LinkedHashMap<String, Object[]> getCalls() {
+        return calls;
+    }
+    
+    public void addCall(String name, Object[] args) {
+        if(this.calls == null) {
+            this.calls = new LinkedHashMap<>();
+        }
+        this.calls.put(name, args);
+    }
+    
+     public boolean hasCall() {
+        return this.calls != null;
     }
 }

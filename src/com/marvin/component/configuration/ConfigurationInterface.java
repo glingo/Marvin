@@ -4,6 +4,6 @@ import com.marvin.component.configuration.builder.TreeBuilder;
 
 public interface ConfigurationInterface {
     
-    TreeBuilder getConfigTreeBuilder();
+    TreeBuilder getConfigTreeBuilder() throws Exception;
     
 }

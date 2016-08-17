@@ -40,16 +40,19 @@ public class ContainerBuilder {
      */
     protected ConcurrentMap<String, Definition> definitions;
     
-    protected ConcurrentMap<String, ExtensionInterface> extensions;
+    protected HashMap<String, ExtensionInterface> extensions;
 
+    protected HashMap<String, Object> extensionConfigs;
+    
     /**
      * The Container to build
      */
     protected Container container;
 
     public ContainerBuilder() {
+        this.extensionConfigs = new HashMap<>();
         this.definitions = new ConcurrentHashMap<>();
-        this.extensions = new ConcurrentHashMap<>();
+        this.extensions = new HashMap<>();
         this.container = new Container();
     }
 
@@ -57,10 +60,10 @@ public class ContainerBuilder {
         this.definitions.keySet().forEach(this::get);
         
         this.extensions.values().forEach((ExtensionInterface extension) -> {
-            extension.load(new HashMap<>(), this);
+//            HashMap conf = this.extensionConfigs.get(extension.getAlias());
+//            extension.load(conf, this);
+            extension.load(this.extensionConfigs, this);
         });
-        
-        System.out.println(this.container);
         
         return this.container;
     }
@@ -136,8 +139,6 @@ public class ContainerBuilder {
                 // instatiation
                 if (constructor != null) {
                     service = constructor.newInstance(arguments);
-                } else {
-                    System.out.println("Can not instanciate " + id);
                 }
             }
 
@@ -156,6 +157,27 @@ public class ContainerBuilder {
                 ((ContainerAwareInterface) service).setContainer(container);
             }
 
+            if(definition.hasCall()) {
+                for (Map.Entry<String, Object[]> entrySet : definition.getCalls().entrySet()) {
+                    String name = entrySet.getKey();
+                    Object[] args = entrySet.getValue();
+    //                Class[] types = new Class[]{};
+    //                
+    //                if(args != null){
+    //                    for (Object arg : args) {
+    //                        if(arg != null) {
+    //                            types = ObjectUtils.addObjectToArray(types, arg.getClass());
+    //                        } else {
+    //                            types = ObjectUtils.addObjectToArray(types, Object.class);
+    //                        }
+    //                    }
+    //                }
+    //                Method call = ClassUtils.getMethod(service.getClass(), name, types);
+                    Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
+                    ReflectionUtils.invokeMethod(call, service, args);
+                }
+            }
+            
             this.container.set(id, service);
         }
         
@@ -184,7 +206,24 @@ public class ContainerBuilder {
         this.addAliases(builder.getAliases());
         this.addExtensions(builder.getExtensions());
     }
+    
+    public void loadFromExtension(String key, HashMap values) throws Exception{
+        String ns = this.getExtension(key).getAlias();
+        this.extensionConfigs.put(ns, values);
+    }
 
+    public HashMap<String, Definition> findTaggedDefinitions(String name){
+        HashMap<String, Definition> tagged = new HashMap<>();
+        
+        this.definitions.forEach((String id, Definition definition) -> { 
+            if(definition.hasTag(name)) {
+                tagged.put(id, definition);
+            }
+        });
+        
+        return tagged;
+    }
+    
     public void set(String id, Object service) {
         this.container.set(id, service);
     }
@@ -243,6 +282,14 @@ public class ContainerBuilder {
     
     public Map<String, ExtensionInterface> getExtensions() {
         return this.extensions;
+    }
+    
+    public ExtensionInterface getExtension(String name) throws Exception {
+        if(!this.extensions.containsKey(name)) {
+            String msg = String.format("Container extension '%s' is not registered", name);
+            throw new Exception(msg);
+        }
+        return this.extensions.get(name);
     }
     
     public void addExtensions(Map<String, ExtensionInterface> extensions) {
