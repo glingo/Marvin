@@ -31,7 +31,9 @@ public class Definition {
     
     protected LinkedHashMap<String, Object[]> calls;
 
-    public Definition() {}
+    public Definition() {
+        this.arguments = new Object[]{};
+    }
     
     public String getScope() {
         return scope;

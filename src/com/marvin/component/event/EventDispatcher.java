@@ -19,11 +19,15 @@ public class EventDispatcher extends Dispatcher<Event> {
 
     @Override
     public void removeSubscriber(SubscriberInterface<Event> subscriber) {
-        if (subscribers == null || subscribers.isEmpty() || !subscribers.contains(subscriber)) {
+        
+        if (this.subscribers == null 
+                || this.subscribers.isEmpty() 
+                || !this.subscribers.contains(subscriber)) {
+            
             return;
         }
 
-        subscribers.remove(subscriber);
+        this.subscribers.remove(subscriber);
     }
 
     @Override

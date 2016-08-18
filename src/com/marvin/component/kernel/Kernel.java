@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -199,27 +200,43 @@ public abstract class Kernel {
             if (controller.getHolder() instanceof ContainerAwareInterface) {
                 ((ContainerAwareInterface) controller.getHolder()).setContainer(container);
             }
-
-            this.container.set("print_writer", writer);
+            
+            StringWriter tmpWriter = new StringWriter();
+            this.container.set("print_writer", tmpWriter);
             controller.run();
-            this.container.set("print_writer", null);
-        }
+            writer.append(tmpWriter.toString());
+            tmpWriter.close();
 
-        writer.flush();
+            writer.flush();
+        }
 
     }
 
     public void handle(BufferedReader reader, PrintWriter writer) throws Exception {
 
         String line = reader.readLine();
-
-        while (line != null 
-                && !"".equals(line) 
-                && !System.lineSeparator().equals(line) 
-                && !line.equals("quit")) {
+        
+        String request = "";
+        
+        while (line != null && !"".equals(line) && !System.lineSeparator().equals(line)) {
+            
+            request += "\n" + line;
+            
             this.handle(line, writer);
+            
             line = reader.readLine();
         }
+        
+        System.out.println("Request :");
+        System.out.println(request);
+
+//        while (line != null 
+//                && !"".equals(line) 
+//                && !System.lineSeparator().equals(line) 
+//                && !line.equals("quit")) {
+//            this.handle(line, writer);
+//            line = reader.readLine();
+//        }
 
     }
 

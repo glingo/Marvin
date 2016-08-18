@@ -1,32 +1,36 @@
 package com.marvin.component.event.dispatcher;
 
-import com.marvin.component.event.subscriber.SubscriberInterface;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
-/**
- *
- * @author Dr.Who
- * @param <T>
- */
+import com.marvin.component.event.subscriber.SubscriberInterface;
+
 public abstract class Dispatcher<T> implements DispatcherInterface<T> {
 
-    protected List<SubscriberInterface<T>> subscribers = new ArrayList<>();
+    protected List<SubscriberInterface<T>> subscribers;
+
+    public Dispatcher() {
+        this.subscribers = new ArrayList<>();
+    }
+    
+    public Dispatcher(List<SubscriberInterface<T>> subscribers) {
+        this.subscribers = new ArrayList<>();
+    }
     
     @Override
     public void addSubscriber(SubscriberInterface<T> sub) {
-        subscribers.add(sub);
+        this.subscribers.add(sub);
     }
 
     @Override
     public void dispatch(String name, T event) {
         
-        if (subscribers == null || subscribers.isEmpty()) {
+        if (this.subscribers == null || this.subscribers.isEmpty()) {
             return;
         }
         
-        subscribers.forEach((SubscriberInterface<T> subscriber) -> {
+        this.subscribers.forEach((SubscriberInterface<T> subscriber) -> {
             
             if (subscriber == null) {
                 return;

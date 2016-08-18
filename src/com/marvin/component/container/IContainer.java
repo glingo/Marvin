@@ -1,11 +1,8 @@
 package com.marvin.component.container;
 
 import com.marvin.component.container.exception.ContainerException;
+import java.util.concurrent.ConcurrentMap;
 
-/**
- *
- * @author caill
- */
 public interface IContainer {
     
     /**
@@ -34,18 +31,18 @@ public interface IContainer {
      * @throws ContainerException if the service does not exists
      */
     Object get(String id) throws ContainerException;
-       
-    /**
-     * @param <T>
-     * @param id
-     * @param type
-     * @return 
-     * @throws com.marvin.component.container.exception.ContainerException 
-     */
+
     <T> T get(String id, Class<T> type) throws ContainerException;
+
+    /* Parameters methods */
+    
+    ConcurrentMap<String, Object> getParameters();
     
     Object getParameter(String key, Object def);
     
     Object getParameter(String key);
+    
+    
+    /* Definitions methods */
     
 }

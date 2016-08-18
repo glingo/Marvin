@@ -95,9 +95,9 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
     @Override
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-        for (Loader<?> loader : loaders) {
+        loaders.stream().forEach((loader) -> {
             loader.setPrefix(prefix);
-        }
+        });
     }
 
     public String getCharset() {
