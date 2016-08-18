@@ -1,20 +1,16 @@
 package com.marvin.bundle.framework.javafx;
 
-import com.marvin.bundle.framework.FrameworkBundle;
-import com.marvin.component.io.IResource;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.kernel.Kernel;
 import com.marvin.component.templating.Engine;
 import com.marvin.component.templating.template.Template;
+
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -106,7 +102,6 @@ public class JavaFXApplication {
     public void display(Stage stage, String name) {
         Parent root = load(name);
         
-        System.out.println(root.getStylesheets());
         Scene scene = new Scene(root, 300, 250);
         stage.setTitle("Hello World!");
         stage.setScene(scene);
