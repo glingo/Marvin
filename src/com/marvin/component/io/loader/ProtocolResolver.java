@@ -15,7 +15,6 @@
  */
 package com.marvin.component.io.loader;
 
-import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.IResource;
 
 /**

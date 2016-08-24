@@ -14,7 +14,6 @@ import java.util.logging.Logger;
  */
 public class Controller extends ContainerAware {
     
-    
     protected void render(String templateName, Map<String, Object> context){
         try {
             Writer writer = this.get("print_writer", Writer.class);

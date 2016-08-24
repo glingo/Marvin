@@ -16,10 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.util.Pair;
 
-/**
- *
- * @author cdi305
- */
 public class Lexer {
 
     protected Syntax syntax;

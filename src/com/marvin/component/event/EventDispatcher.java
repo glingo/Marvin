@@ -34,4 +34,13 @@ public class EventDispatcher extends Dispatcher<Event> {
     public Event create() {
         return new Event();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClass()).append("\n").append(this.subscribers);
+        return sb.toString();
+    }
+    
+    
 }

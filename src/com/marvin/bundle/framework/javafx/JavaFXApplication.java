@@ -108,6 +108,4 @@ public class JavaFXApplication {
         stage.show();
     }
     
-    
-    
 }

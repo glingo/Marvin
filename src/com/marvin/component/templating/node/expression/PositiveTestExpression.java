@@ -3,7 +3,6 @@ package com.marvin.component.templating.node.expression;
 import com.marvin.component.templating.template.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.Test;
-import com.marvin.component.templating.extension.core.DefinedTest;
 import com.marvin.component.templating.node.ArgumentsNode;
 import com.marvin.component.templating.node.TestInvocationExpression;
 

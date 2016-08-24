@@ -1,17 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <<<<<<< HEAD
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * =======
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * >>>>>>> d6a41085fe86ce30f23d3b7929ad492343ff01b7
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node.expression;
 
 import com.marvin.component.templating.template.EvaluationContext;

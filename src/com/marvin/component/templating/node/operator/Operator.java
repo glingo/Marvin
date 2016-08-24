@@ -2,10 +2,6 @@ package com.marvin.component.templating.node.operator;
 
 import com.marvin.component.templating.node.expression.Expression;
 
-/**
- *
- * @author cdi305
- */
 public abstract class Operator {
     
     protected String symbol;

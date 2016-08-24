@@ -2,10 +2,6 @@ package com.marvin.component.templating.node.operator;
 
 import com.marvin.component.templating.node.expression.UnaryExpression;
 
-/**
- *
- * @author cdi305
- */
 public class UnaryOperator extends Operator {
     
     protected int precedence;

@@ -4,4 +4,6 @@
     <route name="debug.container" path="/debug/container" controller="com.marvin.bundle.debug.controller.DebugController::debugContainer" />
     <route name="debug.container.html" path="/debug/container.html" controller="com.marvin.bundle.debug.controller.DebugController::debugContainerHTML" />
 
+    <route name="debug.events" path="/debug/events" controller="com.marvin.bundle.debug.controller.DebugController::debugEvents" />
+    
 </routing>

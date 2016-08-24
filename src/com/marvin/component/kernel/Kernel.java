@@ -112,9 +112,9 @@ public abstract class Kernel {
         // Inject the kernel as a service
         builder.set("kernel", this);
 //         Inject the container as a service
-        builder.set("container", this.container);
+//        builder.set("container", this.container);
         // Inject an event dispatcher
-        builder.set("event_dispatcher", this.dispatcher);
+//        builder.set("event_dispatcher", this.dispatcher);
         // Inject a thread_pool
         builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
         // Inject the logger as a service

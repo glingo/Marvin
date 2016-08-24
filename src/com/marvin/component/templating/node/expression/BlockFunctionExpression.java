@@ -1,11 +1,3 @@
-/*******************************************************************************
- * This file is part of Pebble.
- *
- * Copyright (c) 2014 by Mitchell Bösecke
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node.expression;
 
 import com.marvin.component.templating.template.EvaluationContext;
@@ -30,12 +22,12 @@ public class BlockFunctionExpression implements Expression<String> {
     public String evaluate(Template self, EvaluationContext context) throws Exception {
         Writer writer = new StringWriter();
         String blockName = (String) blockNameExpression.evaluate(self, context);
-//        try {
+        try {
             self.block(writer, context, blockName, false);
-//        } catch (Exception e) {
-//            String msg = String.format("Could not render block [%s] at line %s in file %s.", blockName, this.getLineNumber(), self.getName());
-//            throw new Exception(msg);
-//        }
+        } catch (Exception e) {
+            String msg = String.format("Could not render block [%s] at line %s in file %s.", blockName, this.getLineNumber(), self.getName());
+            throw new Exception(msg);
+        }
         return writer.toString();
     }
 

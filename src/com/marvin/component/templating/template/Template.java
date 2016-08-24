@@ -231,8 +231,7 @@ public class Template implements TemplateInterface {
      * @param writer          The writer
      * @throws Exception      Thrown if an error occurs
      */
-    public void block(Writer writer, EvaluationContext context, String blockName, boolean ignoreOverriden)
-            throws Exception {
+    public void block(Writer writer, EvaluationContext context, String blockName, boolean ignoreOverriden) throws Exception {
 
         Hierarchy hierarchy = context.getHierarchy();
         Template childTemplate = hierarchy.getChild();

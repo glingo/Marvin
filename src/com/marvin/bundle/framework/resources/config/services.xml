@@ -8,6 +8,9 @@
         <service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build">
         </service>
         
+        <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher">
+        </service>
+        
         <service id="console" class="com.marvin.bundle.framework.console.Console">
             <argument type="service" ref="kernel"/>
         </service>

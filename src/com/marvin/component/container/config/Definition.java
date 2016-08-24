@@ -1,7 +1,10 @@
 package com.marvin.component.container.config;
 
 import com.marvin.component.util.ObjectUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -29,7 +32,7 @@ public class Definition {
     
     protected String[] tags;
     
-    protected LinkedHashMap<String, Object[]> calls;
+    protected LinkedHashMap<String, List<Object[]>> calls;
 
     public Definition() {
         this.arguments = new Object[]{};
@@ -156,19 +159,31 @@ public class Definition {
         return false;
     }
 
-    public void setCalls(LinkedHashMap<String, Object[]> calls) {
+    public void setCalls(LinkedHashMap<String, List<Object[]>> calls) {
         this.calls = calls;
     }
 
-    public LinkedHashMap<String, Object[]> getCalls() {
+    public LinkedHashMap<String, List<Object[]>> getCalls() {
         return calls;
     }
     
-    public void addCall(String name, Object[] args) {
+//    public void addCall(String name, Object[] args) {
+//        if(this.calls == null) {
+//            this.calls = new LinkedHashMap<>();
+//        }
+//        this.calls.put(name, args);
+//    }
+    
+    public void addCall(String name, Object... args) {
         if(this.calls == null) {
             this.calls = new LinkedHashMap<>();
         }
-        this.calls.put(name, args);
+        
+        if(!this.calls.containsKey(name)) {
+            this.calls.put(name, new ArrayList<>());
+        }
+        
+        this.calls.get(name).add(args);
     }
     
      public boolean hasCall() {

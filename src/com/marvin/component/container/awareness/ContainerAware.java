@@ -17,6 +17,14 @@ public abstract class ContainerAware implements ContainerAwareInterface {
         return this.container;
     }
     
+    protected Object get(String id) {
+        try {
+            return this.container.get(id);
+        } catch (ContainerException ex) {
+            return null;
+        }
+    }
+    
     protected <T> T get(String id, Class<T> type) {
         try {
             return this.container.get(id, type);

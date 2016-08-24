@@ -7,6 +7,13 @@ import java.util.List;
 
 public class PassConfig {
     
+    
+    public final static String AFTER_REMOVING = "after_removing";
+    public final static String BEFORE_REMOVING = "before_removing";
+    public final static String BEFORE_OPTIMIZATION = "before_optimization";
+    public final static String REMOVING = "removing";
+    public final static String OPTIMIZATION = "optimization";
+    
     protected CompilerPassInterface mergePass;
     
     protected List<CompilerPassInterface> optimizationPasses;
@@ -60,6 +67,55 @@ public class PassConfig {
     
     public List<CompilerPassInterface> getBeforeOptimizationPasses(){
         return controlPasses(this.beforeOptimizationPasses);
+    }
+    
+    public void addOptimizationPass(CompilerPassInterface pass){
+        this.optimizationPasses.add(pass);
+    }
+    
+    public void addRemovingPass(CompilerPassInterface pass){
+        this.removingPasses.add(pass);
+    }
+    
+    public void addAfterRemovingPass(CompilerPassInterface pass){
+        this.afterRemovingPasses.add(pass);
+    }
+    
+    public void addBeforeRemovingPass(CompilerPassInterface pass){
+        this.beforeRemovingPasses.add(pass);
+    }
+    
+    public void addBeforeOptimizationPass(CompilerPassInterface pass){
+        this.beforeOptimizationPasses.add(pass);
+    }
+    
+    public void addPass(CompilerPassInterface pass, String type) throws Exception {
+        switch(type) {
+            case "after_removing" :
+                addAfterRemovingPass(pass);
+                break;
+                
+            case "before_removing" :
+                addBeforeRemovingPass(pass);
+                break;
+                
+            case "before_optimization" :
+                addBeforeOptimizationPass(pass);
+                break;
+                
+            case "optimization" :
+                addOptimizationPass(pass);
+                break;
+                
+            case "removing" :
+                addRemovingPass(pass);
+                break;
+                
+            default:
+                String msg = String.format("Invalid compiler pass type '%s'", type);
+                throw new Exception(msg);
+        }
+        
     }
     
     private List<CompilerPassInterface> controlPasses(List<CompilerPassInterface> passes) {

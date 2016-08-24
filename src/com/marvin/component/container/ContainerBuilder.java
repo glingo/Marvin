@@ -23,10 +23,13 @@ import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.compiler.Compiler;
+import com.marvin.component.container.compiler.PassConfig;
+import com.marvin.component.container.compiler.passes.CompilerPassInterface;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
 import com.marvin.component.util.ReflectionUtils;
 import com.marvin.component.util.StringUtils;
+import java.util.List;
 
 public class ContainerBuilder {
 
@@ -62,14 +65,6 @@ public class ContainerBuilder {
         this.definitions.keySet().forEach(this::get);
         
         return getContainer();
-    }
-    
-    private Compiler getCompiler(){
-        if(this.compiler == null) {
-            this.compiler = new Compiler();
-        }
-        
-        return this.compiler;
     }
 
     private Object resolveArgument(Object arg) {
@@ -162,9 +157,16 @@ public class ContainerBuilder {
             }
 
             if(definition.hasCall()) {
-                for (Map.Entry<String, Object[]> entrySet : definition.getCalls().entrySet()) {
+                
+                for (Map.Entry<String, List<Object[]>> entrySet : definition.getCalls().entrySet()) {
                     String name = entrySet.getKey();
-                    Object[] args = entrySet.getValue();
+                    List<Object[]> args = entrySet.getValue();
+                    
+                    for (Object[] arg : args) {
+                        Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
+                        ReflectionUtils.invokeMethod(call, service, arg);
+                    }
+                    
     //                Class[] types = new Class[]{};
     //                
     //                if(args != null){
@@ -177,8 +179,8 @@ public class ContainerBuilder {
     //                    }
     //                }
     //                Method call = ClassUtils.getMethod(service.getClass(), name, types);
-                    Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
-                    ReflectionUtils.invokeMethod(call, service, args);
+//                    Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
+//                    ReflectionUtils.invokeMethod(call, service, args);
                 }
             }
             
@@ -254,12 +256,23 @@ public class ContainerBuilder {
     
     /* Definitions methods */
     
+    public boolean hasDefinition(String id) {
+        return this.definitions != null && this.definitions.containsKey(id);
+    }
+     
     public void addDefinition(String id, Definition definition) {
         this.definitions.put(id, definition);
     }
     
     public void addDefinitions(Map<String, Definition> definitions) {
         definitions.forEach(this::addDefinition);
+    }
+    
+    public Definition getDefinition(String id) {
+        if(!hasDefinition(id)) {
+            return null;
+        }
+        return this.definitions.get(id);
     }
     
     public ConcurrentMap<String, Definition> getDefinitions() {
@@ -330,8 +343,25 @@ public class ContainerBuilder {
         }
     }
     
+    /* Compiler methods */
     
-
+    
+    private Compiler getCompiler(){
+        if(this.compiler == null) {
+            this.compiler = new Compiler();
+        }
+        
+        return this.compiler;
+    }
+    
+    public void addCompilerPass(CompilerPassInterface pass) throws Exception {
+        addCompilerPass(pass, PassConfig.BEFORE_OPTIMIZATION);
+    }
+    
+    public void addCompilerPass(CompilerPassInterface pass, String type) throws Exception {
+        getCompiler().getPassConfig().addPass(pass, type);
+    }
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
