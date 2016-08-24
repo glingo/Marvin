@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class Controller extends ContainerAware {
     
-    protected void render(String templateName, Map<String, Object> context){
+    protected void render(String templateName, Map<String, Object> context) {
         try {
             Writer writer = this.get("print_writer", Writer.class);
             Engine engine = this.get("templating_engine", Engine.class);
@@ -25,5 +25,18 @@ public class Controller extends ContainerAware {
         } catch (Exception ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    protected void render(String name, Map context, String suffix) {
+
+        if (suffix != null && !suffix.isEmpty()) {
+            name += "." + suffix;
+        }
+        
+        if(!name.endsWith(".view")) {
+            name += ".view";
+        }
+        
+        render(name, context);
     }
 }

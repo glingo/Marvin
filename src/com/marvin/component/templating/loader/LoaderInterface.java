@@ -10,7 +10,7 @@ import java.io.Reader;
  * @param <T>
  *
  */
-public interface Loader<T> {
+public interface LoaderInterface<T> {
 
     /**
      * The reader which will be used by Pebble to read the contents of the

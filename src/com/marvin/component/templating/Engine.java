@@ -5,7 +5,7 @@ import com.marvin.component.templating.extension.Extension;
 import com.marvin.component.templating.extension.ExtensionRegistry;
 import com.marvin.component.templating.lexer.Lexer;
 import com.marvin.component.templating.lexer.Syntax;
-import com.marvin.component.templating.loader.Loader;
+import com.marvin.component.templating.loader.LoaderInterface;
 import com.marvin.component.templating.node.RootNode;
 import com.marvin.component.templating.parser.Parser;
 import com.marvin.component.templating.token.TokenStream;
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class Engine {
 
-    private final Loader<?> loader;
+    private final LoaderInterface<?> loader;
 
     private final Syntax syntax;
 
@@ -48,7 +48,7 @@ public class Engine {
      * @param executorService
      * @param extensions The userProvidedExtensions which should be loaded.
      */
-    public Engine(Loader<?> loader, Syntax syntax, boolean strictVariables, Locale defaultLocale, ExecutorService executorService, Collection<? extends Extension> extensions) {
+    public Engine(LoaderInterface<?> loader, Syntax syntax, boolean strictVariables, Locale defaultLocale, ExecutorService executorService, Collection<? extends Extension> extensions) {
 
         this.loader = loader;
         this.syntax = syntax;
@@ -110,7 +110,7 @@ public class Engine {
      * @return the reader object.
      * @throws Exception thrown when the template could not be loaded.
      */
-    private <T> Reader retrieveReaderFromLoader(Loader<T> loader, Object cacheKey) throws Exception {
+    private <T> Reader retrieveReaderFromLoader(LoaderInterface<T> loader, Object cacheKey) throws Exception {
         // We make sure within getTemplate() that we use only the same key for
         // the same loader and hence we can be sure that the cast is safe.
         @SuppressWarnings("unchecked")
@@ -123,7 +123,7 @@ public class Engine {
      *
      * @return The loader
      */
-    public Loader<?> getLoader() {
+    public LoaderInterface<?> getLoader() {
         return loader;
     }
 

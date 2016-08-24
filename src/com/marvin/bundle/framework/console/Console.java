@@ -17,12 +17,12 @@ public class Console {
             
             this.kernel.boot();
             
-            System.out.println("==============================================");
-            System.out.println("==                MARVIN                    ==");
-            System.out.println("==              Console v0.1                ==");
-            System.out.println("==           debug mode : " + kernel.isDebug() +"              ==");
-            System.out.println("==============================================");
-            
+//            System.out.println("==============================================");
+//            System.out.println("==                MARVIN                    ==");
+//            System.out.println("==              Console v0.1                ==");
+//            System.out.println("==           debug mode : " + kernel.isDebug() +"              ==");
+//            System.out.println("==============================================");
+
             this.kernel.handle(System.in, System.out, System.err);
             
             System.out.println("==============================================");

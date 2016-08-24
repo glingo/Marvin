@@ -9,7 +9,7 @@ import com.marvin.component.templating.lexer.Syntax;
 import com.marvin.component.templating.loader.ClasspathLoader;
 import com.marvin.component.templating.loader.DelegatingLoader;
 import com.marvin.component.templating.loader.FileLoader;
-import com.marvin.component.templating.loader.Loader;
+import com.marvin.component.templating.loader.LoaderInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class EngineBuilder {
 
-    private Loader<?> loader;
+    private LoaderInterface<?> loader;
 
     private final List<Extension> userProvidedExtensions = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class EngineBuilder {
      * @param loader A template loader
      * @return This builder object
      */
-    public EngineBuilder loader(Loader<?> loader) {
+    public EngineBuilder loader(LoaderInterface<?> loader) {
         this.loader = loader;
         return this;
     }
@@ -209,7 +209,7 @@ public class EngineBuilder {
 
         // default loader
         if (loader == null) {
-            List<Loader<?>> defaultLoadingStrategies = new ArrayList<>();
+            List<LoaderInterface<?>> defaultLoadingStrategies = new ArrayList<>();
             defaultLoadingStrategies.add(new ClasspathLoader());
             defaultLoadingStrategies.add(new FileLoader());
             loader = new DelegatingLoader(defaultLoadingStrategies);

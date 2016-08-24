@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
 
 import java.util.Arrays;
 import java.util.concurrent.Executors;
@@ -38,7 +39,9 @@ import java.util.stream.Collectors;
  * @author Dr.Who
  */
 public abstract class Kernel {
-
+    
+    protected static final String VERSION = "v0.1";
+    
     protected static final int THREAD = 10;
 
     protected boolean booted = false;
@@ -158,7 +161,7 @@ public abstract class Kernel {
     /* Handles methods */
     
     
-    public void handle(String row, PrintWriter writer) throws Exception {
+    public void handle(String row, Writer writer) throws Exception {
 
         this.boot();
 
@@ -181,19 +184,22 @@ public abstract class Kernel {
             Route route = this.router.find(uri);
 
             if (route == null) {
-                writer.format("Sorry we could find a route for %s\n", uri);
+                String msg = String.format("Sorry we could find a route for %s\n", uri);
+                writer.append(msg);
                 return;
             }
 
             if (route.getController() == null) {
-                writer.format("There is no Controller for %s\n", uri);
+                String msg = String.format("There is no Controller for %s\n", uri);
+                writer.append(msg);
                 return;
             }
 
             Controller controller = this.resolver.resolveController(route.getController());
 
             if (controller == null) {
-                writer.format("No controller set for %s\n", uri);
+                String msg = String.format("No controller set for %s\n", uri);
+                writer.append(msg);
                 return;
             }
 
@@ -204,8 +210,10 @@ public abstract class Kernel {
             StringWriter tmpWriter = new StringWriter();
             this.container.set("print_writer", tmpWriter);
             controller.run();
+            tmpWriter.flush();
             writer.append(tmpWriter.toString());
             tmpWriter.close();
+            this.container.set("print_writer", null);
 
             writer.flush();
         }
@@ -240,7 +248,7 @@ public abstract class Kernel {
 
     }
 
-    public void handle(Reader reader, PrintWriter writer) throws Exception {
+    public void handle(Reader reader, Writer writer) throws Exception {
         BufferedReader buffered = new BufferedReader(reader);
         this.handle(buffered, writer);
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.io.xml;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,10 +6,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-/**
- *
- * @author cdi305
- */
 public class DocumentLoader {
 
     /**

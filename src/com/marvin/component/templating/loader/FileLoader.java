@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author mbosecke
  *
  */
-public class FileLoader implements Loader<String> {
+public class FileLoader implements LoaderInterface<String> {
 
     private static final Logger logger = Logger.getLogger(FileLoader.class.getName());
 

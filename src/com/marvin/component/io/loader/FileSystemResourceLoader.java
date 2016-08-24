@@ -3,10 +3,6 @@ package com.marvin.component.io.loader;
 import com.marvin.component.io.resource.FileSystemResource;
 import com.marvin.component.io.IResource;
 
-/**
- *
- * @author cdi305
- */
 public class FileSystemResourceLoader extends DefaultResourceLoader {
 
     /**

@@ -30,7 +30,8 @@ public class Controller {
             }
             
             long end = new Date().getTime();
-            System.out.format("Controller executed in %s ms\n", end - start);
+            
+            System.out.format("Controller (%s, %s) executed in %s ms\n", holder, action, end - start);
 
         }
     }

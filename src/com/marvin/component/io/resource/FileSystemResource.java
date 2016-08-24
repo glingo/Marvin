@@ -162,6 +162,7 @@ public class FileSystemResource extends Resource implements WritableResource {
 
     /**
      * This implementation returns the underlying File's length.
+     * @throws java.io.IOException
      */
     @Override
     public long contentLength() throws IOException {

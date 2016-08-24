@@ -8,7 +8,7 @@ import java.io.StringReader;
  * it is primarily for testing and debugging. Many tags do not
  * work when using this loader, such as "extends", "imports", "include".
  */
-public class StringLoader implements Loader<String> {
+public class StringLoader implements LoaderInterface<String> {
 
     @Override
     public Reader getReader(String templateName) throws Exception {

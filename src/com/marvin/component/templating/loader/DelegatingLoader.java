@@ -14,7 +14,7 @@ import java.util.List;
  * @author mbosecke
  *
  */
-public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
+public class DelegatingLoader implements LoaderInterface<DelegatingLoaderCacheKey> {
 
     private String prefix;
 
@@ -27,7 +27,7 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
      * soon as one of them finds a template, the others will not be given a
      * chance to do so.
      */
-    private final List<Loader<?>> loaders;
+    private final List<LoaderInterface<?>> loaders;
 
     /**
      * Constructor provided with a list of children loaders.
@@ -35,8 +35,8 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
      * @param loaders
      *            A list of loaders to delegate to
      */
-    public DelegatingLoader(List<Loader<?>> loaders) {
-        this.loaders = Collections.unmodifiableList(new ArrayList<Loader<?>>(loaders));
+    public DelegatingLoader(List<LoaderInterface<?>> loaders) {
+        this.loaders = Collections.unmodifiableList(new ArrayList<>(loaders));
     }
 
 
@@ -47,7 +47,7 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
 
         final int size = this.loaders.size();
         for (int i = 0; i < size; i++) {
-            Loader<?> loader = this.loaders.get(i);
+            LoaderInterface<?> loader = this.loaders.get(i);
             Object delegatingKey = cacheKey.getDelegatingCacheKeys().get(i);
             try {
                 reader = this.getReaderInner(loader, delegatingKey);
@@ -66,7 +66,7 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
         return reader;
     }
 
-    private <T> Reader getReaderInner(Loader<T> delegatingLoader, Object cacheKey) throws Exception {
+    private <T> Reader getReaderInner(LoaderInterface<T> delegatingLoader, Object cacheKey) throws Exception {
 
         // This unchecked cast is ok, because we ensure that the type of the
         // cache key corresponds to the loader when we create the key.
@@ -117,7 +117,7 @@ public class DelegatingLoader implements Loader<DelegatingLoaderCacheKey> {
         if (relativePath == null) {
             return relativePath;
         }
-        for (Loader<?> loader : this.loaders) {
+        for (LoaderInterface<?> loader : this.loaders) {
             String path = loader.resolveRelativePath(relativePath, anchorPath);
             if (path != null) {
                 return path;

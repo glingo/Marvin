@@ -10,10 +10,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
- *
- * @author cdi305
- */
 public abstract class FileResolvingResource extends Resource {
 
     /**

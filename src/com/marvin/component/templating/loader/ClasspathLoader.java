@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @author mbosecke
  *
  */
-public class ClasspathLoader implements Loader<String> {
+public class ClasspathLoader implements LoaderInterface<String> {
 
     private static final Logger logger = Logger.getLogger(ClasspathLoader.class.getName());
 

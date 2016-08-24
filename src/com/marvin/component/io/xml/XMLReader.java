@@ -14,10 +14,6 @@ import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-/**
- *
- * @author cdi305
- */
 public abstract class XMLReader {
 
     protected DocumentLoader documentLoader;

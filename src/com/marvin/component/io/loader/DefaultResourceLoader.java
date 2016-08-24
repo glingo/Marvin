@@ -11,10 +11,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- *
- * @author cdi305
- */
 public class DefaultResourceLoader extends ResourceLoader {
 
     private ClassLoader classLoader;
