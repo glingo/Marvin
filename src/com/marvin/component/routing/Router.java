@@ -13,17 +13,22 @@ public class Router {
     }
 
     public void addRoute(String id, Route route) {
-        this.routes.putIfAbsent(id, route);
+        getRoutes().putIfAbsent(id, route);
     }
 
     public Route find(String path) {
-        return routes.values().stream().filter((Route filtered) -> {
+        return getRoutes().values().stream().filter((Route filtered) -> {
             return filtered.getPath().matches(path);
         }).findFirst().orElse(null);
     }
 
     public ConcurrentMap<String, Route> getRoutes() {
-        return routes;
+        
+        if(this.routes == null) {
+            setRoutes(new ConcurrentHashMap<>());
+        }
+        
+        return this.routes;
     }
 
     public void setRoutes(ConcurrentMap<String, Route> routes) {

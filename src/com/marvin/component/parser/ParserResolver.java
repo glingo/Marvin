@@ -1,5 +1,6 @@
 package com.marvin.component.parser;
 
+import java.util.Arrays;
 import com.marvin.component.parser.support.BigDecimalParser;
 import com.marvin.component.parser.support.BooleanParser;
 import com.marvin.component.parser.support.ByteParser;
@@ -14,12 +15,7 @@ import com.marvin.component.parser.support.ShortParser;
 import com.marvin.component.parser.support.SqlDateParser;
 import com.marvin.component.parser.support.SqlTimestampParser;
 import com.marvin.component.parser.support.StringParser;
-import java.util.Arrays;
 
-/**
- *
- * @author cdi305
- */
 public class ParserResolver {
 
     Parser[] parsers;

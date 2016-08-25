@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.container;
+package com.marvin.bundle.framework.container.compiler;
 
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.compiler.passes.CompilerPassInterface;

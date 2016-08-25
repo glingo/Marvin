@@ -9,10 +9,6 @@ public abstract class NumericNodeDefinition extends ScalarNodeDefinition {
         super(name);
     }
     
-//    public NumericNodeDefinition(String name, NodeParentInterface parent) {
-//        super(name, parent);
-//    }
-    
     public abstract void max(Number max) throws Exception;
     
     public abstract void min(Number min) throws Exception;

@@ -1,6 +1,5 @@
 package com.marvin.component.configuration.builder.definition;
 
-import com.marvin.component.configuration.builder.NodeInterface;
 import com.marvin.component.configuration.builder.node.FloatNode;
 import com.marvin.component.configuration.builder.node.Node;
 
@@ -10,13 +9,8 @@ public class FloatNodeDefinition extends NumericNodeDefinition {
         super(name);
     }
     
-//    public FloatNodeDefinition(String name, NodeParentInterface parent) {
-//        super(name, parent);
-//    }
-    
     @Override
     protected Node instatiateNode() {
-//        return new FloatNode(this.name, this.parent);
         return new FloatNode(this.name);
     }
 

@@ -7,9 +7,6 @@ import com.marvin.component.util.ClassUtils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Dr.Who
- */
 public abstract class Bundle extends ContainerAware {
     
     protected ExtensionInterface extension;
@@ -19,7 +16,6 @@ public abstract class Bundle extends ContainerAware {
      * @return Bundle
      */
     public Bundle boot(){
-//        System.out.format("bundle is booting %s\n", this);
         return this;
     }
     
@@ -44,8 +40,7 @@ public abstract class Bundle extends ContainerAware {
      *
      * @return string The Bundle namespace
      */
-    public String getNamespace()
-    {
+    public String getNamespace() {
         return this.getClass().getPackage().getName();
     }
     
@@ -64,8 +59,7 @@ public abstract class Bundle extends ContainerAware {
      *
      * @return string The Bundle absolute path
      */
-    public String getPath()
-    {
+    public String getPath() {
         return this.getClass().getName();
     }
     
@@ -74,13 +68,12 @@ public abstract class Bundle extends ContainerAware {
      *
      * @return string
      */
-    protected String getContainerExtensionPath()
-    {
+    protected String getContainerExtensionPath() {
         return String.format("%s.container.%sExtension", this.getNamespace(), this.getName());
     }
     
-    protected Class getContainerExtensionClass(){
-        String className = this.getContainerExtensionPath();
+    protected Class getContainerExtensionClass() {
+        String className = getContainerExtensionPath();
         try {
             return ClassUtils.forName(className, null);
         } catch (ClassNotFoundException ex) {
@@ -88,8 +81,8 @@ public abstract class Bundle extends ContainerAware {
         }
     }
     
-    protected ExtensionInterface createContainerExtension(){
-        Class cl = this.getContainerExtensionClass();
+    protected ExtensionInterface createContainerExtension() {
+        Class cl = getContainerExtensionClass();
         
         if(cl != null) {
             try {
@@ -101,9 +94,9 @@ public abstract class Bundle extends ContainerAware {
         return null;
     }
     
-    public ExtensionInterface getContainerExtension(){
+    public ExtensionInterface getContainerExtension() {
         if(null == this.extension) {
-            this.extension = this.createContainerExtension();
+            this.extension = createContainerExtension();
         }
         
         return this.extension;

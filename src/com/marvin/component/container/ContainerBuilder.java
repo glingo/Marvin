@@ -1,7 +1,6 @@
 package com.marvin.component.container;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.Arrays;
@@ -52,17 +51,14 @@ public class ContainerBuilder {
     protected Container container;
 
     public ContainerBuilder() {
-        this.extensionConfigs = new HashMap<>();
-        this.definitions = new ConcurrentHashMap<>();
-        this.extensions = new HashMap<>();
-        this.container = new Container();
+        
     }
 
     public Container build() {
         
         getCompiler().compile(this);
         
-        this.definitions.keySet().forEach(this::get);
+        getDefinitions().keySet().forEach(this::get);
         
         return getContainer();
     }
@@ -70,27 +66,22 @@ public class ContainerBuilder {
     private Object resolveArgument(Object arg) {
 
         if (arg instanceof Reference) {
-            Reference ref = (Reference) arg;
-            arg = get(ref.getTarget());
+            arg = get(((Reference) arg).getTarget());
         }
 
         if (arg instanceof Parameter) {
-            Parameter parameter = (Parameter) arg;
-            arg = getParameter(parameter.getKey());
+            arg = getParameter(((Parameter) arg).getKey());
         }
 
+        // recurse
         if (arg instanceof Collection) {
-            Collection collection = (Collection) arg;
-            arg = collection.stream()
-                    .map(this::resolveArgument)
+            arg = ((Collection) arg).stream().map(this::resolveArgument)
                     .collect(Collectors.toCollection(HashSet::new));
         }
 
+        // recurse
         if (ObjectUtils.isArray(arg)) {
-            Object[] array = (Object[]) arg;
-            arg = Arrays.stream(array)
-                    .map(this::resolveArgument)
-                    .collect(Collectors.toList()).toArray();
+            arg = resolveArguments((Object[]) arg);
         }
 
         return arg;
@@ -99,101 +90,103 @@ public class ContainerBuilder {
     private Object[] resolveArguments(Object[] arguments) {
         return Arrays.stream(arguments).map(this::resolveArgument).toArray();
     }
-
+    
     private Constructor<Object> resolveConstructor(Definition definition) {
-        try {
-            Class type = Class.forName(definition.getClassName());
-            
-            int len = definition.getArguments().length;
-            Constructor<Object>[] constructors = type.getConstructors();
 
-            Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
-                return len == cstr.getParameterCount();
-            };
+        Class type = ClassUtils.resolveClassName(definition.getClassName(), null);
 
-            return Arrays.stream(constructors).filter(filter).findFirst().orElse(null);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        int len = definition.getArguments().length;
+        Constructor<Object>[] constructors = type.getConstructors();
 
-        return null;
+        Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
+            return len == cstr.getParameterCount();
+        };
+
+        return Arrays.stream(constructors).filter(filter).findFirst().orElse(null);
     }
 
     public Object instanciate(String id, Definition definition) {
         Object service = null;
+        
+        // resolve arguments
+        Object[] arguments = resolveArguments(definition.getArguments());
 
-        try {
+        try{
             // if we have a factory use it to build the service.
             if (StringUtils.hasLength(definition.getFactoryName())) {
-                Class factory = ClassUtils.resolveClassName(definition.getFactoryName(), null);
-                Method method = ClassUtils.getMethod(factory, definition.getFactoryMethodName(), new Class[]{});
-                service = ReflectionUtils.invokeMethod(method, factory.newInstance());
-
+                service = callFactory(id, definition, arguments);
             } else {
-
-                // resolution des arguments
-                Object[] arguments = resolveArguments(definition.getArguments());
-                Constructor<Object> constructor = resolveConstructor(definition);
-
-                // instatiation
-                if (constructor != null) {
-                    service = constructor.newInstance(arguments);
-                }
+                service = callConstructor(id, definition, arguments);
             }
-
-        } catch (InstantiationException ex) {
-            LOG.log(Level.WARNING, "InstantiationException, we could not instatiate the service", ex);
-        } catch (IllegalAccessException ex) {
-            LOG.log(Level.WARNING, "IllegalAccessException, we can not access to the constructor", ex);
-        } catch (IllegalArgumentException ex) {
-            LOG.log(Level.WARNING, "IllegalArgumentException, Oops something's wrong in arguments", ex);
-        } catch (InvocationTargetException ex) {
-            LOG.log(Level.WARNING, "InvocationTargetException, Oops something's wrong in constructor invocation", ex);
+        } catch(Exception ex) {
+            String msg = String.format("InstantiationException, we could not instatiate the service %s.", id);
+            LOG.log(Level.WARNING, msg, ex);
         }
 
-        if (service != null) {
-            if (service instanceof ContainerAwareInterface) {
-                ((ContainerAwareInterface) service).setContainer(container);
-            }
+        // apply post instanciation
+        postInstanciate(id, definition, service);
 
-            if(definition.hasCall()) {
-                
-                for (Map.Entry<String, List<Object[]>> entrySet : definition.getCalls().entrySet()) {
-                    String name = entrySet.getKey();
-                    List<Object[]> args = entrySet.getValue();
-                    
-                    for (Object[] arg : args) {
-                        Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
-                        ReflectionUtils.invokeMethod(call, service, arg);
-                    }
-                    
-    //                Class[] types = new Class[]{};
-    //                
-    //                if(args != null){
-    //                    for (Object arg : args) {
-    //                        if(arg != null) {
-    //                            types = ObjectUtils.addObjectToArray(types, arg.getClass());
-    //                        } else {
-    //                            types = ObjectUtils.addObjectToArray(types, Object.class);
-    //                        }
-    //                    }
-    //                }
-    //                Method call = ClassUtils.getMethod(service.getClass(), name, types);
-//                    Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
-//                    ReflectionUtils.invokeMethod(call, service, args);
-                }
-            }
+        set(id, service);
+
+        return service;
+    }
+    
+    private Object callFactory(String id, Definition definition, Object[] arguments) throws Exception {
+        Class factory = ClassUtils.resolveClassName(definition.getFactoryName(), null);
+        Method method = ClassUtils.getMethod(factory, definition.getFactoryMethodName(), new Class[]{});
+        return ReflectionUtils.invokeMethod(method, factory.newInstance(), arguments);
+    }
+    
+    private Object callConstructor(String id, Definition definition, Object[] arguments) throws Exception {
+        Constructor<Object> constructor = resolveConstructor(definition);
+        return constructor.newInstance(arguments);
+    }
+    
+    private void postInstanciate(String id, Definition definition, Object service) {
+        
+        if (service == null) {
+            return;
+        }
             
-            getContainer().set(id, service);
+        applyAwareness(service);
+
+        // call methods if there is
+        applyCalls(id, definition, service);
+    }
+    
+    private void applyAwareness(Object service){
+        if (service instanceof ContainerAwareInterface) {
+            ((ContainerAwareInterface) service).setContainer(getContainer());
+        }
+    }
+    
+    private void applyCalls(String id, Definition definition, Object service) {
+        
+        // do nothing
+        if(!definition.hasCall()) {
+            return;
         }
         
-        return service;
+        definition.getCalls().entrySet().stream().forEach((entrySet) -> {
+            String name = entrySet.getKey();
+            List<Object[]> args = entrySet.getValue();
+
+            args.stream().forEach((arg) -> {
+                Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
+                ReflectionUtils.invokeMethod(call, service, resolveArguments(arg));
+            });
+        });
     }
     
     /* Container methods */
     
     public Container getContainer() {
-        return container;
+        
+        if(this.container == null) {
+            this.container = new Container();
+        }
+        
+        return this.container;
     }
 
     public Object get(String id) {
@@ -203,8 +196,8 @@ public class ContainerBuilder {
             service = getContainer().get(id);
         } catch (ContainerException ex) {
             // The service has not been instatiate yet, look into definition registry ?
-            Definition def = this.definitions.get(id);
-            if (def != null) {
+            if(hasDefinition(id)) {
+                Definition def = getDefinition(id);
                 service = instanciate(id, def);
             }
         }
@@ -217,21 +210,21 @@ public class ContainerBuilder {
     }
     
     public void merge(ContainerBuilder builder) {
-        this.addDefinitions(builder.getDefinitions());
-        this.addParameters(builder.getParameters());
-        this.addAliases(builder.getAliases());
-        this.addExtensions(builder.getExtensions());
+        addDefinitions(builder.getDefinitions());
+        addParameters(builder.getParameters());
+        addAliases(builder.getAliases());
+        addExtensions(builder.getExtensions());
     }
     
-    public void loadFromExtension(String key, HashMap values) throws Exception{
-        String ns = this.getExtension(key).getAlias();
-        this.extensionConfigs.put(ns, values);
+    public void loadFromExtension(String key, HashMap values) throws Exception {
+        String ns = getExtension(key).getAlias();
+        getExtensionConfigs().put(ns, values);
     }
 
     public HashMap<String, Definition> findTaggedDefinitions(String name){
         HashMap<String, Definition> tagged = new HashMap<>();
         
-        this.definitions.forEach((String id, Definition definition) -> { 
+        getDefinitions().forEach((String id, Definition definition) -> { 
             if(definition.hasTag(name)) {
                 tagged.put(id, definition);
             }
@@ -247,6 +240,11 @@ public class ContainerBuilder {
     }
     
     public void addAliases(Map<String, String> aliases){
+        
+        if(aliases == null) {
+            return;
+        }
+        
         aliases.forEach(this::addAlias);
     }
     
@@ -257,14 +255,17 @@ public class ContainerBuilder {
     /* Definitions methods */
     
     public boolean hasDefinition(String id) {
-        return this.definitions != null && this.definitions.containsKey(id);
+        return getDefinitions().containsKey(id);
     }
      
     public void addDefinition(String id, Definition definition) {
-        this.definitions.put(id, definition);
+        getDefinitions().put(id, definition);
     }
     
     public void addDefinitions(Map<String, Definition> definitions) {
+        if(definitions == null) {
+            return;
+        }
         definitions.forEach(this::addDefinition);
     }
     
@@ -272,11 +273,16 @@ public class ContainerBuilder {
         if(!hasDefinition(id)) {
             return null;
         }
-        return this.definitions.get(id);
+        return getDefinitions().get(id);
     }
     
     public ConcurrentMap<String, Definition> getDefinitions() {
-        return definitions;
+        
+        if(this.definitions == null) {
+            this.definitions = new ConcurrentHashMap<>();
+        }
+        
+        return this.definitions;
     }
 
     public void setDefinitions(ConcurrentMap<String, Definition> definitions) {
@@ -295,7 +301,7 @@ public class ContainerBuilder {
     }
     
     public Map<String, Object> getParameters() {
-        return this.getContainer().getParameters();
+        return getContainer().getParameters();
     }
 
     public Object getParameter(String key) {
@@ -309,23 +315,36 @@ public class ContainerBuilder {
     /* Extensions methods */
     
     public HashMap<String, Object> getExtensionConfig(String name) {
-        if(!this.extensionConfigs.containsKey(name)) {
-            this.extensionConfigs.put(name, new HashMap());
+        if(!getExtensionConfigs().containsKey(name)) {
+            getExtensionConfigs().put(name, new HashMap());
         }
         
-        return this.extensionConfigs.get(name);
+        return getExtensionConfigs().get(name);
+    }
+    
+    public HashMap<String, HashMap<String, Object>> getExtensionConfigs() {
+        if(this.extensionConfigs == null) {
+            this.extensionConfigs = new HashMap<>();
+        }
+        
+        return this.extensionConfigs;
     }
     
     public Map<String, ExtensionInterface> getExtensions() {
+        
+        if(this.extensions == null) {
+            this.extensions = new HashMap<>();
+        }
+        
         return this.extensions;
     }
     
     public ExtensionInterface getExtension(String name) throws Exception {
-        if(!this.extensions.containsKey(name)) {
-            String msg = String.format("Container extension '%s' is not registered", name);
+        if(!getExtensions().containsKey(name)) {
+            String msg = String.format("Container's extension '%s' is not registered", name);
             throw new Exception(msg);
         }
-        return this.extensions.get(name);
+        return getExtensions().get(name);
     }
     
     public void addExtensions(Map<String, ExtensionInterface> extensions) {
@@ -333,18 +352,17 @@ public class ContainerBuilder {
     }
     
     public void addExtension(ExtensionInterface extension) {
-        this.extensions.putIfAbsent(extension.getAlias(), extension);
+        getExtensions().putIfAbsent(extension.getAlias(), extension);
     }
 
     public void registerExtension(ExtensionInterface extension) {
         if(extension != null) {
-            this.extensions.putIfAbsent(extension.getAlias(), extension);
-            this.extensionConfigs.put(extension.getAlias(), new HashMap<>());
+            getExtensions().putIfAbsent(extension.getAlias(), extension);
+            getExtensionConfigs().put(extension.getAlias(), new HashMap<>());
         }
     }
     
     /* Compiler methods */
-    
     
     private Compiler getCompiler(){
         if(this.compiler == null) {
@@ -361,6 +379,18 @@ public class ContainerBuilder {
     public void addCompilerPass(CompilerPassInterface pass, String type) throws Exception {
         getCompiler().getPassConfig().addPass(pass, type);
     }
+    
+    
+    /* static methods */
+    
+    
+    public static String underscore(String id){
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return id.replaceAll(regex, replacement).toLowerCase();
+    }
+
+    /* others */
     
     @Override
     public String toString() {
@@ -384,13 +414,4 @@ public class ContainerBuilder {
         return builder.toString();
     }
     
-    /* static methods */
-    
-    
-    public static String underscore(String id){
-        String regex = "([a-z])([A-Z]+)";
-        String replacement = "$1_$2";
-        return id.replaceAll(regex, replacement).toLowerCase();
-    }
-
 }

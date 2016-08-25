@@ -5,10 +5,6 @@ import com.marvin.component.configuration.builder.node.Node;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-/**
- *
- * @author cdi305
- */
 public abstract class NodeDefinition {
     
     protected String name;
@@ -27,18 +23,9 @@ public abstract class NodeDefinition {
         this.name = name;
     }
     
-//    public NodeDefinition(String name, NodeParentInterface parent) {
-//        this.name = name;
-//        this.parent = parent;
-//    }
-    
     public NodeDefinition end(){
         return this.parent;
     }
-    
-//    public NodeBuilder children() {
-//        return this.getNodeBuilder();
-//    }
     
     public NodeDefinition append(NodeDefinition definition) throws CloneNotSupportedException {
         
@@ -86,7 +73,7 @@ public abstract class NodeDefinition {
     }
     
     public Node getNode(){
-        return this.getNode(false);
+        return getNode(false);
     }
     
     public NodeDefinition attribute(String key, Object attribute) {
@@ -95,7 +82,7 @@ public abstract class NodeDefinition {
     }
     
     public NodeDefinition info(String info){
-        return this.attribute("info", info);
+        return attribute("info", info);
     }
     
     public NodeDefinition defaultValue(Object value){
@@ -105,15 +92,15 @@ public abstract class NodeDefinition {
     }
     
     public NodeDefinition defaultNull(){
-        return this.defaultValue(null);
+        return defaultValue(null);
     }
     
     public NodeDefinition defaultTrue(){
-        return this.defaultValue(true);
+        return defaultValue(true);
     }
     
     public NodeDefinition defaultFalse(){
-        return this.defaultValue(false);
+        return defaultValue(false);
     }
     
     public NodeDefinition required(){
@@ -129,31 +116,31 @@ public abstract class NodeDefinition {
     public abstract Node createNode();
     
     public VariableNodeDefinition variableNode(String name) throws Exception {
-        return this.getNodeBuilder().variableNode(name);
+        return getNodeBuilder().variableNode(name);
     }
      
     public EnumNodeDefinition enumNode(String name) throws Exception {
-        return this.getNodeBuilder().enumNode(name);
+        return getNodeBuilder().enumNode(name);
     }
     
     public FloatNodeDefinition floatNode(String name) throws Exception {
-        return this.getNodeBuilder().floatNode(name);
+        return getNodeBuilder().floatNode(name);
     }
     
     public IntegerNodeDefinition integerNode(String name) throws Exception {
-        return this.getNodeBuilder().integerNode(name);
+        return getNodeBuilder().integerNode(name);
     }
     
     public BooleanNodeDefinition booleanNode(String name) throws Exception {
-        return this.getNodeBuilder().booleanNode(name);
+        return getNodeBuilder().booleanNode(name);
     }
     
     public ScalarNodeDefinition scalarNode(String name) throws Exception {
-        return this.getNodeBuilder().scalarNode(name);
+        return getNodeBuilder().scalarNode(name);
     }
     
     public ArrayNodeDefinition arrayNode(String name) throws Exception {
-        return this.getNodeBuilder().arrayNode(name);
+        return getNodeBuilder().arrayNode(name);
     }
     
     private int getRank(){

@@ -1,6 +1,6 @@
 package com.marvin.bundle.framework;
 
-import com.marvin.bundle.framework.container.RegisterSubscribersPass;
+import com.marvin.bundle.framework.container.compiler.RegisterSubscribersPass;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.compiler.PassConfig;
 import com.marvin.component.kernel.bundle.Bundle;

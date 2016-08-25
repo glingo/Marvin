@@ -6,8 +6,4 @@ public class BooleanNodeDefinition extends ScalarNodeDefinition {
         super(name);
     }
     
-//    public BooleanNodeDefinition(String name, NodeParentInterface parent) {
-//        super(name, parent);
-//    }
-    
 }

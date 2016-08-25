@@ -3,7 +3,6 @@ package com.marvin.component.routing.config;
 public class Route {
 
     private String controller;
-//    private String name;
     private String path = "/";
 
     public Route() {
@@ -22,7 +21,7 @@ public class Route {
     }
     
     public String getController() {
-        return controller;
+        return this.controller;
     }
 
     public void setController(String controller) {
@@ -30,7 +29,7 @@ public class Route {
     }
 
     public String getPath() {
-        return path;
+        return this.path;
     }
 
     public void setPath(String path) {

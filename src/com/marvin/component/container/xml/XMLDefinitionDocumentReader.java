@@ -61,29 +61,33 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
     protected void doRegisterDefinitions(Element root, ContainerBuilder builder) {
 
+        try {
 //        preProcessXml(root);
-        NodeList nl = root.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node node = nl.item(i);
-            if (node instanceof Element) {
-                Element ele = (Element) node;
-                parseDefinitionElement(ele, builder);
-                parseExtensionElement(ele, builder);
+            NodeList nl = root.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node node = nl.item(i);
+                if (node instanceof Element) {
+                    Element ele = (Element) node;
+                    parseDefinitionElement(ele, builder);
+                    parseExtensionElement(ele, builder);
+                }
             }
-        }
 //        postProcessXml(root); 
+        } catch (Exception ex) {
+            Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
-    
-    private void parseExtensionElement(Element ele, ContainerBuilder builder) {
+
+    private void parseExtensionElement(Element ele, ContainerBuilder builder) throws Exception {
         if (builder.getExtensions().containsKey(ele.getNodeName())
                 || builder.getExtensions().containsKey(ele.getLocalName())) {
             processExtension(ele, builder);
         }
     }
-    
+
     private void parseDefinitionElement(Element ele, ContainerBuilder builder) {
-        
+
         parseElement(ele);
         if (nodeNameEquals(ele, SERVICE_ELEMENT)) {
             processDefinition(ele, builder);
@@ -223,13 +227,13 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         // It's a literal value.
         String value = ele.getTextContent();
         String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
-        
-        try {
-            Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
+
+        if (StringUtils.hasLength(typeAttr)) {
+            Class type = ClassUtils.resolveClassName(typeAttr, null);
             return parser.parse(type, value);
-        } catch (ClassNotFoundException ex) {
-            return value;
         }
+
+        return value;
     }
 
     protected void processParameter(Element ele, ContainerBuilder builder) {
@@ -238,12 +242,15 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
 
         if (StringUtils.hasLength(id)) {
-            try {
-                Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-                builder.addParameter(id, parser.parse(type, valueAttr));
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Class type = ClassUtils.resolveClassName(typeAttr, null);
+            builder.addParameter(id, parser.parse(type, valueAttr));
+//            try {
+//                Class type = ClassUtils.resolveClassName(typeAttr, null);
+//                Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
+//                builder.addParameter(id, parser.parse(type, valueAttr));
+//            } catch (ClassNotFoundException ex) {
+//                Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
     }
 
@@ -253,32 +260,32 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         if (!StringUtils.hasLength(id)) {
             return;
         }
-        
+
         Definition definition = new Definition();
-        
+
         String className = ele.getAttribute("class");
         String factoryMethod = ele.getAttribute("factoryMethod");
         String factory = ele.getAttribute("factory");
-        
+
         if (StringUtils.hasLength(factoryMethod)) {
             definition.setFactoryMethodName(factoryMethod);
         }
-        
+
         boolean hasFactory = StringUtils.hasLength(factory);
-        
+
         if (hasFactory) {
             definition.setFactoryName(factory);
-        } else if(StringUtils.hasLength(factoryMethod)) {
+        } else if (StringUtils.hasLength(factoryMethod)) {
             definition.setFactoryName(className);
         }
-        
+
         definition.setClassName(className);
         parseArgumentElements(ele, definition);
         parseTagElements(ele, definition);
         parseCallElements(ele, definition);
         builder.addDefinition(id, definition);
     }
-    
+
     private void parseCallElements(Element serviceEle, Definition definition) {
         NodeList nl = serviceEle.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -288,13 +295,13 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             }
         }
     }
-    
+
     private void parseCallElement(Element callEle, Definition definition) {
         String nameAttr = callEle.getAttribute(NAME_ATTRIBUTE);
         Object[] arguments = new Object[]{};
-        
+
         NodeList nl = callEle.getChildNodes();
-         for (int i = 0; i < nl.getLength(); i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
             if (node instanceof Element && nodeNameEquals(node, ARGUMENT_ELEMENT)) {
                 arguments = ObjectUtils.addObjectToArray(arguments, parseArgumentValue((Element) node));
@@ -305,7 +312,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             definition.addCall(nameAttr, arguments);
         }
     }
-    
+
     private void parseTagElements(Element serviceEle, Definition definition) {
         NodeList nl = serviceEle.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -315,7 +322,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             }
         }
     }
-    
+
     private void parseTagElement(Element tagEle, Definition definition) {
         String nameAttr = tagEle.getAttribute(NAME_ATTRIBUTE);
 
@@ -323,118 +330,110 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             definition.addTag(nameAttr);
         }
     }
-    
-    protected void processExtension(Element ele, ContainerBuilder builder) {
+
+    protected void processExtension(Element ele, ContainerBuilder builder) throws Exception {
         HashMap values = (HashMap) convertElementToMap(ele, true);
-        try {
-            builder.loadFromExtension(ele.getNodeName(), values);
-        } catch (Exception ex) {
-            Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        builder.loadFromExtension(ele.getNodeName(), values);
     }
-    
+
     protected Object convertElementToMap(Element ele, boolean checkPrefix) {
         String prefix = ele.getPrefix();
         boolean empty = true;
-        
+
         HashMap<String, Object> config = new HashMap<>();
-        
+
         NamedNodeMap attributes = ele.getAttributes();
-        
+
         for (int i = 0; i < attributes.getLength(); i++) {
             Node node = attributes.item(i);
             String nodePrefix = node.getPrefix();
-            
-            if(checkPrefix && prefix != null && !"".equals(nodePrefix) && !prefix.equals(nodePrefix)) {
+
+            if (checkPrefix && prefix != null && !"".equals(nodePrefix) && !prefix.equals(nodePrefix)) {
                 continue;
             }
-            
+
             config.put(node.getNodeName(), convert(node.getNodeValue()));
             empty = false;
         }
-        
+
         Object nodeValue = false;
-        
+
         NodeList children = ele.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node node = children.item(i);
-            
-            if(node.getNodeType() == Node.TEXT_NODE) {
-                if(!"".equals(node.getNodeValue().trim())) {
+
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                if (!"".equals(node.getNodeValue().trim())) {
                     nodeValue = node.getNodeValue();
                     empty = false;
                 }
-            } else if(node.getNodeType() != Node.COMMENT_NODE){
+            } else if (node.getNodeType() != Node.COMMENT_NODE) {
                 Object value = convertElementToMap((Element) node, checkPrefix);
-                    String key = node.getLocalName();
-                    if(config.containsKey(key)) {
-                        if(!(config.get(key) instanceof Collection)) {
-                            config.put(key, new ArrayList<>());
-                        }
-                        
-                        ((List) config.get(key)).add(value);   
-                    } else {
-                        config.put(key, value);
+                String key = node.getLocalName();
+                if (config.containsKey(key)) {
+                    if (!(config.get(key) instanceof Collection)) {
+                        config.put(key, new ArrayList<>());
                     }
-                
-                    empty = false;
+
+                    ((List) config.get(key)).add(value);
+                } else {
+                    config.put(key, value);
+                }
+
+                empty = false;
             }
-            
+
         }
-        
-        if(!Boolean.FALSE.equals(nodeValue)) {
+
+        if (!Boolean.FALSE.equals(nodeValue)) {
             Object value = convert((String) nodeValue);
-            if(config.size() > 0) {
+            if (config.size() > 0) {
                 config.put("value", value);
             } else {
                 return value;
             }
         }
-        
+
         return !empty ? config : null;
     }
-    
-    
+
     protected Object convert(String value) {
         String lowerCase = value.toLowerCase();
-        
-        if(isNumeric(lowerCase)) {
+
+        if (isNumeric(lowerCase)) {
             return getNumeric(value);
         }
-        
-        switch(lowerCase) {
+
+        switch (lowerCase) {
             case "null":
                 return null;
             case "true":
                 return true;
             case "false":
                 return false;
-            
-            default :
+
+            default:
                 return value;
         }
-        
+
     }
-    
+
     public static NumberFormat getNumberFormatter() {
         return NumberFormat.getInstance();
     }
-    
+
     public static Number getNumeric(String inputData) {
         NumberFormat formatter = getNumberFormatter();
         ParsePosition pos = new ParsePosition(0);
         return formatter.parse(inputData, pos);
     }
-    
+
     public static boolean isNumeric(String inputData) {
         NumberFormat formatter = getNumberFormatter();
         ParsePosition pos = new ParsePosition(0);
         formatter.parse(inputData, pos);
         return inputData.length() == pos.getIndex();
     }
-    
-    
-
 
 //    public boolean isDefaultNamespace(String namespaceUri) {
 //        return (!StringUtils.hasLength(namespaceUri) || BEANS_NAMESPACE_URI.equals(namespaceUri));

@@ -36,4 +36,13 @@ public class TestServiceA extends Service {
         System.out.println(i);
     }
     
+    public void callService(Service service){
+        service.sayHello();
+    }
+    
+    public static void main(String[] args) {
+        Service service = new TestServiceA(null, Integer.SIZE);
+        System.out.println(service);
+    }
+    
 }

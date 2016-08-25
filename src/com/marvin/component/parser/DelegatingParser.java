@@ -1,8 +1,5 @@
 package com.marvin.component.parser;
 
-/**
- * @author cdi305
- */
 public class DelegatingParser {
     
     ParserResolver resolver;

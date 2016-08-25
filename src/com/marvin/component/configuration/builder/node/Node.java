@@ -5,10 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- *
- * @author cdi305
- */
 public abstract class Node {
     
     protected String name;
@@ -20,7 +16,6 @@ public abstract class Node {
     protected HashMap<String, Object> attributes;
     
     protected LinkedHashMap<String, Node> children;
-    
     
     protected List<Function<Object, Object>> normalizationClosures;
     protected List<Function<Object, Object>> finalValidationClosures;
@@ -40,10 +35,10 @@ public abstract class Node {
     
     final public Object normalize(Object value) throws Exception {
         
-        value = this.preNormalize(value);
+        value = preNormalize(value);
         
-        if(normalizationClosures != null) {
-            for (Function<Object, Object> closure : normalizationClosures) {
+        if(getNormalizationClosures() != null) {
+            for (Function<Object, Object> closure : getNormalizationClosures()) {
                 value = closure.apply(value);
             }
         }
@@ -51,14 +46,14 @@ public abstract class Node {
         // replaces with equivalent values
         // dans un tableau de valeur
         
-        this.validateType(value);
+        validateType(value);
         
-        return this.normalizeValue(value);
+        return normalizeValue(value);
     }
     
     final public Object merge(Object left, Object right) throws Exception {
         
-        if(!this.allowOverWrite) {
+        if(!isAllowOverWrite()) {
             String msg = String.format("Configuration path %s, can not be overwritten. "
                     + "You have to define all options for this path, "
                     + "and any of its sub-paths in one configuration section.", this.getPath());
@@ -66,22 +61,22 @@ public abstract class Node {
         }
         
         // validate type of left side object
-        this.validateType(left);
+        validateType(left);
         
         // validate type of right side object
-        this.validateType(right);
+        validateType(right);
         
-        return this.mergeValues(left, right);
+        return mergeValues(left, right);
     }
     
     final public Object finalize(Object value) throws Exception {
         
-        this.validateType(value);
+        validateType(value);
         
-        value = this.finalizeValue(value);
+        value = finalizeValue(value);
         
-        if(finalValidationClosures != null) {
-            for (Function<Object, Object> closure : finalValidationClosures) {
+        if(getFinalValidationClosures() != null) {
+            for (Function<Object, Object> closure : getFinalValidationClosures()) {
                 value = closure.apply(value);
             }
         }
@@ -97,28 +92,32 @@ public abstract class Node {
 
     abstract protected Object finalizeValue(Object value) throws Exception;
     
+    abstract public boolean hasDefaultValue();
+    
+    abstract public Object getDefaultValue();
+    
     public void addChild(Node child){
         
-        if(this.children == null) {
-            this.children = new LinkedHashMap<>();
+        if(getChildren() == null) {
+            setChildren(new LinkedHashMap<>());
         }
         
-        this.children.putIfAbsent(child.getName(), child);
+        getChildren().putIfAbsent(child.getName(), child);
         child.setParent(this);
     }
     
     public final String getPath() {
         String path = getName();
         
-        if(this.parent != null) {
-            path = this.getParent().getName() + "." + path;
+        if(getParent() != null) {
+            path = getParent().getName() + "." + path;
         }
         
         return path;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -126,7 +125,7 @@ public abstract class Node {
     }
 
     public boolean isRequired() {
-        return required;
+        return this.required;
     }
 
     public void setRequired(boolean required) {
@@ -134,7 +133,7 @@ public abstract class Node {
     }
 
     public Node getParent() {
-        return parent;
+        return this.parent;
     }
 
     public void setParent(Node parent) {
@@ -142,19 +141,44 @@ public abstract class Node {
     }
 
     public HashMap<String, Object> getAttributes() {
-        return attributes;
+        return this.attributes;
     }
 
     public void setAttributes(HashMap<String, Object> attributes) {
         this.attributes = attributes;
     }
 
+    public boolean isAllowOverWrite() {
+        return this.allowOverWrite;
+    }
+    
     public void setAllowOverWrite(boolean allowOverWrite) {
         this.allowOverWrite = allowOverWrite;
     }
-    
-    public abstract boolean hasDefaultValue();
-    public abstract Object getDefaultValue();
+
+    public List<Function<Object, Object>> getFinalValidationClosures() {
+        return this.finalValidationClosures;
+    }
+
+    public List<Function<Object, Object>> getNormalizationClosures() {
+        return this.normalizationClosures;
+    }
+
+    public void setFinalValidationClosures(List<Function<Object, Object>> finalValidationClosures) {
+        this.finalValidationClosures = finalValidationClosures;
+    }
+
+    public void setNormalizationClosures(List<Function<Object, Object>> normalizationClosures) {
+        this.normalizationClosures = normalizationClosures;
+    }
+
+    public void setChildren(LinkedHashMap<String, Node> children) {
+        this.children = children;
+    }
+
+    public LinkedHashMap<String, Node> getChildren() {
+        return this.children;
+    }
     
     private int getRank(){
         int rank = 0;

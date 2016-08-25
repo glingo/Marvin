@@ -10,7 +10,7 @@ public class TreeBuilder {
     protected NodeBuilder builder;
     
     public NodeDefinition root(String name) throws Exception {
-        return this.root(name, "array", null);
+        return root(name, "array", null);
     }
     
     public NodeDefinition root(String name, String type, NodeBuilder builder) throws Exception {
@@ -19,26 +19,51 @@ public class TreeBuilder {
             builder = new NodeBuilder();
         }
         
-        this.builder = builder;
+        setBuilder(builder);
         
-        this.root = this.builder.node(name, type);
-        this.builder.setParent(root);
+        setRoot(getBuilder().node(name, type));
+        getBuilder().setParent(root);
         
-        return this.root;
+        return getRoot();
     }
     
     public Node buildTree() throws Exception {
         
-        if(this.root == null) {
+        if(getRoot() == null) {
             throw new Exception("The configuration tree has no root node.");
         }
         
-        if(this.tree != null) {
-            return this.tree;
+        if(getTree() != null) {
+            return getTree();
         }
         
-        this.tree = this.root.getNode(true);
+        setTree(getRoot().getNode(true));
+        
+        return getTree();
+    }
+
+    public NodeDefinition getRoot() {
+        return this.root;
+    }
+
+    public Node getTree() {
         return this.tree;
+    }
+
+    public NodeBuilder getBuilder() {
+        return this.builder;
+    }
+
+    public void setBuilder(NodeBuilder builder) {
+        this.builder = builder;
+    }
+
+    public void setRoot(NodeDefinition root) {
+        this.root = root;
+    }
+
+    public void setTree(Node tree) {
+        this.tree = tree;
     }
     
     @Override

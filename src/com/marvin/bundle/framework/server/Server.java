@@ -46,11 +46,7 @@ public class Server {
 //        dispatcher.dispatch(ServerEvents.ACCEPT, new ServerEvent(this));
                 
         while (!isStopped()) {
-//            System.out.println("Server waiting for connection ... ");
-            
             try (Socket remote = socket.accept()) {
-                
-//                System.out.println("Server get a connection ... ");
                 
                 InputStream in = remote.getInputStream();
                 OutputStream out = remote.getOutputStream();
@@ -76,15 +72,11 @@ public class Server {
     }
 
     private synchronized void open() {
-//        System.out.println("Server opening socket ... ");
-
         try {
             this.socket = new ServerSocket(this.port, this.backlog, InetAddress.getLocalHost());
         } catch (IOException e) {
             throw new RuntimeException("Impossible d'ouvrir le port : " + this.port, e);
         }
-        
-//        System.out.println("Server socket opened ... ");
 
         System.out.println("Server listening ");
         System.out.println(this.socket.getInetAddress());

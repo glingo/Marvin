@@ -18,6 +18,7 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
         super(name, parent);
     }
 
+    @Override
     public boolean hasDefaultValue() {
         return this.defaultValueSet;
     }
@@ -27,6 +28,7 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
         this.defaultValue = defaultValue;
     }
 
+    @Override
     public Object getDefaultValue() {
         Object v = defaultValue;
         
@@ -55,12 +57,19 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
     @Override
     protected Object finalizeValue(Object value) throws Exception {
         
-        if(!this.allowEmptyValue && ObjectUtils.isEmpty(value)) {
+        if(!isAllowEmptyValue() && ObjectUtils.isEmpty(value)) {
             String msg = String.format("The path '%s' cannot contain an empty value, but got %s.", this.getPath(), value);
             throw new Exception(msg);
         }
         
         return value;
     }
-    
+
+    public boolean isAllowEmptyValue() {
+        return allowEmptyValue;
+    }
+
+    public void setAllowEmptyValue(boolean allowEmptyValue) {
+        this.allowEmptyValue = allowEmptyValue;
+    }
 }

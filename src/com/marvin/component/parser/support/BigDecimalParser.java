@@ -1,12 +1,10 @@
 package com.marvin.component.parser.support;
 
 import com.marvin.component.parser.Parser;
-import com.marvin.component.parser.Parser;
 import java.math.BigDecimal;
 
 /**
  * Convert to a {@link BigDecimal} by parsing the value as a string
- *
  */
 public class BigDecimalParser implements Parser<BigDecimal> {
 

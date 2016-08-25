@@ -25,6 +25,18 @@
             </call>
         </service>
         
+        <service id="test.service.a.with.call" class="com.marvin.service.TestServiceA">
+            <argument type="java.lang.String" value="test.service.a.with.call"/>
+            <argument type="int" value="1"/>
+            <call name="say">
+                <argument type="java.lang.String" value="test.service.a.with.call"/>
+                <argument type="int" value="9999"/>
+            </call>
+            <call name="callService">
+                <argument type="service" ref="test.service.a"/>
+            </call>
+        </service>
+        
         <!-- Give a test service named Service B ( with a reference to Service A ) to the container -->
         <service id="test.service.b" class="com.marvin.service.TestServiceB">
             <argument type="service" ref="test.service.a"/>
@@ -55,10 +67,11 @@
             <argument type="int" value="3"/>
             <argument>
                 <array>
-                    <value type="java.lang.String">Random string</value>
+                    <value type="java.lang.String" value="Service C deux">Random string</value>
                     <value type="int">42</value>
                 </array>
             </argument>
+            <call name="sayHello"/>
         </service>
         
         <service id="test.service.c.deux" class="com.marvin.service.TestServiceC">
@@ -71,6 +84,7 @@
                     <argument type="int" value="3"/>
                 </list>
             </argument>
+            <call name="sayHello"/>
         </service>
         
         <!-- Give a test service with null parameters -->

@@ -16,11 +16,19 @@ public class Container implements IContainer {
     /** The map where we stack parameters. */
     protected ConcurrentMap<String, Object> parameters;
     
-    /** Constructor whithout any arguments */
+    /** 
+     * Constructor whithout any arguments 
+     */
     public Container() {
-        this.aliases     = new ConcurrentHashMap<>();
-        this.services    = new ConcurrentHashMap<>();
-        this.parameters  = new ConcurrentHashMap<>();
+    
+    }
+    
+    /** 
+     * Constructor whith a map of parameters
+     * @param parameters 
+     */
+    public Container(ConcurrentMap<String, Object> parameters) {
+        setParameters(parameters);
     }
     
 // *************************************************************************
@@ -42,12 +50,12 @@ public class Container implements IContainer {
         // in case of null object
         if(null == service) {
             // remove it from map
-            this.services.remove(id);
+            getServices().remove(id);
             return;
         }
         
         // inject service in map of services if it is not already set
-        this.services.putIfAbsent(id, service);
+        getServices().putIfAbsent(id, service);
         
     }
     
@@ -59,9 +67,9 @@ public class Container implements IContainer {
     public Object get(String id) throws ContainerException {
         
         // look into aliases map
-        if(this.aliases.containsKey(id)) {
+        if(getAliases().containsKey(id)) {
             // this is an alias, retrive the real id
-            id = this.aliases.get(id);
+            id = getAliases().get(id);
         }
         
         // check if container have this service
@@ -72,7 +80,7 @@ public class Container implements IContainer {
         }
         
         // return the service
-        return this.services.get(id);
+        return getServices().get(id);
     }
 
     @Override
@@ -81,14 +89,21 @@ public class Container implements IContainer {
     }
     
     public boolean contains(String id){
-        return this.services.containsKey(id);
+        return getServices() != null && getServices().containsKey(id);
     }
     
 // *************************************************************************
 // *                      GETTERS and SETTERS                              *
 // *************************************************************************
 
+    /* Aliases */
+    
     public ConcurrentMap<String, String> getAliases() {
+        
+        if(this.aliases == null) {
+            setAliases(new ConcurrentHashMap<>());
+        }
+        
         return aliases;
     }
 
@@ -97,39 +112,56 @@ public class Container implements IContainer {
     }
     
     public void addAlias(String id, String alias) {
-        this.aliases.put(id, alias);
+        getAliases().put(id, alias);
     }
+    
+    /* Services */
 
     public ConcurrentMap<String, Object> getServices() {
-        return services;
+        
+        if(this.services == null) {
+            setServices(new ConcurrentHashMap<>());
+        }
+        
+        return this.services;
     }
 
     public void setServices(ConcurrentMap<String, Object> services) {
         this.services = services;
     }
     
+    /* Parameters */
+    
     @Override
     public Object getParameter(String key, Object def){
-        return this.parameters.getOrDefault(key, def);
+        return getParameters().getOrDefault(key, def);
     }
     
     @Override
     public Object getParameter(String key){
-        return this.parameters.get(key);
+        return getParameters().get(key);
     }
     
     public void setParameter(String key, Object value) {
-        this.parameters.put(key, value);
+        getParameters().put(key, value);
     }
 
     @Override
     public ConcurrentMap<String, Object> getParameters() {
-        return parameters;
+        
+        if(this.parameters == null) {
+            setParameters(new ConcurrentHashMap<>());
+        }
+        
+        return this.parameters;
     }
 
-    public void setParameters(ConcurrentMap<String, Object> parameters) {
+    public final void setParameters(ConcurrentMap<String, Object> parameters) {
         this.parameters = parameters;
     }
+    
+    
+    /* others */
 
     @Override
     public String toString() {

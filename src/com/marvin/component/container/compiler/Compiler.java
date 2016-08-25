@@ -8,15 +8,24 @@ public class Compiler {
     protected PassConfig passConfig;
 
     public Compiler() {
-        this.passConfig = new PassConfig();
+        
+    }
+    
+    public Compiler(PassConfig passConfig) {
+        this.passConfig = passConfig;
     }
 
     public PassConfig getPassConfig() {
-        return passConfig;
+        
+        if(this.passConfig == null) {
+            this.passConfig = new PassConfig();
+        }
+        
+        return this.passConfig;
     }
     
     public void compile(ContainerBuilder builder){
-        this.getPassConfig().getPasses().forEach((CompilerPassInterface pass) -> {
+        getPassConfig().getPasses().forEach((CompilerPassInterface pass) -> {
             pass.accept(builder);
         });
     }

@@ -16,12 +16,9 @@ public class Processor {
         }
         
         for (Map.Entry<String, Object> entry : config.entrySet()) {
-//            String key = entry.getKey();
             Object value = entry.getValue();
-            // normalize
-            value = root.normalize(value);
-            // merge
-            current = root.merge(current, value);
+            value = root.normalize(value);       // normalize
+            current = root.merge(current, value);// merge
         }
         
         // finalize and return
@@ -31,8 +28,7 @@ public class Processor {
     
     public Object processConfiguration(ConfigurationInterface configuration, HashMap<String, Object> config) throws Exception{
         Node root = configuration.getConfigTreeBuilder().buildTree();
-        return this.process(root, config);
-        
+        return process(root, config);
     }
     
     public static Object normalizeConfig(HashMap<String, Object> config, String key, String plural){

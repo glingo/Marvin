@@ -2,14 +2,9 @@ package com.marvin.component.container.config;
 
 import com.marvin.component.util.ObjectUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- *
- * @author cdi305
- */
 public class Definition {
     
     protected String scope;
@@ -39,7 +34,7 @@ public class Definition {
     }
     
     public String getScope() {
-        return scope;
+        return this.scope;
     }
 
     public void setScope(String scope) {
@@ -47,7 +42,7 @@ public class Definition {
     }
 
     public String getClassName() {
-        return className;
+        return this.className;
     }
 
     public void setClassName(String className) {
@@ -55,7 +50,7 @@ public class Definition {
     }
 
     public String getFactoryMethodName() {
-        return factoryMethodName;
+        return this.factoryMethodName;
     }
 
     public void setFactoryMethodName(String factoryMethodName) {
@@ -63,7 +58,7 @@ public class Definition {
     }
 
     public String getParentName() {
-        return parentName;
+        return this.parentName;
     }
 
     public void setParentName(String parentName) {
@@ -71,7 +66,7 @@ public class Definition {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -79,7 +74,7 @@ public class Definition {
     }
 
     public Boolean getDeprecated() {
-        return deprecated;
+        return this.deprecated;
     }
 
     public void setDeprecated(Boolean deprecated) {
@@ -87,7 +82,7 @@ public class Definition {
     }
 
     public String[] getAliases() {
-        return aliases;
+        return this.aliases;
     }
 
     public void setAliases(String[] aliases) {
@@ -95,7 +90,7 @@ public class Definition {
     }
 
     public Object[] getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public void setArguments(Object[] arguments) {
@@ -104,18 +99,19 @@ public class Definition {
     
     public void replaceArgument(int index, Object argument) {
         
-        if(arguments == null) {
-            this.arguments = new Object[index];
+        if(getArguments() == null) {
+            setArguments(new Object[index]);
         }
         
-        if(index < this.arguments.length - 1) {
+        if(index < getArguments().length - 1) {
             this.arguments[index] = argument;
         }
     }
     
     public void addArgument(Object argument) {
+        
         if(arguments == null) {
-            this.arguments = new Object[0];
+            setArguments(new Object[0]);
         }
         
         this.arguments = ObjectUtils.addObjectToArray(arguments, argument);
@@ -126,7 +122,7 @@ public class Definition {
     }
 
     public String getFactoryName() {
-        return factoryName;
+        return this.factoryName;
     }
 
     public void setTags(String[] tags) {
@@ -134,7 +130,7 @@ public class Definition {
     }
 
     public String[] getTags() {
-        return tags;
+        return this.tags;
     }
     
     public void addTag(String tag) {
@@ -146,11 +142,12 @@ public class Definition {
     }
     
     public boolean hasTag(String name){
-        if(this.tags == null) {
+        
+        if(getTags() == null) {
             return false;
         }
         
-        for (String tag : this.tags) {
+        for (String tag : getTags()) {
             if(name.equals(tag)) {
                 return true;
             }
@@ -164,26 +161,20 @@ public class Definition {
     }
 
     public LinkedHashMap<String, List<Object[]>> getCalls() {
-        return calls;
+        return this.calls;
     }
     
-//    public void addCall(String name, Object[] args) {
-//        if(this.calls == null) {
-//            this.calls = new LinkedHashMap<>();
-//        }
-//        this.calls.put(name, args);
-//    }
-    
     public void addCall(String name, Object... args) {
-        if(this.calls == null) {
-            this.calls = new LinkedHashMap<>();
+        
+        if(getCalls() == null) {
+            setCalls(new LinkedHashMap<>());
         }
         
-        if(!this.calls.containsKey(name)) {
-            this.calls.put(name, new ArrayList<>());
+        if(!getCalls().containsKey(name)) {
+            getCalls().put(name, new ArrayList<>());
         }
         
-        this.calls.get(name).add(args);
+        getCalls().get(name).add(args);
     }
     
      public boolean hasCall() {

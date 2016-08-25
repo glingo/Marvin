@@ -23,7 +23,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     @Override
     protected Object preNormalize(Object value) {
         
-        if(!this.normalizeKeys || !(value instanceof Map)) {
+        if(!isNormalizeKeys() || !(value instanceof Map)) {
             return value;
         }
         
@@ -60,14 +60,14 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     protected Object normalizeValue(Object value) {
         
         HashMap<String, Object> casted = (HashMap<String, Object>) value;
-        casted = this.remapXml(casted);
+        casted = remapXml(casted);
         
         HashMap<String, Object> normalized = new HashMap<>();
         
         casted.forEach((String key, Object val) -> {
-            if(this.children.containsKey(key)) {
-                normalized.put(key, this.children.get(key).normalizeValue(val));
-            } else if (!this.removeExtraKeys) {
+            if(getChildren().containsKey(key)) {
+                normalized.put(key, getChildren().get(key).normalizeValue(val));
+            } else if (!isRemoveExtraKeys()) {
                 normalized.put(key, val);
             }
         });
@@ -82,7 +82,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
             return false;
         }
         
-        if(Boolean.FALSE.equals(left) || !this.deepMerging) {
+        if(Boolean.FALSE.equals(left) || !isDeepMerging()) {
             return right;
         }
         
@@ -96,7 +96,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
             
             // no conflict
             if(!left.containsKey(key)) {
-                if(!this.allowNewKeys) {
+                if(!isAllowNewKeys()) {
                     String msg = String.format("You are not allowed to define new elements for path '%s'", this.getPath());
                     throw new Exception(msg);
                 }
@@ -105,11 +105,11 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
                 continue;
             }
             
-            if(!this.children.containsKey(key)){
+            if(!getChildren().containsKey(key)){
                 throw new Exception("merge() expects a normalized config array.");
             }
             
-            left.put(key, this.children.get(key).merge(left.get(key), value));
+            left.put(key, getChildren().get(key).merge(left.get(key), value));
         }
         
         return left;
@@ -119,8 +119,8 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     protected Object finalizeValue(Object value) throws Exception {
         HashMap<String, Object> casted = (HashMap<String, Object>) value;
         
-        if(this.children != null) {
-            for(Map.Entry<String, Node> entry : this.children.entrySet()) {
+        if(getChildren() != null) {
+            for(Map.Entry<String, Node> entry : getChildren().entrySet()) {
                 String key = entry.getKey();
                 Node child = entry.getValue();
 
@@ -145,7 +145,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     }
     
     protected HashMap<String, Object> remapXml(HashMap<String, Object> value){
-        this.xmlRemapping.forEach((String singular, String plural) -> {
+        getXmlRemapping().forEach((String singular, String plural) -> {
             if(value.containsKey(singular)) {
                 value.put(plural, value.get(singular));
                 value.remove(singular);
@@ -165,7 +165,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
        
         HashMap<String, Object> defaults = new HashMap<>();
         
-        this.children.forEach((String key, Node child) -> {
+        getChildren().forEach((String key, Node child) -> {
             if(child.hasDefaultValue()) {
                 defaults.put(key, child.getDefaultValue());
             }
@@ -185,4 +185,41 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     public HashMap<String, String> getXmlRemapping() {
         return xmlRemapping;
     }
+
+    public boolean isDeepMerging() {
+        return deepMerging;
+    }
+
+    public boolean isAddIfNotSet() {
+        return addIfNotSet;
+    }
+
+    public boolean isAllowNewKeys() {
+        return allowNewKeys;
+    }
+
+    public boolean isNormalizeKeys() {
+        return normalizeKeys;
+    }
+
+    public boolean isRemoveExtraKeys() {
+        return removeExtraKeys;
+    }
+
+    public void setAddIfNotSet(boolean addIfNotSet) {
+        this.addIfNotSet = addIfNotSet;
+    }
+
+    public void setAllowNewKeys(boolean allowNewKeys) {
+        this.allowNewKeys = allowNewKeys;
+    }
+
+    public void setDeepMerging(boolean deepMerging) {
+        this.deepMerging = deepMerging;
+    }
+
+    public void setRemoveExtraKeys(boolean removeExtraKeys) {
+        this.removeExtraKeys = removeExtraKeys;
+    }
+    
 }

@@ -1,6 +1,5 @@
 package com.marvin.component.configuration.builder.node;
 
-import com.marvin.component.configuration.builder.NodeParentInterface;
 import com.marvin.component.configuration.builder.PrototypeNodeInterface;
 
 public class PrototypedArrayNode extends ArrayNode {
@@ -11,12 +10,8 @@ public class PrototypedArrayNode extends ArrayNode {
         super(name);
     }
 
-//    public PrototypedArrayNode(String name, NodeParentInterface parent) {
-//        super(name, parent);
-//    }
-
     public PrototypeNodeInterface getPrototype() {
-        return prototype;
+        return this.prototype;
     }
 
     public void setPrototype(PrototypeNodeInterface prototype) {

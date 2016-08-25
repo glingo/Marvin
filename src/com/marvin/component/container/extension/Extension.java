@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container.extension;
 
 import com.marvin.component.configuration.ConfigurationInterface;
@@ -11,10 +6,6 @@ import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.util.ClassUtils;
 import java.util.HashMap;
 
-/**
- *
- * @author cdi305
- */
 public abstract class Extension implements ExtensionInterface {
     
     @Override
@@ -27,7 +18,8 @@ public abstract class Extension implements ExtensionInterface {
     }
     
     public ConfigurationInterface getConfiguration(){
-        String className = String.format("%s.Configuration", this.getClass().getPackage().getName());
+        String pckgName = ClassUtils.getPackageName(this.getClass());
+        String className = String.format("%s.Configuration", pckgName);
         
         try {
             Class cl = ClassUtils.forName(className, null);
@@ -43,4 +35,5 @@ public abstract class Extension implements ExtensionInterface {
         
         return (HashMap<String, Object>) processor.processConfiguration(configuration, configs);
     }
+    
 }

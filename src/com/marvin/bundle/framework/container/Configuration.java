@@ -1,12 +1,9 @@
 package com.marvin.bundle.framework.container;
+
 import com.marvin.component.configuration.*;
 import com.marvin.component.configuration.builder.TreeBuilder;
 import com.marvin.component.configuration.builder.definition.NodeDefinition;
 
-/**
- *
- * @author cdi305
- */
 public class Configuration implements ConfigurationInterface {
 
     @Override

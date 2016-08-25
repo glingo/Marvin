@@ -220,7 +220,7 @@ public abstract class Kernel {
 
     }
 
-    public void handle(BufferedReader reader, PrintWriter writer) throws Exception {
+    public void handle(BufferedReader reader, Writer writer) throws Exception {
 
         String line = reader.readLine();
         
