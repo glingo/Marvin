@@ -1,4 +1,6 @@
-package com.marvin.component.shell;
+package com.marvin.bundle.framework.shell;
+
+import com.marvin.bundle.framework.shell.parser.ParserInterface;
 
 public abstract class Shell implements ShellInterface {
     
@@ -6,6 +8,7 @@ public abstract class Shell implements ShellInterface {
     
     protected abstract ExecutionStrategy getExecutionStrategy();
     
+    protected abstract ParserInterface getParser();
     
     @Override
     public void executeCommand(String line){
@@ -13,8 +16,11 @@ public abstract class Shell implements ShellInterface {
         // change status to parsing
         
         final ExecutionStrategy executionStrategy = getExecutionStrategy();
+        final ParserInterface parser = getParser();
         
-//        Object result = executionStrategy.execute(null, line, arguments);
+        MethodReference reference = parser.parse(line);
+        
+        Object result = executionStrategy.execute(reference);
         
     }
 }

@@ -25,7 +25,7 @@ public class Definition {
     
     protected Object[] arguments;
     
-    protected String[] tags;
+    protected Tag[] tags;
     
     protected LinkedHashMap<String, List<Object[]>> calls;
 
@@ -125,17 +125,17 @@ public class Definition {
         return this.factoryName;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(Tag[] tags) {
         this.tags = tags;
     }
 
-    public String[] getTags() {
+    public Tag[] getTags() {
         return this.tags;
     }
     
-    public void addTag(String tag) {
+    public void addTag(Tag tag) {
         if(this.tags == null) {
-            this.tags = new String[0];
+            this.tags = new Tag[0];
         }
         
         this.tags = ObjectUtils.addObjectToArray(this.tags, tag);
@@ -147,8 +147,8 @@ public class Definition {
             return false;
         }
         
-        for (String tag : getTags()) {
-            if(name.equals(tag)) {
+        for (Tag tag : getTags()) {
+            if(name.equals(tag.getName())) {
                 return true;
             }
         }

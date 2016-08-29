@@ -1,4 +1,4 @@
-package com.marvin.component.shell;
+package com.marvin.bundle.framework.shell;
 
 public interface ShellPromptAccessor {
     
