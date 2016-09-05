@@ -9,21 +9,21 @@ import java.util.HashMap;
  *
  * @author cdi305
  */
-public class RegisterSubscribersPass implements CompilerPassInterface {
+public class RegisterCommandsPass implements CompilerPassInterface {
     
-    public final static String DISPATCHER_NAME = "event_dispatcher";
-    public final static String SUBSCRIBER_TAG = "event_subscriber";
+    public final static String SHELL_NAME = "shell";
+    public final static String COMMAND_TAG = "command";
 
     @Override
     public void accept(ContainerBuilder builder) {
         
-        if(!builder.hasDefinition(DISPATCHER_NAME)) {
+        if(!builder.hasDefinition(SHELL_NAME)) {
             return;
         }
         
-        Definition dispatcher = builder.getDefinition(DISPATCHER_NAME);
+        Definition shell = builder.getDefinition(SHELL_NAME);
         
-        HashMap<String, Definition> taggedDefinitions = builder.findTaggedDefinitions(SUBSCRIBER_TAG);
+        HashMap<String, Definition> taggedDefinitions = builder.findTaggedDefinitions(COMMAND_TAG);
         
         taggedDefinitions.forEach((String name, Definition definition)->{
             
@@ -31,10 +31,9 @@ public class RegisterSubscribersPass implements CompilerPassInterface {
             
             // do nothing if abstract
             
-            // shall we instanciate the subscriber here ?
-            Object subscriber = builder.get(name);
+            Object command = builder.get(name);
             
-            dispatcher.addCall("addSubscriber", subscriber);
+            shell.addCall("addCommand", command);
         });
 
     }

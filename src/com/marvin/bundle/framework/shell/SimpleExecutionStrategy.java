@@ -1,4 +1,4 @@
-package com.marvin.component.shell;
+package com.marvin.bundle.framework.shell;
 
 import com.marvin.component.util.ReflectionUtils;
 import java.lang.reflect.Method;
@@ -13,11 +13,11 @@ public class SimpleExecutionStrategy implements ExecutionStrategy {
     }
 
     @Override
-    public Object execute(Method method, Object instance, Object[] arguments) {
+    public Object execute(MethodReference reference) {
         
         // try synchronized with mutex
         
-        return invoke(method, instance, arguments);
+        return invoke(reference.getMethod(), reference.getInstance(), reference.getArguments());
     
     }
 

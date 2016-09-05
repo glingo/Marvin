@@ -16,6 +16,7 @@ import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
+import com.marvin.component.container.config.Tag;
 import com.marvin.component.io.xml.XMLDocumentReader;
 import com.marvin.component.io.xml.XMLReaderContext;
 import com.marvin.component.util.ClassUtils;
@@ -325,9 +326,24 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
     private void parseTagElement(Element tagEle, Definition definition) {
         String nameAttr = tagEle.getAttribute(NAME_ATTRIBUTE);
+        NamedNodeMap attributes = tagEle.getAttributes();
+        
+        Tag tag = new Tag();
 
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Node node = attributes.item(i);
+            if(nodeNameEquals(node, NAME_ATTRIBUTE)) {
+                tag.setName(nameAttr);
+                continue;
+            }
+            
+            tag.setParameter(node.getNodeName(), convert(node.getNodeValue()));
+            
+        }
+        
         if (StringUtils.hasLength(nameAttr)) {
-            definition.addTag(nameAttr);
+            
+            definition.addTag(tag);
         }
     }
 

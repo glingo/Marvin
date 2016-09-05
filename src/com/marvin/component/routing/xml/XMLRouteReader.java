@@ -1,21 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.routing.xml;
 
-import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.xml.XMLDefinitionDocumentReader;
 import com.marvin.component.container.xml.XMLDefinitionReader;
-import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.IResource;
 import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
-import com.marvin.component.routing.Router;
-import java.io.IOException;
-import java.io.InputStream;
+import com.marvin.component.routing.RouteCollection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Document;
@@ -25,18 +15,32 @@ import org.xml.sax.InputSource;
  *
  * @author cdi305
  */
-public class XMLRouteReader extends XMLReader {
+public class XmlRouteReader extends XMLReader {
 
-    protected Router router;
-
-    public XMLRouteReader(Router router) {
+    protected RouteCollection collection;
+    
+    public XmlRouteReader() {
         super();
-        this.router = router;
     }
     
-    public XMLRouteReader(Router router, ResourceLoader loader) {
+    public XmlRouteReader(ResourceLoader loader) {
         super(loader, new DocumentLoader());
-        this.router = router;
+    }
+    
+    public XmlRouteReader(RouteCollection collection) {
+        super();
+        this.collection = collection;
+    }
+    
+    public XmlRouteReader(RouteCollection collection, ResourceLoader loader) {
+        super(loader, new DocumentLoader());
+        this.collection = collection;
+    }
+
+    public RouteCollection read(String location, RouteCollection collection) {
+        this.collection = collection;
+        super.read(location);
+        return getRouteCollection();
     }
     
     @Override
@@ -49,9 +53,15 @@ public class XMLRouteReader extends XMLReader {
         }
     }
     
-    
     public void registerRoutes(Document doc, IResource resource) {
-        XMLRouteDocumentReader documentReader = new XMLRouteDocumentReader(this.context);
-        documentReader.registerRoutes(doc, router);
+        XmlRouteDocumentReader documentReader = new XmlRouteDocumentReader(this.context);
+        documentReader.registerRoutes(doc, getRouteCollection());
+    }
+    
+    public RouteCollection getRouteCollection(){
+        if(this.collection == null) {
+            this.collection = new RouteCollection();
+        }
+        return this.collection;
     }
 }

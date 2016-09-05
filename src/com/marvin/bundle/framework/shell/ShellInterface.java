@@ -1,4 +1,4 @@
-package com.marvin.component.shell;
+package com.marvin.bundle.framework.shell;
 
 import java.io.File;
 
