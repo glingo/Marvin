@@ -1,10 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.marvin.bundle.framework.shell;
 
 import com.marvin.component.kernel.Kernel;
 import com.marvin.component.kernel.dialog.Request;
 import com.marvin.component.kernel.dialog.Response;
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -14,11 +18,15 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Shell {
+/**
+ *
+ * @author caill
+ */
+public class KernelShell {
     
     private final Kernel kernel;
     
-    public Shell(Kernel kernel) {
+    public KernelShell(Kernel kernel) {
         this.kernel = kernel;
     }
     public void handle(BufferedReader reader, Writer writer) throws Exception {
@@ -74,7 +82,7 @@ public class Shell {
             
             System.out.println("==============================================");
         } catch (Exception ex) {
-            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
