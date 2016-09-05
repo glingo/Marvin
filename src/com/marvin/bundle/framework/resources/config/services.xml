@@ -68,7 +68,7 @@
         </service>
         
         
-        <service id="shell" class="com.marvin.bundle.framework.shell.Shell">
+        <service id="shell" class="com.marvin.bundle.framework.shell.KernelShell">
             <argument type="service" ref="kernel"/>
         </service>
         
