@@ -24,6 +24,7 @@ import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.compiler.Compiler;
 import com.marvin.component.container.compiler.PassConfig;
 import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.templating.token.Type;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
 import com.marvin.component.util.ReflectionUtils;
@@ -91,15 +92,71 @@ public class ContainerBuilder {
         return Arrays.stream(arguments).map(this::resolveArgument).toArray();
     }
     
-    private Constructor<Object> resolveConstructor(Definition definition) {
+    private Class resolveArgumentType(Object argument, Class given) {
+        
+        if(null == argument) {
+            return given;
+        }
+        
+        if(null != given && ClassUtils.isAssignable(given, argument.getClass())) {
+            return given;
+        }
+        
+        return argument.getClass();
+    }
+    
+    private Class[] resolveArgumentsTypes(Object[] arguments, Class[] given) {
+        
+        if(null == arguments) {
+            return new Class[]{};
+        }
+        
+        int len = arguments.length;
+        
+        int givenLength = 0;
+        
+        if(given != null) {
+            givenLength = given.length;
+        }
+        
+        Class[] types = new Class[len];
+        for (int i = 0; i < len; i++) {
+            Class wanted = null;
+            if(i < givenLength) {
+                wanted = given[i];
+            }
+            
+            types[i] = resolveArgumentType(arguments[i], wanted);
+        }
+        
+        return types;
+    }
+    
+    private Constructor<Object> resolveConstructor(String className, Object[] arguments) {
+        
+        Class type = ClassUtils.resolveClassName(className, null);
+        
+        Class[] argumentsTypes = resolveArgumentsTypes(arguments, null);
+        
+        if(ClassUtils.hasConstructor(type, argumentsTypes)) {
+            // we got a contructor !
+            return ClassUtils.getConstructorIfAvailable(type, argumentsTypes);
+        }
 
-        Class type = ClassUtils.resolveClassName(definition.getClassName(), null);
-
-        int len = definition.getArguments().length;
+        // we need to find it in an other way
+        int len = arguments.length;
         Constructor<Object>[] constructors = type.getConstructors();
 
         Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
-            return len == cstr.getParameterCount();
+            
+            if(len != cstr.getParameterCount()) {
+                return false;
+            }
+            
+            Class[] wanted = cstr.getParameterTypes();
+            Class[] types = resolveArgumentsTypes(arguments, wanted);
+            
+            return ClassUtils.hasConstructor(type, types);
         };
 
         return Arrays.stream(constructors).filter(filter).findFirst().orElse(null);
@@ -132,13 +189,24 @@ public class ContainerBuilder {
     }
     
     private Object callFactory(String id, Definition definition, Object[] arguments) throws Exception {
+        // assume that args are resolved !
+        
         Class factory = ClassUtils.resolveClassName(definition.getFactoryName(), null);
+        
+        //try to work with static methods
+        
+//        Method method = ClassUtils.getStatitcMethod(factory, definition.getFactoryMethodName(), new Class[]{});
+//        ReflectionUtils.invokeMethod(method, null, arguments);
+        
         Method method = ClassUtils.getMethod(factory, definition.getFactoryMethodName(), new Class[]{});
         return ReflectionUtils.invokeMethod(method, factory.newInstance(), arguments);
     }
     
     private Object callConstructor(String id, Definition definition, Object[] arguments) throws Exception {
-        Constructor<Object> constructor = resolveConstructor(definition);
+        Constructor<Object> constructor = resolveConstructor(definition.getClassName(), arguments);
+        if(null == constructor) {
+            throw new Exception(String.format("we could not find constructor for %s", id));
+        }
         return constructor.newInstance(arguments);
     }
     

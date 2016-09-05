@@ -5,7 +5,10 @@
  */
 package com.marvin.component.routing;
 
+import com.marvin.component.kernel.dialog.Request;
 import com.marvin.component.routing.config.Route;
+import com.marvin.component.routing.matcher.UriMatcher;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,22 +22,33 @@ public class RouterProgrammaticTest {
 
         Route route_A = new Route();
 //        route_A.setName("test_route_a");
-        route_A.setController("app.bundles.test.controller.DefaultController::charger");
+        route_A.addDefault("_controller", "app.bundles.test.controller.DefaultController::charger");
+//        route_A.setController("app.bundles.test.controller.DefaultController::charger");
         route_A.setPath("/");
 
         Route route_B = new Route();
 //        route_B.setName("test_route_b");
-        route_B.setController("app.bundles.test.controller.TestController::charger");
-        route_B.setPath("/");
-
-        Router router = new Router();
-
-        router.addRoute("test_route_a", route_A);
-        router.addRoute("test_route_b", route_B);
+        route_B.addDefault("_controller", "app.bundles.test.controller.TestController::charger");
+        route_B.addDefault("name", "world");
+        route_B.addRequirement("name", "\\W");
+//        route_B.setController("app.bundles.test.controller.TestController::charger");
+        route_B.setPath("/{name}");
         
-        Route result = router.find("/");
+        RouteCollection collection = new RouteCollection();
+
+        collection.addRoute("test_route_a", route_A);
+        collection.addRoute("test_route_b", route_B);
+
+        RequestMatcherInterface matcher = new UriMatcher();
+        Router router = new Router(collection, matcher);
         
+        Request request = Request.build("/");
+        HashMap<String, Object> result = router.matchRequest(request);
         System.out.println(result);
+        
+        Request request2 = Request.build("/world");
+        HashMap<String, Object> world = router.matchRequest(request2);
+        System.out.println(world);
 
     }
 }

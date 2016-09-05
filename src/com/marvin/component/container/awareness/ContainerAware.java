@@ -1,6 +1,5 @@
 package com.marvin.component.container.awareness;
 
-import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.IContainer;
 
 public abstract class ContainerAware implements ContainerAwareInterface {
@@ -18,19 +17,11 @@ public abstract class ContainerAware implements ContainerAwareInterface {
     }
     
     protected Object get(String id) {
-        try {
-            return getContainer().get(id);
-        } catch (ContainerException ex) {
-            return null;
-        }
+        return getContainer().get(id);
     }
     
     protected <T> T get(String id, Class<T> type) {
-        try {
-            return getContainer().get(id, type);
-        } catch (ContainerException ex) {
-            return null;
-        }
+        return getContainer().get(id, type);
     }
     
 }

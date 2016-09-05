@@ -15,7 +15,7 @@ public class FrameworkExtension extends Extension {
     public void load(HashMap<String, Object> configs, ContainerBuilder builder) {
         try {
             ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
-            XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
+            XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
             
             reader.read("../resources/config/services.xml");
         

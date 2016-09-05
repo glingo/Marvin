@@ -10,7 +10,7 @@ public class DebugBundle extends Bundle {
     @Override
     public void build(ContainerBuilder builder) {
         ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
-        XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
+        XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
         reader.read("resources/config/services.xml");
     }
 

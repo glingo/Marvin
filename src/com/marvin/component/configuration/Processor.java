@@ -25,7 +25,6 @@ public class Processor {
          return (HashMap<String, Object>) root.finalize(current);
     }
     
-    
     public Object processConfiguration(ConfigurationInterface configuration, HashMap<String, Object> config) throws Exception{
         Node root = configuration.getConfigTreeBuilder().buildTree();
         return process(root, config);

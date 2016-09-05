@@ -1,21 +1,15 @@
 package com.marvin.component.kernel;
 
 import com.marvin.component.container.Container;
-import com.marvin.component.container.awareness.ContainerAwareInterface;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.xml.XMLDefinitionReader;
-import com.marvin.component.event.EventDispatcher;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
-import com.marvin.component.kernel.controller.Controller;
 import com.marvin.component.kernel.controller.ControllerResolver;
-import com.marvin.component.kernel.event.KernelEvent;
-import com.marvin.component.kernel.event.KernelEvents;
-import com.marvin.component.routing.Router;
-import com.marvin.component.routing.config.Route;
-import com.marvin.component.routing.xml.XMLRouteReader;
+import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.kernel.dialog.RequestHandler;
+import com.marvin.component.kernel.dialog.Response;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,7 +21,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,11 +41,11 @@ public abstract class Kernel {
     protected boolean debug = false;
 
     protected ControllerResolver resolver = new ControllerResolver();
-    protected EventDispatcher dispatcher = new EventDispatcher();
+//    protected EventDispatcher dispatcher = new EventDispatcher();
 
     protected Map<String, Bundle> bundles;
     protected Container container;
-    protected Router router;
+//    protected Router router;
 
     abstract protected Bundle[] registerBundles();
 
@@ -61,6 +54,17 @@ public abstract class Kernel {
     public Kernel(boolean debug) {
         this.debug = debug;
     }
+    
+    public Map<String, Bundle> getBundles() {
+        if(this.bundles == null) {
+            this.initializeBundles();
+        }
+        return this.bundles;
+    }
+    
+    public Bundle getBundle(String name){
+        return getBundles().getOrDefault(name, null);
+    }
 
     public void boot() {
 
@@ -68,15 +72,13 @@ public abstract class Kernel {
             return;
         }
 
-        this.dispatcher.dispatch(KernelEvents.BEFORE_LOAD, new KernelEvent(this));
-
-        ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
+//        this.dispatcher.dispatch(KernelEvents.BEFORE_LOAD, new KernelEvent(this));
 
         this.initializeBundles();
         
-        this.initializeContainer(loader);
+        this.initializeContainer();
 
-        this.initializeRouter(loader);
+//        this.initializeRouter(loader);
 
         this.bundles.values().forEach((Bundle bundle) -> {
             bundle.setContainer(container);
@@ -85,8 +87,12 @@ public abstract class Kernel {
 
         this.booted = true;
 
-        this.dispatcher.dispatch(KernelEvents.AFTER_LOAD, new KernelEvent(this));
+//        this.dispatcher.dispatch(KernelEvents.AFTER_LOAD, new KernelEvent(this));
 
+    }
+    
+    public RequestHandler getRequestHandler(){
+        return getContainer().get("request_handler", RequestHandler.class);
     }
 
     protected void initializeBundles() {
@@ -101,13 +107,15 @@ public abstract class Kernel {
         });
     }
 
-    protected void initializeContainer(ResourceLoader loader) {
+    protected void initializeContainer() {
+
+        ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
 
         ContainerBuilder builder = new ContainerBuilder();
         
         this.prepareContainer(builder);
 
-        XMLDefinitionReader reader = new XMLDefinitionReader(builder, loader);
+        XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
 
         reader.read("resources/parameters.xml");
         reader.read("resources/services.xml");
@@ -115,11 +123,12 @@ public abstract class Kernel {
         // Inject the kernel as a service
         builder.set("kernel", this);
 //         Inject the container as a service
-//        builder.set("container", this.container);
+        builder.set("container", builder.getContainer());
+        builder.set("kernel.resource_loader", loader);
         // Inject an event dispatcher
 //        builder.set("event_dispatcher", this.dispatcher);
         // Inject a thread_pool
-        builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
+//        builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
         // Inject the logger as a service
 //        this.container.set("logger", this.logger);
 
@@ -128,17 +137,21 @@ public abstract class Kernel {
         });
 
         this.container = builder.build();
+        
+//        Router router = this.container.get("router", Router.class);
+//        RouteCollection collection = router.getRouteCollection();
+//        System.out.println(router);
     }
 
-    protected void initializeRouter(ResourceLoader loader) {
+//    protected void initializeRouter(ResourceLoader loader) {
 
-        this.router = new Router();
-        XMLRouteReader reader = new XMLRouteReader(router, loader);
-        reader.read("resources/routing.xml");
+//        this.router = new Router();
+//        XMLRouteReader reader = new XMLRouteReader(router, loader);
+//        reader.read("resources/routing.xml");
 
         // Inject the router as a service
-        this.container.set("router", this.router);
-    }
+//        this.container.set("router", this.router);
+//    }
 
     public void terminate() {
 //        this.dispatcher.dispatch(KernelEvents.TERMINATE, new KernelEvent(this));
@@ -160,11 +173,38 @@ public abstract class Kernel {
     
     /* Handles methods */
     
+    public Response handle(Request request) throws Exception {
+        
+        this.boot();
+        
+        return getRequestHandler().handle(request, true);
+        
+    }
+    
     
     public void handle(String row, Writer writer) throws Exception {
 
         this.boot();
+        
+        // stack request
+        
+        // Dispatch event Request ( get response )
+        
+        // Find controller via resolver
+        
+        // filter controller via event
+       
+        // resolve arguments to pass
+        
+        // filter controller arguments via event
 
+        // direct call controller
+        
+        // typer la response
+        
+        // filter la response ( pop request )
+        
+        
         // Toute cette partie est la recuperation de la Requette.
         String uri = null;
         Matcher matcher = Pattern.compile("^([A-Z]+) (\\p{Graph}+) ?((HTTP/[0-9\\.]+)?)$").matcher(row);
@@ -180,42 +220,49 @@ public abstract class Kernel {
         }
 
         if (uri != null) {
-
-            Route route = this.router.find(uri);
-
-            if (route == null) {
-                String msg = String.format("Sorry we could find a route for %s\n", uri);
-                writer.append(msg);
-                return;
-            }
-
-            if (route.getController() == null) {
-                String msg = String.format("There is no Controller for %s\n", uri);
-                writer.append(msg);
-                return;
-            }
-
-            Controller controller = this.resolver.resolveController(route.getController());
-
-            if (controller == null) {
-                String msg = String.format("No controller set for %s\n", uri);
-                writer.append(msg);
-                return;
-            }
-
-            if (controller.getHolder() instanceof ContainerAwareInterface) {
-                ((ContainerAwareInterface) controller.getHolder()).setContainer(container);
-            }
-            
             StringWriter tmpWriter = new StringWriter();
             this.container.set("print_writer", tmpWriter);
-            controller.run();
+            handle(Request.build(uri));
             tmpWriter.flush();
             writer.append(tmpWriter.toString());
             tmpWriter.close();
             this.container.set("print_writer", null);
 
-            writer.flush();
+//            Route route = this.router.find(uri);
+
+//            if (route == null) {
+//                String msg = String.format("Sorry we could find a route for %s\n", uri);
+//                writer.append(msg);
+//                return;
+//            }
+//
+//            if (route.getController() == null) {
+//                String msg = String.format("There is no Controller for %s\n", uri);
+//                writer.append(msg);
+//                return;
+//            }
+
+//            Controller controller = this.resolver.resolveController(route.getController());
+
+//            if (controller == null) {
+//                String msg = String.format("No controller set for %s\n", uri);
+//                writer.append(msg);
+//                return;
+//            }
+//
+//            if (controller.getHolder() instanceof ContainerAwareInterface) {
+//                ((ContainerAwareInterface) controller.getHolder()).setContainer(container);
+//            }
+//            
+//            StringWriter tmpWriter = new StringWriter();
+//            this.container.set("print_writer", tmpWriter);
+//            controller.run();
+//            tmpWriter.flush();
+//            writer.append(tmpWriter.toString());
+//            tmpWriter.close();
+//            this.container.set("print_writer", null);
+//
+//            writer.flush();
         }
 
     }

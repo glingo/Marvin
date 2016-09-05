@@ -1,12 +1,13 @@
 package com.marvin.component.event;
 
+import com.marvin.component.event.dispatcher.Dispatcher;
 import java.util.Date;
 
 public class Event {
 
     private long id;
     private boolean propagationStopped = false;
-    private EventDispatcher dispatcher;
+    private Dispatcher dispatcher;
 
     public Event() {
         super();
@@ -21,12 +22,20 @@ public class Event {
         this.id = id;
     }
 
-    public EventDispatcher getDispatcher() {
+    public Dispatcher getDispatcher() {
         return dispatcher;
     }
 
-    public void setDispatcher(EventDispatcher dispatcher) {
+    public void setDispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    public boolean isPropagationStopped() {
+        return propagationStopped;
+    }
+
+    public void stopEventPropagation() {
+        this.propagationStopped = true;
     }
 
 }

@@ -4,12 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Utility class to handle relative paths.
- *
- * @author Thomas Hunziker
- */
-public final class PathUtils {
+public abstract class PathUtils {
 
     private static final Pattern separatorRegex = Pattern.compile("\\\\|/");
 
@@ -47,10 +42,10 @@ public final class PathUtils {
     private static String resolvePathInner(String relativePath, String anchorPath, char separator) {
         StringBuilder resultingPath = new StringBuilder();
 
-        for (String segment : resolvePathSegments(determineAnchorPathSegments(anchorPath, separator),
-                splitBySeparator(relativePath, separator))) {
-            resultingPath.append(segment).append(separator);
-        }
+        resolvePathSegments(determineAnchorPathSegments(anchorPath, separator),
+                splitBySeparator(relativePath, separator)).stream().forEach((segment) -> {
+                    resultingPath.append(segment).append(separator);
+        });
 
         // remove the erroneous separator added at the end
         return resultingPath.substring(0, resultingPath.length() - 1);
@@ -70,15 +65,18 @@ public final class PathUtils {
     private static Collection<String> resolvePathSegments(Collection<String> anchorSegments,
             Collection<String> relativeSegments) {
         ArrayDeque<String> result = new ArrayDeque<>(anchorSegments);
-        for (String segment : relativeSegments) {
-            if (segment.equals(".")) {
-                // do nothing
-            } else if (segment.equals("..")) {
-                result.pollLast();
-            } else {
-                result.add(segment);
+        relativeSegments.stream().forEach((String segment) -> {
+            switch (segment) {
+                case ".": // do nothing
+                    break;
+                case "..":
+                    result.pollLast();
+                    break;
+                default:
+                    result.add(segment);
+                    break;
             }
-        }
+        });
 
         return result;
     }

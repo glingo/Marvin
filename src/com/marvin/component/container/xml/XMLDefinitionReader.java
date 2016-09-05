@@ -19,17 +19,21 @@ import org.xml.sax.InputSource;
 public class XMLDefinitionReader extends XMLReader {
 
     protected ContainerBuilder containerBuilder;
-
+    
     public XMLDefinitionReader(ContainerBuilder containerBuilder) {
         super();
         this.containerBuilder = containerBuilder;
     }
     
-    public XMLDefinitionReader(ContainerBuilder containerBuilder, ResourceLoader loader) {
+    public XMLDefinitionReader(ResourceLoader loader) {
         super(loader, new DocumentLoader());
-        this.containerBuilder = containerBuilder;
     }
 
+    public XMLDefinitionReader(ResourceLoader resourceLoader, ContainerBuilder containerBuilder) {
+        super(resourceLoader, new DocumentLoader());
+        this.containerBuilder = containerBuilder;
+    }
+    
     @Override
     protected void doRead(InputSource inputSource, IResource resource) {
         try {
@@ -42,10 +46,13 @@ public class XMLDefinitionReader extends XMLReader {
     
     public void registerDefinitions(Document doc, IResource resource) {
         XMLDefinitionDocumentReader documentReader = new XMLDefinitionDocumentReader(this.context);
-        documentReader.registerDefinitions(doc, containerBuilder);
+        documentReader.registerDefinitions(doc, getContainerBuilder());
     }
 
     public ContainerBuilder getContainerBuilder() {
+        if(containerBuilder == null) {
+            this.containerBuilder = new ContainerBuilder();
+        }
         return containerBuilder;
     }
 

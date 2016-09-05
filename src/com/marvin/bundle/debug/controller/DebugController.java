@@ -1,9 +1,10 @@
 package com.marvin.bundle.debug.controller;
 
-import com.marvin.bundle.framework.console.event.ConsoleEvent;
-import com.marvin.bundle.framework.console.event.ConsoleEvents;
+import com.marvin.bundle.framework.shell.event.ShellEvent;
+import com.marvin.bundle.framework.shell.event.ShellEvents;
 import com.marvin.bundle.framework.controller.Controller;
 import com.marvin.component.event.EventDispatcher;
+import com.marvin.component.kernel.dialog.Response;
 import java.util.HashMap;
 
 /**
@@ -12,25 +13,25 @@ import java.util.HashMap;
  */
 public class DebugController extends Controller {
     
-    public void debugContainer(){
+    public Response debugContainer(){
         HashMap<String, Object> context = new HashMap<>();
         context.put("container", this.getContainer());
-        this.render("com/marvin/bundle/debug/resources/view/debug_container.view", context);
+        return this.render("com/marvin/bundle/debug/resources/view/debug_container.view", context);
     }
     
-    public void debugContainerHTML(){
+    public Response debugContainerHTML(){
         HashMap<String, Object> context = new HashMap<>();
         context.put("container", this.getContainer());
-        this.render("com/marvin/bundle/debug/resources/view/debug_container.html.view", context);
+        return this.render("com/marvin/bundle/debug/resources/view/debug_container.html.view", context);
     }
     
-    public void debugEvents(){
+    public Response debugEvents(){
         HashMap<String, Object> context = new HashMap<>();
         EventDispatcher dispatcher = this.get("event_dispatcher", EventDispatcher.class);
         
-        dispatcher.dispatch(ConsoleEvents.START, new ConsoleEvent(null));
+        dispatcher.dispatch(ShellEvents.START, new ShellEvent(null));
         
         context.put("event_dispatcher", dispatcher);
-        this.render("com/marvin/bundle/debug/resources/view/debug_events.view", context);
+        return this.render("com/marvin/bundle/debug/resources/view/debug_events.view", context);
     }
 }

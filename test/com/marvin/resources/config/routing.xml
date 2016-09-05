@@ -2,6 +2,10 @@
 
 <routing>
     
+    <route name="test" path="/test">
+        <default key="_controller">app.bundles.test.controller.TestController::test</default>
+    </route>
+    
 <!--    <route name="demo.homepage" path="/" controller="app.bundles.test.controller.DefaultController::charger" />
     <route name="demo.container.use" path="/container" controller="app.bundles.test.controller.TestController::test" />-->
     

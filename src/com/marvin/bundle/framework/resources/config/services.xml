@@ -2,20 +2,77 @@
 <container>
     
     <!--<framework test="true"/>-->
+    <parameters>
+        <parameter id="router.resource" type="java.lang.String" value="resources/routing.xml"/>
+    </parameters>
     
     <services>
+        
+        <service id="uri_matcher" class="com.marvin.component.routing.matcher.UriMatcher" />
+        
+        <service id="request_matcher" class="com.marvin.component.routing.matcher.RequestMatcherDelegate">
+            <argument>
+                <list>
+                    <argument type="service" ref="uri_matcher"/>
+                </list>
+            </argument>
+        </service>
+        
+        <!-- XmlRouteReader definition -->
+        <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
+            <argument type="service" ref="kernel.resource_loader"/>
+        </service>
+        
+        <!-- Router definition -->
+        <service id="router" class="com.marvin.component.routing.Router">
+            <argument type="service" ref="router.reader_xml" />
+            <argument type="parameter" ref="router.resource" />
+            <argument type="service" ref="request_matcher" />
+        </service>
+        
+        <!-- Router subscriber definition -->
+        <service id="router.listener" class="com.marvin.bundle.framework.event.RouterSubscriber">
+            <argument type="service" ref="router"/>
+            <tag name="event_subscriber"/>
+        </service>
+        
+        
+        <!-- ControllerNameParser definition -->
+        <service id="controller.name_parser" class="com.marvin.bundle.framework.controller.ControllerNameParser">
+            <argument type="service" ref="kernel"/>
+        </service>
+        
+        <!-- ControllerResolver definition -->
+        <service id="controller.resolver" class="com.marvin.bundle.framework.controller.ControllerResolver">
+            <argument type="service" ref="controller.name_parser"/>
+        </service>
+        
+        <service id="argument_resolver" class="com.marvin.component.kernel.controller.ArgumentResolver" /> 
+        
+        <!-- request handler definition -->
+        <service id="request_handler" class="com.marvin.component.kernel.dialog.RequestHandler">
+            <argument type="service" ref="event_dispatcher"/>
+            <argument type="service" ref="controller.resolver"/>
+            <argument type="service" ref="argument_resolver"/>
+        </service>
+        
+        
+        <!-- Templating definition -->
     
         <service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build">
         </service>
         
+        <!-- event dispatcher definition -->
+        
         <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher">
         </service>
         
-        <service id="console" class="com.marvin.bundle.framework.console.Console">
+        
+        <service id="shell" class="com.marvin.bundle.framework.shell.Shell">
             <argument type="service" ref="kernel"/>
         </service>
         
-        <service id="console.event_listener" class="com.marvin.bundle.framework.console.listener.ConsoleSubscriber">
+        <service id="shell.event_listener" class="com.marvin.bundle.framework.shell.listener.ShellSubscriber">
             <tag name="event_subscriber"/>
         </service>
         

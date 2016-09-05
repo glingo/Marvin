@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  *
  * @author caill
  */
-public class MySecondEventSubscriber extends EventSubscriber {
+public class MySecondEventSubscriber extends EventSubscriber<Event> {
 
     @Override
     public Map<String, Consumer<Event>> getSubscribedEvents() {

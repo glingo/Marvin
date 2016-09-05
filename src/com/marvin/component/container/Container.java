@@ -175,6 +175,10 @@ public class Container implements IContainer {
         
         builder.append("\n----------------Liste des services----------------");
         this.getServices().forEach((String id, Object service) -> {
+            if("container".equals(id)) {
+                builder.append("\n").append(id).append(": ").append("service_container");
+                return;
+            }
             builder.append("\n").append(id).append(": ").append(service);
         });
         

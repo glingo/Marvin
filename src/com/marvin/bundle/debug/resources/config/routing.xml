@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routing>
     
-    <route name="debug.container" path="/debug/container" controller="com.marvin.bundle.debug.controller.DebugController::debugContainer" />
-    <route name="debug.container.html" path="/debug/container.html" controller="com.marvin.bundle.debug.controller.DebugController::debugContainerHTML" />
+    <route name="debug.container" path="/debug/container">
+        <default key="_controller">com.marvin.bundle.debug.controller.DebugController::debugContainer</default>
+    </route>
+    
+    <route name="debug.container.html" path="/debug/container.html">
+        <default key="_controller">com.marvin.bundle.debug.controller.DebugController::debugContainerHTML</default>
+    </route>
 
-    <route name="debug.events" path="/debug/events" controller="com.marvin.bundle.debug.controller.DebugController::debugEvents" />
+    <route name="debug.events" path="/debug/events">
+        <default key="_controller">com.marvin.bundle.debug.controller.DebugController::debugEvents</default>
+    </route>
     
 </routing>

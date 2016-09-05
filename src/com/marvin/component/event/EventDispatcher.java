@@ -5,29 +5,32 @@ import com.marvin.component.event.subscriber.SubscriberInterface;
 
 public class EventDispatcher extends Dispatcher<Event> {
 
-    @Override
-    public void dispatch(String name, Event event) {
+    public EventDispatcher() {
+        super((Event event) -> {return event.isPropagationStopped();});
+    }
 
+    @Override
+    public void dispatch(final String name, Event event) {
+        
         if (event == null) {
             event = this.create();
         }
 
         event.setDispatcher(this);
-
+        
         super.dispatch(name, event);
     }
 
     @Override
     public void removeSubscriber(SubscriberInterface<Event> subscriber) {
         
-        if (this.subscribers == null 
-                || this.subscribers.isEmpty() 
-                || !this.subscribers.contains(subscriber)) {
+        if (getSubscribers().isEmpty() 
+                || !getSubscribers().contains(subscriber)) {
             
             return;
         }
 
-        this.subscribers.remove(subscriber);
+        getSubscribers().remove(subscriber);
     }
 
     @Override
@@ -38,9 +41,14 @@ public class EventDispatcher extends Dispatcher<Event> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass()).append("\n").append(this.subscribers);
+        sb
+            .append("\n-----")
+            .append(this.getClass())
+            .append("-----")
+            .append("\n\t")
+            .append(getSubscribers())
+            .append("\n");
         return sb.toString();
     }
-    
     
 }

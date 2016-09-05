@@ -6,7 +6,8 @@
 package com.marvin.component.routing;
 
 import com.marvin.component.routing.config.Route;
-import com.marvin.component.routing.xml.XMLRouteReader;
+import com.marvin.component.routing.matcher.UriMatcher;
+import com.marvin.component.routing.xml.XmlRouteReader;
 
 /**
  *
@@ -15,12 +16,12 @@ import com.marvin.component.routing.xml.XMLRouteReader;
 public class RouterXMLTest {
     
     public static void main(String[] args) {
-        Router router = new Router();
-        XMLRouteReader reader = new XMLRouteReader(router);
-        reader.read("com/marvin/resources/config/routing.xml");
+        XmlRouteReader reader = new XmlRouteReader();
+        RequestMatcherInterface matcher = new UriMatcher();
+        Router router = new Router(reader, "com/marvin/resources/config/routing.xml", matcher);
         
-        router.routes.forEach((String name, Route route) -> {
-            System.out.println(name + " :: " + route.getPath() + " :: " + route.getController());
+        router.getRouteCollection().getRoutes().forEach((String name, Route route) -> {
+            System.out.println(name + " :: " + route.getPath() + " :: " + route.getDefaults());
         });
         
     }

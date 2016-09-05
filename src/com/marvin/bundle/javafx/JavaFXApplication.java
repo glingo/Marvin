@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.javafx;
+package com.marvin.bundle.javafx;
 
 import com.marvin.component.kernel.Kernel;
 import com.marvin.component.templating.Engine;
