@@ -28,6 +28,7 @@ public class Route {
         if(this.compiled) {
             return;
         }
+        
         Matcher matcher = replacementPattern.matcher(path);
 //        String staticPart = path.split("\\{.*?\\}")[0];
 //        ^[//]+[hello]+[//]+(\w+)$
@@ -44,8 +45,8 @@ public class Route {
  
             if(getRequirements().containsKey(key)){
                 Pattern value = getRequirements().get(key);
-                System.out.println("value detected: \n\t");
-                System.out.println(value);
+//                System.out.println("value detected: \n\t");
+//                System.out.println(value);
                 if(value != null){
                     matcher.appendReplacement(sb, "(" + value.pattern() + ")");
                 }
@@ -55,16 +56,17 @@ public class Route {
         matcher.appendTail(sb);
         sb.append("$");
         
-        System.out.println(sb.toString());
+//        System.out.println(sb.toString());
         
 //        this.pattern = Pattern.compile(sb.toString());
 
         String regex = sb.toString();
-        regex = regex
-                .replaceAll("/", "[//]");
+        regex = regex.replaceAll("/", "[//]");
         this.pattern = Pattern.compile(regex);
         
         this.compiled = true;
+        
+//        System.out.println("route compiled : " + this.getDefaults());
     }
  
     public String getStaticPrefix() {
@@ -178,5 +180,7 @@ public class Route {
         }
         m.appendTail(sb);
         System.out.println(sb.toString());
+        
+        
     }
 }

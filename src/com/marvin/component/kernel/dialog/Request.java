@@ -24,10 +24,11 @@ public class Request {
     private HashMap<String, Object> attributes;
     
     //[scheme:][//authority][path][?query][#fragment]
-    private URI uri;
+    private final URI uri;
 
     public Request(URI uri) {
         this.uri = uri;
+        this.uri.getQuery();
     }
     
     public static Request build(String path, HashMap<String, Object> queryParameters, HashMap<String, String> headers) {
@@ -48,6 +49,8 @@ public class Request {
         Request request = new Request(uri);
         request.addHeaders(headers);
         request.addQueryParameters(queryParameters);
+        
+        
         return request;
     }
     
@@ -55,12 +58,12 @@ public class Request {
         return new Request(URI.create(path));
     }
     
-    public static void build(Reader reader) throws Exception {
-        build(new BufferedReader(reader));
+    public static Request build(Reader reader) throws Exception {
+        return build(new BufferedReader(reader));
     }
 
-    public static void build(InputStream in) throws Exception {
-        build(new InputStreamReader(in));
+    public static Request build(InputStream in) throws Exception {
+        return build(new InputStreamReader(in));
     }
 
     public static Request build(BufferedReader br) {
@@ -83,7 +86,7 @@ public class Request {
             }
             
             URI uri = URI.create(line);
-            Request request = new Request(uri);
+            return new Request(uri);
         } catch (IOException ex) {
             Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
         }

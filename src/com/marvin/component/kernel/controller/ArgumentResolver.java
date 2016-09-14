@@ -43,6 +43,9 @@ public class ArgumentResolver {
             });
         });
         
+        System.out.println(this.getClass() + " ::getArguments");
+        System.out.println(arguments);
+        
         return arguments;
     }
     

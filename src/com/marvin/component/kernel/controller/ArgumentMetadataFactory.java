@@ -26,6 +26,10 @@ public class ArgumentMetadataFactory implements ArgumentMetadataFactoryInterface
             arguments.add(new ArgumentMetadata(param.getName(), param.getType(), param.isVarArgs()));
         }
         
+        System.out.println(controller);
+        
+//        System.out.println(arguments);
+        
         return arguments;
     }
     

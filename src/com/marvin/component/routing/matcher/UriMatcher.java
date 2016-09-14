@@ -22,9 +22,9 @@ public class UriMatcher extends RequestMatcher {
     protected HashMap<String, Object> matchCollection(String path, RouteCollection collection) {
         
         Route route = collection.getRoutes().values().stream().filter((Route filtered) -> {
-            System.out.println(filtered.getPattern());
-            System.out.println(path);
-            System.out.println(filtered.getPattern().matcher(path).find());
+//            System.out.println(filtered.getPattern());
+//            System.out.println(path);
+//            System.out.println(filtered.getPattern().matcher(path).find());
 //            System.out.println(filtered.getPattern().matcher(path).matches());
 //            return filtered.getPattern().matcher(path).matches();
             return filtered.getPattern().matcher(path).find();
@@ -35,6 +35,7 @@ public class UriMatcher extends RequestMatcher {
         }
         
         HashMap<String, Object> parameters = route.getDefaults();
+        parameters.put("_route", path);
         
         return parameters;
     }

@@ -5,8 +5,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.marvin.component.kernel.Kernel;
+import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.kernel.dialog.Response;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.InetAddress;
 
 public class Server { 
@@ -47,12 +52,18 @@ public class Server {
                 
         while (!isStopped()) {
             try (Socket remote = socket.accept()) {
-                
-                InputStream in = remote.getInputStream();
+                Request request = Request.build(remote.getInputStream());
+//                InputStream in = remote.getInputStream();
                 OutputStream out = remote.getOutputStream();
                 
-                this.kernel.handle(in, out);
+//                this.kernel.handle(in, out);
                 
+                Response response = this.kernel.handle(request);
+                Writer writer = new OutputStreamWriter(out);
+                
+                writer.write(response.getContent().toString());
+                writer.flush();
+                writer.close();
                 remote.close();
             }
         }

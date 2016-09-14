@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.routing.matcher;
 
 import com.marvin.component.kernel.dialog.Request;
 import com.marvin.component.routing.RequestMatcherInterface;
 import com.marvin.component.routing.RouteCollection;
-import com.marvin.component.routing.config.Route;
 import java.util.HashMap;
 
 public abstract class RequestMatcher implements RequestMatcherInterface {
