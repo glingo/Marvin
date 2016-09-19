@@ -7,7 +7,7 @@ package com.marvin.component.kernel.controller.argumentResolver;
 
 import com.marvin.component.kernel.controller.ArgumentMetadata;
 import com.marvin.component.kernel.controller.ArgumentValueResolverInterface;
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 
 /**
  *

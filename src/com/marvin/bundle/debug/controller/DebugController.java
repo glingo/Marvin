@@ -1,10 +1,10 @@
 package com.marvin.bundle.debug.controller;
 
-import com.marvin.bundle.framework.shell.event.ShellEvent;
-import com.marvin.bundle.framework.shell.event.ShellEvents;
+import com.marvin.component.shell.event.ShellEvent;
+import com.marvin.component.shell.event.ShellEvents;
 import com.marvin.bundle.framework.controller.Controller;
 import com.marvin.component.event.EventDispatcher;
-import com.marvin.component.kernel.dialog.Response;
+import com.marvin.component.dialog.Response;
 import java.util.HashMap;
 
 /**

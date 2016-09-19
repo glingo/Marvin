@@ -7,9 +7,9 @@ import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
 import com.marvin.component.kernel.controller.ControllerResolver;
-import com.marvin.component.kernel.dialog.Request;
-import com.marvin.component.kernel.dialog.RequestHandler;
-import com.marvin.component.kernel.dialog.Response;
+import com.marvin.component.dialog.Request;
+import com.marvin.component.dialog.RequestHandler;
+import com.marvin.component.dialog.Response;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -91,10 +91,6 @@ public abstract class Kernel {
 
     }
     
-    public RequestHandler getRequestHandler(){
-        return getContainer().get("request_handler", RequestHandler.class);
-    }
-
     protected void initializeBundles() {
         this.bundles = Arrays.stream(registerBundles())
             .collect(Collectors.toConcurrentMap(Bundle::getName, (Bundle bundle) -> {return bundle;}));
@@ -173,18 +169,18 @@ public abstract class Kernel {
     
     /* Handles methods */
     
-    public Response handle(Request request) throws Exception {
-        
-        this.boot();
-        
-        return getRequestHandler().handle(request, true);
-        
-    }
+//    public Response handle(Request request) throws Exception {
+//        
+//        this.boot();
+//        
+//        return getRequestHandler().handle(request, true);
+//        
+//    }
     
     
-    public void handle(String row, Writer writer) throws Exception {
-
-        this.boot();
+//    public void handle(String row, Writer writer) throws Exception {
+//
+//        this.boot();
         
         // stack request
         
@@ -206,27 +202,27 @@ public abstract class Kernel {
         
         
         // Toute cette partie est la recuperation de la Requette.
-        String uri = null;
-        Matcher matcher = Pattern.compile("^([A-Z]+) (\\p{Graph}+) ?((HTTP/[0-9\\.]+)?)$").matcher(row);
-
-        if (matcher.find()) {
-//            String method = matcher.group(1);
-            uri = matcher.group(2);
-//            String protocol = matcher.group(3);
-        }
-
-        if (uri == null && row.matches("^(\\p{Graph}+)$")) {
-            uri = row;
-        }
-
-        if (uri != null) {
-            StringWriter tmpWriter = new StringWriter();
-            this.container.set("print_writer", tmpWriter);
-            handle(Request.build(uri));
-            tmpWriter.flush();
-            writer.append(tmpWriter.toString());
-            tmpWriter.close();
-            this.container.set("print_writer", null);
+//        String uri = null;
+//        Matcher matcher = Pattern.compile("^([A-Z]+) (\\p{Graph}+) ?((HTTP/[0-9\\.]+)?)$").matcher(row);
+//
+//        if (matcher.find()) {
+////            String method = matcher.group(1);
+//            uri = matcher.group(2);
+////            String protocol = matcher.group(3);
+//        }
+//
+//        if (uri == null && row.matches("^(\\p{Graph}+)$")) {
+//            uri = row;
+//        }
+//
+//        if (uri != null) {
+//            StringWriter tmpWriter = new StringWriter();
+//            this.container.set("print_writer", tmpWriter);
+//            handle(Request.build(uri));
+//            tmpWriter.flush();
+//            writer.append(tmpWriter.toString());
+//            tmpWriter.close();
+//            this.container.set("print_writer", null);
 
 //            Route route = this.router.find(uri);
 
@@ -263,27 +259,27 @@ public abstract class Kernel {
 //            this.container.set("print_writer", null);
 //
 //            writer.flush();
-        }
+//        }
+//
+//    }
 
-    }
-
-    public void handle(BufferedReader reader, Writer writer) throws Exception {
-
-        String line = reader.readLine();
-        
-        String request = "";
-        
-        while (line != null && !"".equals(line) && !System.lineSeparator().equals(line)) {
-            
-            request += "\n" + line;
-            
-            this.handle(line, writer);
-            
-            line = reader.readLine();
-        }
-        
-        System.out.println("Request :");
-        System.out.println(request);
+//    public void handle(BufferedReader reader, Writer writer) throws Exception {
+//
+//        String line = reader.readLine();
+//        
+//        String request = "";
+//        
+//        while (line != null && !"".equals(line) && !System.lineSeparator().equals(line)) {
+//            
+//            request += "\n" + line;
+//            
+//            this.handle(line, writer);
+//            
+//            line = reader.readLine();
+//        }
+//        
+//        System.out.println("Request :");
+//        System.out.println(request);
 
 //        while (line != null 
 //                && !"".equals(line) 
@@ -293,21 +289,21 @@ public abstract class Kernel {
 //            line = reader.readLine();
 //        }
 
-    }
+//    }
 
-    public void handle(Reader reader, Writer writer) throws Exception {
-        BufferedReader buffered = new BufferedReader(reader);
-        this.handle(buffered, writer);
-    }
-
-    public void handle(InputStream in, OutputStream out) throws Exception {
-        PrintWriter writer = new PrintWriter(out, true);
-        Reader reader = new InputStreamReader(in);
-        this.handle(reader, writer);
-    }
-
-    public void handle(InputStream in, OutputStream out, OutputStream err) throws Exception {
-        this.handle(in, out);
-        out.flush();
-    }
+//    public void handle(Reader reader, Writer writer) throws Exception {
+//        BufferedReader buffered = new BufferedReader(reader);
+//        this.handle(buffered, writer);
+//    }
+//
+//    public void handle(InputStream in, OutputStream out) throws Exception {
+//        PrintWriter writer = new PrintWriter(out, true);
+//        Reader reader = new InputStreamReader(in);
+//        this.handle(reader, writer);
+//    }
+//
+//    public void handle(InputStream in, OutputStream out, OutputStream err) throws Exception {
+//        this.handle(in, out);
+//        out.flush();
+//    }
 }

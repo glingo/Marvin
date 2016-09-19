@@ -1,6 +1,6 @@
 package com.marvin.component.routing.matcher;
 
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 import com.marvin.component.routing.RouteCollection;
 import com.marvin.component.routing.config.Route;
 import java.util.HashMap;

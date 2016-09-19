@@ -1,6 +1,6 @@
 package com.marvin.component.routing;
 
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 import java.util.HashMap;
 
 public interface RequestMatcherInterface {

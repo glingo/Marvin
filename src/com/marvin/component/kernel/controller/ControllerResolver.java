@@ -6,7 +6,7 @@
 package com.marvin.component.kernel.controller;
 
 import com.marvin.component.container.awareness.ContainerAware;
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 import com.marvin.component.util.ClassUtils;
 import java.lang.reflect.Method;
 

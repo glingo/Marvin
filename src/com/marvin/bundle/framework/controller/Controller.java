@@ -1,7 +1,7 @@
 package com.marvin.bundle.framework.controller;
 
 import com.marvin.component.container.awareness.ContainerAware;
-import com.marvin.component.kernel.dialog.Response;
+import com.marvin.component.dialog.Response;
 import com.marvin.component.templating.Engine;
 import com.marvin.component.templating.template.Template;
 import java.io.StringWriter;

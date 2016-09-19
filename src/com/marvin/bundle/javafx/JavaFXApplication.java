@@ -54,7 +54,7 @@ public class JavaFXApplication {
         StringWriter writer = new StringWriter();
         
         try {
-            this.kernel.handle(name, writer);
+//            this.kernel.handle(name, writer);
 
             InputStream stream = new ByteArrayInputStream(writer.toString().getBytes());
 

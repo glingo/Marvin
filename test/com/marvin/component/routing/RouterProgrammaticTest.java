@@ -5,7 +5,7 @@
  */
 package com.marvin.component.routing;
 
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 import com.marvin.component.routing.config.Route;
 import com.marvin.component.routing.matcher.UriMatcher;
 import java.util.HashMap;

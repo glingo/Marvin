@@ -1,6 +1,6 @@
 package com.marvin.component.kernel.controller;
 
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 
 public interface ArgumentValueResolverInterface {
     

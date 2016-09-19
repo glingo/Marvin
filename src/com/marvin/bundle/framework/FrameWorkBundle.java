@@ -18,7 +18,6 @@ public class FrameworkBundle extends Bundle {
         } catch (Exception ex) {
             Logger.getLogger(FrameworkBundle.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     

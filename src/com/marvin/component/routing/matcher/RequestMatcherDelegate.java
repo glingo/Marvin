@@ -5,7 +5,7 @@
  */
 package com.marvin.component.routing.matcher;
 
-import com.marvin.component.kernel.dialog.Request;
+import com.marvin.component.dialog.Request;
 import com.marvin.component.routing.RequestMatcherInterface;
 import com.marvin.component.routing.RouteCollection;
 import java.util.Collection;
