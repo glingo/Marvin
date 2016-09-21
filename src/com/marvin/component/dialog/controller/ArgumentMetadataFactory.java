@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.marvin.component.kernel.controller;
+package com.marvin.component.dialog.controller;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -25,10 +25,6 @@ public class ArgumentMetadataFactory implements ArgumentMetadataFactoryInterface
         for (Parameter param : parameters) {
             arguments.add(new ArgumentMetadata(param.getName(), param.getType(), param.isVarArgs()));
         }
-        
-        System.out.println(controller);
-        
-//        System.out.println(arguments);
         
         return arguments;
     }

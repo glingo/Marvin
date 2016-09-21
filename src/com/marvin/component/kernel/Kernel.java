@@ -6,7 +6,7 @@ import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
-import com.marvin.component.kernel.controller.ControllerResolver;
+import com.marvin.component.dialog.controller.ControllerResolver;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -27,11 +27,9 @@ public abstract class Kernel {
     protected boolean debug = false;
 
     protected ControllerResolver resolver = new ControllerResolver();
-//    protected EventDispatcher dispatcher = new EventDispatcher();
 
     protected Map<String, Bundle> bundles;
     protected Container container;
-//    protected Router router;
 
     abstract protected Bundle[] registerBundles();
 
@@ -58,13 +56,9 @@ public abstract class Kernel {
             return;
         }
 
-//        this.dispatcher.dispatch(KernelEvents.BEFORE_LOAD, new KernelEvent(this));
-
         this.initializeBundles();
         
         this.initializeContainer();
-
-//        this.initializeRouter(loader);
 
         this.bundles.values().forEach((Bundle bundle) -> {
             bundle.setContainer(container);
@@ -72,8 +66,6 @@ public abstract class Kernel {
         });
 
         this.booted = true;
-
-//        this.dispatcher.dispatch(KernelEvents.AFTER_LOAD, new KernelEvent(this));
 
     }
     
@@ -107,33 +99,15 @@ public abstract class Kernel {
 //         Inject the container as a service
         builder.set("container", builder.getContainer());
         builder.set("kernel.resource_loader", loader);
-        // Inject an event dispatcher
-//        builder.set("event_dispatcher", this.dispatcher);
         // Inject a thread_pool
 //        builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
-        // Inject the logger as a service
-//        this.container.set("logger", this.logger);
 
         this.bundles.values().forEach((Bundle bundle) -> {
             bundle.build(builder);
         });
 
         this.container = builder.build();
-        
-//        Router router = this.container.get("router", Router.class);
-//        RouteCollection collection = router.getRouteCollection();
-//        System.out.println(router);
     }
-
-//    protected void initializeRouter(ResourceLoader loader) {
-
-//        this.router = new Router();
-//        XMLRouteReader reader = new XMLRouteReader(router, loader);
-//        reader.read("resources/routing.xml");
-
-        // Inject the router as a service
-//        this.container.set("router", this.router);
-//    }
 
     public void terminate() {
 //        this.dispatcher.dispatch(KernelEvents.TERMINATE, new KernelEvent(this));
@@ -151,6 +125,7 @@ public abstract class Kernel {
     public Container getContainer() {
         return this.container;
     }
+}
     
     
     /* Handles methods */
@@ -292,4 +267,3 @@ public abstract class Kernel {
 //        this.handle(in, out);
 //        out.flush();
 //    }
-}

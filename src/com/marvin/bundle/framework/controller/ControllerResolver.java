@@ -1,11 +1,11 @@
 package com.marvin.bundle.framework.controller;
 
 import com.marvin.component.container.awareness.ContainerAwareInterface;
-import com.marvin.component.kernel.controller.ControllerReference;
+import com.marvin.component.dialog.controller.ControllerReference;
 import com.marvin.component.util.ClassUtils;
 import java.lang.reflect.Method;
 
-public class ControllerResolver extends com.marvin.component.kernel.controller.ControllerResolver implements ContainerAwareInterface {
+public class ControllerResolver extends com.marvin.component.dialog.controller.ControllerResolver implements ContainerAwareInterface {
 
     private final ControllerNameParser parser;
     
@@ -44,7 +44,7 @@ public class ControllerResolver extends com.marvin.component.kernel.controller.C
             }
         }
         
-        return super.createController(name); //To change body of generated methods, choose Tools | Templates.
+        return super.createController(name);
     }
 
 }

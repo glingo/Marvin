@@ -2,7 +2,6 @@ package com.marvin.component.dialog.event;
 
 import com.marvin.component.dialog.Request;
 import com.marvin.component.dialog.RequestHandler;
-import com.marvin.component.dialog.Response;
 
 public class GetResponseForExceptionEvent extends GetResponseEvent {
     

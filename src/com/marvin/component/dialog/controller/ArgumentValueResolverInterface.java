@@ -1,4 +1,4 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.component.dialog.controller;
 
 import com.marvin.component.dialog.Request;
 

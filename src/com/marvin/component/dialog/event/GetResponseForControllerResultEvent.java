@@ -1,18 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.dialog.event;
 
 import com.marvin.component.dialog.Request;
 import com.marvin.component.dialog.RequestHandler;
-import com.marvin.component.dialog.Response;
 
-/**
- *
- * @author caill
- */
 public class GetResponseForControllerResultEvent extends RequestHandlerEvent {
     
     private Object response;

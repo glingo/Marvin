@@ -369,7 +369,7 @@ public abstract class ReflectionUtils {
      * Determine whether the given field is a "public static final" constant.
      *
      * @param field the field to check
-     * @return 
+     * @return
      */
     public static boolean isPublicStaticFinal(Field field) {
         int modifiers = field.getModifiers();
@@ -380,7 +380,7 @@ public abstract class ReflectionUtils {
      * Determine whether the given method is an "equals" method.
      *
      * @param method
-     * @return 
+     * @return
      * @see java.lang.Object#equals(Object)
      */
     public static boolean isEqualsMethod(Method method) {
@@ -395,7 +395,7 @@ public abstract class ReflectionUtils {
      * Determine whether the given method is a "hashCode" method.
      *
      * @param method
-     * @return 
+     * @return
      * @see java.lang.Object#hashCode()
      */
     public static boolean isHashCodeMethod(Method method) {
@@ -406,7 +406,7 @@ public abstract class ReflectionUtils {
      * Determine whether the given method is a "toString" method.
      *
      * @param method
-     * @return 
+     * @return
      * @see java.lang.Object#toString()
      */
     public static boolean isToStringMethod(Method method) {
@@ -416,8 +416,9 @@ public abstract class ReflectionUtils {
     /**
      * Determine whether the given method is originally declared by
      * {@link java.lang.Object}.
+     *
      * @param method
-     * @return 
+     * @return
      */
     public static boolean isObjectMethod(Method method) {
         if (method == null) {
@@ -436,7 +437,7 @@ public abstract class ReflectionUtils {
      * the pattern "CGLIB$methodName$0".
      *
      * @param renamedMethod the method to check
-     * @return 
+     * @return
      * @see org.springframework.cglib.proxy.Enhancer#rename
      */
     public static boolean isCglibRenamedMethod(Method renamedMethod) {
@@ -499,6 +500,23 @@ public abstract class ReflectionUtils {
                 || !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible()) {
             ctor.setAccessible(true);
         }
+    }
+
+    /**
+     * Obtain an accessible constructor for the given class and parameters.
+     *
+     * @param clazz the clazz to check
+     * @param parameterTypes the parameter types of the desired constructor
+     * @return the constructor reference
+     * @throws NoSuchMethodException if no such constructor exists
+     * @since 5.0
+     */
+    public static <T> Constructor<T> accessibleConstructor(Class<T> clazz, Class<?>... parameterTypes)
+            throws NoSuchMethodException {
+
+        Constructor<T> ctor = clazz.getDeclaredConstructor(parameterTypes);
+        makeAccessible(ctor);
+        return ctor;
     }
 
     /**
@@ -575,7 +593,7 @@ public abstract class ReflectionUtils {
      * class methods are included first.
      *
      * @param leafClass the class to introspect
-     * @return 
+     * @return
      */
     public static Method[] getAllDeclaredMethods(Class<?> leafClass) {
         final List<Method> methods = new ArrayList<>(32);
@@ -590,7 +608,7 @@ public abstract class ReflectionUtils {
      * method already included are filtered out.
      *
      * @param leafClass the class to introspect
-     * @return 
+     * @return
      */
     public static Method[] getUniqueDeclaredMethods(Class<?> leafClass) {
         final List<Method> methods = new ArrayList<>(32);
@@ -746,6 +764,7 @@ public abstract class ReflectionUtils {
      * Given the source object and the destination, which must be the same class
      * or a subclass, copy all fields, including inherited fields. Designed to
      * work on objects with public no-arg constructors.
+     *
      * @param src
      * @param dest
      */
@@ -803,7 +822,7 @@ public abstract class ReflectionUtils {
          * Determine whether the given method matches.
          *
          * @param method the method to check
-         * @return 
+         * @return
          */
         boolean matches(Method method);
     }
@@ -834,7 +853,7 @@ public abstract class ReflectionUtils {
          * Determine whether the given field matches.
          *
          * @param field the field to check
-         * @return 
+         * @return
          */
         boolean matches(Field field);
     }

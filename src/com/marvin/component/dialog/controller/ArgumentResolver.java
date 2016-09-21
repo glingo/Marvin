@@ -1,8 +1,8 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.component.dialog.controller;
 
-import com.marvin.component.kernel.controller.argumentResolver.DefaultValueResolver;
-import com.marvin.component.kernel.controller.argumentResolver.RequestAtributeValueResolver;
-import com.marvin.component.kernel.controller.argumentResolver.RequestValueResolver;
+import com.marvin.component.dialog.controller.argumentResolver.DefaultValueResolver;
+import com.marvin.component.dialog.controller.argumentResolver.RequestAtributeValueResolver;
+import com.marvin.component.dialog.controller.argumentResolver.RequestValueResolver;
 import com.marvin.component.dialog.Request;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,6 @@ public class ArgumentResolver {
                 }
             });
         });
-        
-        System.out.println(this.getClass() + " ::getArguments");
-        System.out.println(arguments);
         
         return arguments;
     }

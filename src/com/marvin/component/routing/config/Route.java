@@ -1,14 +1,16 @@
 package com.marvin.component.routing.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Route {
 
-//    private String controller;
     private String path;
     
+    private List<String> variableNames;
     private HashMap<String, Object> defaults;
     private HashMap<String, Pattern> requirements;
     
@@ -30,25 +32,17 @@ public class Route {
         }
         
         Matcher matcher = replacementPattern.matcher(path);
-//        String staticPart = path.split("\\{.*?\\}")[0];
-//        ^[//]+[hello]+[//]+(\w+)$
         StringBuffer sb = new StringBuffer();
         sb.append("^");
         
         while (matcher.find()) {
             String key = matcher.group().replaceAll("[{}]", "");
+            addVariableName(key);
             
-//            if(getDefaults().containsKey(key)) {
-//                String value = getDefaults().getOrDefault(key, key);
-//                regex = regex.replace(matcher.group(), value);
-//            }
- 
             if(getRequirements().containsKey(key)){
                 Pattern value = getRequirements().get(key);
-//                System.out.println("value detected: \n\t");
-//                System.out.println(value);
                 if(value != null){
-                    matcher.appendReplacement(sb, "(" + value.pattern() + ")");
+                    matcher.appendReplacement(sb, "(?<" + key + ">" + value.pattern() + ")");
                 }
             }
         }
@@ -56,17 +50,10 @@ public class Route {
         matcher.appendTail(sb);
         sb.append("$");
         
-//        System.out.println(sb.toString());
-        
-//        this.pattern = Pattern.compile(sb.toString());
-
         String regex = sb.toString();
-        regex = regex.replaceAll("/", "[//]");
         this.pattern = Pattern.compile(regex);
         
         this.compiled = true;
-        
-//        System.out.println("route compiled : " + this.getDefaults());
     }
  
     public String getStaticPrefix() {
@@ -119,13 +106,29 @@ public class Route {
         return requirements;
     }
     
-    
-//    public Route(String path, String controller) {
-//        super();
-//        this.path = path;
-//        this.controller = controller;
-//    }
+    public String getPath() {
+        return this.path;
+    }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public List<String> getVariableNames() {
+        if(this.variableNames == null) {
+            this.variableNames = new ArrayList<>();
+        }
+        return variableNames;
+    }
+
+    public void setVariableNames(List<String> variableNames) {
+        this.variableNames = variableNames;
+    }
+    
+    public void addVariableName(String name) {
+        getVariableNames().add(name);
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -147,22 +150,6 @@ public class Route {
         
         return sb.toString();
     }
-    
-//    public String getController() {
-//        return this.controller;
-//    }
-//
-//    public void setController(String controller) {
-//        this.controller = controller;
-//    }
-
-    public String getPath() {
-        return this.path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public static void main(String[] args) {
         
@@ -180,7 +167,6 @@ public class Route {
         }
         m.appendTail(sb);
         System.out.println(sb.toString());
-        
         
     }
 }

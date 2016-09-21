@@ -1,4 +1,4 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.component.dialog.controller;
 
 import java.lang.reflect.Method;
 
@@ -34,6 +34,5 @@ public class ControllerReference {
         String ts = String.format("ControllerReference (%s, %s)", this.holder, this.action);
         return ts;
     }
-
     
 }

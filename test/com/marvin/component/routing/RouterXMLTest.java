@@ -5,9 +5,11 @@
  */
 package com.marvin.component.routing;
 
+import com.marvin.component.dialog.Request;
 import com.marvin.component.routing.config.Route;
 import com.marvin.component.routing.matcher.UriMatcher;
 import com.marvin.component.routing.xml.XmlRouteReader;
+import java.util.HashMap;
 
 /**
  *
@@ -20,9 +22,24 @@ public class RouterXMLTest {
         RequestMatcherInterface matcher = new UriMatcher();
         Router router = new Router(reader, "com/marvin/resources/config/routing.xml", matcher);
         
+        System.out.println("\t Routes : ");
         router.getRouteCollection().getRoutes().forEach((String name, Route route) -> {
-            System.out.println(name + " :: " + route.getPath() + " :: " + route.getDefaults());
+            System.out.println(route);
         });
+        
+        Request request = Request.build("/hello/world2");
+        System.out.println("\n\n\t matching /hello/world2 : ");
+        System.out.println(router.matchRequest(request));
+        
+        
+        request = Request.build("/hello");
+        System.out.println("\n\n\t matching /hello : ");
+        System.out.println(router.matchRequest(request));
+        
+        
+        request = Request.build("/test");
+        System.out.println("\n\n\t matching /test : ");
+        System.out.println(router.matchRequest(request));
         
     }
 }

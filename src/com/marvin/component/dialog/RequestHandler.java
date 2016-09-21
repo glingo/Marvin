@@ -1,9 +1,13 @@
 package com.marvin.component.dialog;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Stack;
+
 import com.marvin.component.event.EventDispatcher;
-import com.marvin.component.kernel.controller.ArgumentResolver;
-import com.marvin.component.kernel.controller.ControllerReference;
-import com.marvin.component.kernel.controller.ControllerResolver;
+import com.marvin.component.dialog.controller.ArgumentResolver;
+import com.marvin.component.dialog.controller.ControllerReference;
+import com.marvin.component.dialog.controller.ControllerResolver;
 import com.marvin.component.dialog.event.FilterControllerArgumentsEvent;
 import com.marvin.component.dialog.event.RequestHandlerEvents;
 import com.marvin.component.dialog.event.FilterControllerEvent;
@@ -13,9 +17,6 @@ import com.marvin.component.dialog.event.GetResponseForControllerResultEvent;
 import com.marvin.component.dialog.event.GetResponseForExceptionEvent;
 import com.marvin.component.dialog.event.RequestHandlerEvent;
 import com.marvin.component.util.ReflectionUtils;
-import java.util.Date;
-import java.util.List;
-import java.util.Stack;
 
 public class RequestHandler {
     
@@ -100,7 +101,7 @@ public class RequestHandler {
         this.dispatcher.dispatch(RequestHandlerEvents.REQUEST, responseEvent);
         
         if(responseEvent.hasResponse()) {
-            // return this.filterREsponse();
+//             return this.filterResponse();
         }
         
         request = responseEvent.getRequest();
@@ -121,9 +122,6 @@ public class RequestHandler {
         // resolve arguments to pass
         List<Object> arguments = this.argsResolver.getArguments(request, controller);
         
-        System.out.println("arguments :");
-        System.out.println(arguments);
-        
         // filter controller arguments via event
         FilterControllerArgumentsEvent argsEvent = new FilterControllerArgumentsEvent(this, controller, arguments, request);
         this.dispatcher.dispatch(RequestHandlerEvents.CONTROLLER_ARGUMENTS, argsEvent);
@@ -131,11 +129,9 @@ public class RequestHandler {
         controller = argsEvent.getController();
         arguments = argsEvent.getArguments();
         
-        System.out.println("arguments :");
-        System.out.println(arguments);
-        
         // direct call controller
-        Object response = ReflectionUtils.invokeMethod(controller.getAction(), controller.getHolder(), arguments.toArray());
+        Object response = ReflectionUtils.invokeMethod(controller.getAction(), 
+                controller.getHolder(), arguments.toArray());
 
         // typer la response
         if(!(response instanceof Response)) {
@@ -166,7 +162,6 @@ public class RequestHandler {
         
         long end = new Date().getTime();
         System.out.format("%s executed in %s ms\n", controller, end - start);
-//        System.out.format("response : \n\t%s", response);
 
         return (Response) response;
     }

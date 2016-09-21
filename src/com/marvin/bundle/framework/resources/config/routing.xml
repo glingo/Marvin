@@ -49,7 +49,7 @@
             <argument type="service" ref="controller.name_parser"/>
         </service>
         
-        <service id="argument_resolver" class="com.marvin.component.kernel.controller.ArgumentResolver" /> 
+        <service id="argument_resolver" class="com.marvin.component.dialog.controller.ArgumentResolver" /> 
         
     </services>
 </container>

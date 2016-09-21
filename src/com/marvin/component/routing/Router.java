@@ -6,10 +6,10 @@ import java.util.HashMap;
 
 public class Router {
 
-    private XmlRouteReader reader;
     private String resource;
+    private XmlRouteReader reader;
     private RouteCollection collection;
-    private RequestMatcherInterface matcher;
+    private final RequestMatcherInterface matcher;
     
     public Router(RouteCollection collection, RequestMatcherInterface matcher) {
         super();

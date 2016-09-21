@@ -3,7 +3,13 @@ package com.marvin.component.dialog;
 public class Response {
     
     Object content;
+    
+    public Response() {}
 
+    public Response(Object content) {
+        this.content = content;
+    }
+    
     public Object getContent() {
         return content;
     }

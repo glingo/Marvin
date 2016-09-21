@@ -21,18 +21,14 @@ public class RouterProgrammaticTest {
     public static void main(String[] args) {
 
         Route route_A = new Route();
-//        route_A.setName("test_route_a");
         route_A.addDefault("_controller", "app.bundles.test.controller.DefaultController::charger");
-//        route_A.setController("app.bundles.test.controller.DefaultController::charger");
         route_A.setPath("/");
 
         Route route_B = new Route();
-//        route_B.setName("test_route_b");
         route_B.addDefault("_controller", "app.bundles.test.controller.TestController::charger");
         route_B.addDefault("name", "world");
-        route_B.addRequirement("name", "\\W");
-//        route_B.setController("app.bundles.test.controller.TestController::charger");
-        route_B.setPath("/{name}");
+        route_B.addRequirement("name", "\\w+");
+        route_B.setPath("/hello/{name}");
         
         RouteCollection collection = new RouteCollection();
 
@@ -46,7 +42,7 @@ public class RouterProgrammaticTest {
         HashMap<String, Object> result = router.matchRequest(request);
         System.out.println(result);
         
-        Request request2 = Request.build("/world");
+        Request request2 = Request.build("/hello/world2");
         HashMap<String, Object> world = router.matchRequest(request2);
         System.out.println(world);
 

@@ -1,6 +1,6 @@
 package com.marvin.component.dialog.event;
 
-import com.marvin.component.kernel.controller.ControllerReference;
+import com.marvin.component.dialog.controller.ControllerReference;
 import com.marvin.component.dialog.Request;
 import com.marvin.component.dialog.RequestHandler;
 import java.util.List;
