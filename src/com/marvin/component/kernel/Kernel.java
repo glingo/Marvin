@@ -6,7 +6,6 @@ import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
-import com.marvin.component.dialog.controller.ControllerResolver;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -25,8 +24,6 @@ public abstract class Kernel {
 
     protected boolean booted = false;
     protected boolean debug = false;
-
-    protected ControllerResolver resolver = new ControllerResolver();
 
     protected Map<String, Bundle> bundles;
     protected Container container;

@@ -3,7 +3,7 @@
     
     <services>
         
-        <service id="server" class="com.marvin.component.server.Server">
+<!--        <service id="server" class="com.marvin.component.server.Server">
             <argument type="service" ref="kernel"/>
             <argument type="int" value="80"/>
             <argument type="int" value="81"/>
@@ -11,6 +11,6 @@
         
         <service id="server.event_listener" class="com.marvin.component.server.listener.ServerSubscriber">
             <tag name="event_subscriber"/>
-        </service>
+        </service>-->
     </services>
 </container>

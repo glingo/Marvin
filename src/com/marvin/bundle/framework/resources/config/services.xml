@@ -4,8 +4,7 @@
     <services>
         
         <!-- event dispatcher definition -->
-        <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher">
-        </service>
+        <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher" />
         
     </services>
 </container>

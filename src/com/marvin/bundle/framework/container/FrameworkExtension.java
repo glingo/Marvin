@@ -1,28 +1,32 @@
 package com.marvin.bundle.framework.container;
 
+import com.marvin.bundle.framework.FrameworkBundle;
 import com.marvin.component.configuration.ConfigurationInterface;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.extension.Extension;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.ClassPathResourceLoader;
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrameworkExtension extends Extension {
-
+    private static final Logger LOG = Logger.getLogger(FrameworkExtension.class.getName());
+    
     @Override
     public void load(HashMap<String, Object> configs, ContainerBuilder builder) {
         try {
-            ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
+            ClassPathResourceLoader loader = new ClassPathResourceLoader(FrameworkBundle.class);
             XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
             
-            reader.read("../resources/config/services.xml");
-            reader.read("../resources/config/templating.xml");
-            reader.read("../resources/config/routing.xml");
-            reader.read("../resources/config/web.xml");
-            reader.read("../resources/config/shell.xml");
-            reader.read("../resources/config/server.xml");
+            reader.read("resources/config/services.xml");
+            reader.read("resources/config/templating.xml");
+            reader.read("resources/config/routing.xml");
+            reader.read("resources/config/web.xml");
+            reader.read("resources/config/shell.xml");
+            reader.read("resources/config/server.xml");
         
             ConfigurationInterface configuration = this.getConfiguration();
             HashMap<String, Object> conf = this.processConfiguration(configuration, configs);

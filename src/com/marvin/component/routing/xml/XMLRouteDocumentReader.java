@@ -2,8 +2,8 @@ package com.marvin.component.routing.xml;
 
 import com.marvin.component.io.xml.XMLDocumentReader;
 import com.marvin.component.io.xml.XMLReaderContext;
+import com.marvin.component.routing.Route;
 import com.marvin.component.routing.RouteCollection;
-import com.marvin.component.routing.config.Route;
 import com.marvin.component.util.StringUtils;
 
 import org.w3c.dom.Document;
@@ -11,10 +11,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- *
- * @author cdi305
- */
 public class XmlRouteDocumentReader extends XMLDocumentReader {
 
     public static final String ROUTE_ELEMENT = "route";
@@ -66,8 +62,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
         String name = ele.getAttribute("name");
         String path = ele.getAttribute("path");
         
-//        String controller = ele.getAttribute("controller");
-
         if (StringUtils.hasLength(name)) {
             Route route = new Route();
             route.setPath(path);
@@ -79,7 +73,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
                     parseRequirementElement((Element) node, route);
                 }
             }
-//            route.setController(controller);
             collection.addRoute(name, route);
         }
     }
@@ -87,8 +80,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     protected void processDefault(Element ele, Route route) {
         String key = ele.getAttribute(KEY_ATTRIBUTE);
         
-//        String controller = ele.getAttribute("controller");
-
         if (StringUtils.hasLength(key)) {
             route.addDefault(key, ele.getTextContent().trim());
         }
@@ -97,8 +88,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     protected void processRequirement(Element ele, Route route) {
         String key = ele.getAttribute(KEY_ATTRIBUTE);
         
-//        String controller = ele.getAttribute("controller");
-
         if (StringUtils.hasLength(key)) {
             route.addRequirement(key, ele.getTextContent().trim());
         }
@@ -118,14 +107,4 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
         }
     }
 
-
-//    public boolean isDefaultNamespace(String namespaceUri) {
-//        return (!StringUtils.hasLength(namespaceUri) || BEANS_NAMESPACE_URI.equals(namespaceUri));
-//    }
-//    public boolean isDefaultNamespace(Node node) {
-//        return isDefaultNamespace(getNamespaceURI(node));
-//    }
-//    private boolean isCandidateElement(Node node) {
-//        return (node instanceof Element && (isDefaultNamespace(node) || !isDefaultNamespace(node.getParentNode())));
-//    }
 }

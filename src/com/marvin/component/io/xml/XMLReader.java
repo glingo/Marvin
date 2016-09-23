@@ -42,7 +42,7 @@ public abstract class XMLReader {
         IResource resource = this.resourceLoader.load(location);
         
         if (!resource.exists()) {
-            System.err.format("Resource %s does not exists\n", location);
+            System.err.format("Resource %s does not exists, %s\n", location, this.resourceLoader);
             return;
         }
 

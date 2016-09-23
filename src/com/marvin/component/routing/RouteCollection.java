@@ -1,6 +1,5 @@
 package com.marvin.component.routing;
 
-import com.marvin.component.routing.config.Route;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
