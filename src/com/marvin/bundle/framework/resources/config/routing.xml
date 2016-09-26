@@ -2,9 +2,7 @@
 <container>
     
     <!--<framework test="true"/>-->
-    <parameters>
-        <parameter id="router.resource" type="java.lang.String" value="resources/routing.xml"/>
-    </parameters>
+
     
     <services>
         

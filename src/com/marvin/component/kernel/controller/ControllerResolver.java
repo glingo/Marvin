@@ -13,7 +13,8 @@ public abstract class ControllerResolver<T> extends ContainerAware implements Co
     protected ControllerReference createController(String name) throws Exception {
         
         if (false == name.contains("::")) {
-            throw new Exception(String.format("Unable to find controller '%s'.", name));
+            String msg = String.format("Unable to find controller '%s'.", name);
+            throw new Exception(msg);
         }
 
         String[] split = name.split("::", 2);
@@ -33,8 +34,7 @@ public abstract class ControllerResolver<T> extends ContainerAware implements Co
             return null;
         }
         
-        if(controller instanceof ControllerReference) {
-            // done;
+        if(controller instanceof ControllerReference) { // done;
             return (ControllerReference) controller;
         }
     

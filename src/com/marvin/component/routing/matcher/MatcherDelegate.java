@@ -45,6 +45,5 @@ public class MatcherDelegate implements MatcherInterface {
     public Collection<MatcherInterface> getMatchers() {
         return matchers;
     }
-
     
 }

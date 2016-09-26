@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
     
+    <parameters>
+        <parameter id="router.resource" type="java.lang.String" value="resources/routing.xml"/>
+    </parameters>
+    
     <services>
+        
+        <!-- XmlRouteReader definition -->
+        <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
+            <argument type="service" ref="kernel.resource_loader"/>
+        </service>
+        
+        <!-- controller name parser -->
+        <service id="controller.name_parser" class="com.marvin.component.kernel.controller.ControllerNameParser">
+            <argument type="service" ref="kernel"/>
+        </service>
         
         <!-- event dispatcher definition -->
         <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher" />
