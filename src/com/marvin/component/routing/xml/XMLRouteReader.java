@@ -6,7 +6,6 @@ import com.marvin.component.io.IResource;
 import com.marvin.component.io.xml.DocumentLoader;
 import com.marvin.component.io.xml.XMLReader;
 import com.marvin.component.routing.RouteCollection;
-import com.marvin.component.routing.xml.XmlRouteDocumentReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Document;
