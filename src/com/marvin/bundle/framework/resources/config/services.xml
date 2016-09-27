@@ -7,6 +7,9 @@
     
     <services>
         
+        <!-- Translator definition -->
+        <service id="translator" class="com.marvin.component.translation.Translator" />
+        
         <!-- XmlRouteReader definition -->
         <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
             <argument type="service" ref="kernel.resource_loader"/>
