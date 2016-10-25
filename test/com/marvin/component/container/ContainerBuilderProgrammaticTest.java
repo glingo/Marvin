@@ -1,27 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container;
 
 import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
 import com.marvin.component.container.config.Reference;
-import com.marvin.service.IService;
-import com.marvin.service.TestServiceA;
-import com.marvin.service.TestServiceB;
-import com.marvin.service.TestServiceC;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mock.services.IMockService;
+import mock.services.MockServiceA;
+import mock.services.MockServiceB;
+import mock.services.MockServiceC;
+import mock.services.MockServiceD;
 
-/**
- *
- * @author cdi305
- */
 public class ContainerBuilderProgrammaticTest {
     
     public static void main(String[] args) {
@@ -61,17 +53,18 @@ public class ContainerBuilderProgrammaticTest {
         
         try {
             
-            IService a = container.get("test.service.a", TestServiceA.class);
-            IService b = container.get("test.service.b", TestServiceB.class);
-            IService c = container.get("test.service.c", TestServiceC.class);
+            IMockService a = container.get("test.service.a", MockServiceA.class);
+            IMockService b = container.get("test.service.b", MockServiceB.class);
+            IMockService c = container.get("test.service.c", MockServiceC.class);
+            IMockService d = container.get("test.service.c", MockServiceD.class);
             
             System.out.println(a);
             System.out.println(b);
             System.out.println(c);
             
-            a.sayHello();
-            b.sayHello();
-            c.sayHello();
+            a.mockMethod();
+            b.mockMethod();
+            c.mockMethod();
             
         } catch (ContainerException ex) {
             Logger.getLogger(ContainerBuilderProgrammaticTest.class.getName()).log(Level.SEVERE, null, ex);

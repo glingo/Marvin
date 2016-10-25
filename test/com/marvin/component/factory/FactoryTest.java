@@ -1,26 +1,28 @@
 package com.marvin.component.factory;
 
-import com.marvin.service.Classes;
-import com.marvin.service.Parameters;
 import com.marvin.old.pattern.factory.IFactory;
 import com.marvin.old.pattern.factory.factories.FactoryImpl;
-import com.marvin.service.IService;
+import java.util.ArrayList;
+import mock.services.IMockService;
+import mock.services.MockServiceA;
+import mock.services.MockServiceB;
+import mock.services.MockServiceC;
 
-/**
- *
- * @author cdi305
- */
 public class FactoryTest {
     
     public static void main(String[] args) {
         IFactory factory = new FactoryImpl();
         
-        IService serviceA = factory.instance(Classes.serviceA, Parameters.serviceA);
-        IService serviceB = factory.instance(Classes.serviceB, Parameters.serviceB);
-        IService serviceC = factory.instance(Classes.serviceC, Parameters.serviceC);
-        
+        Object[] pA = new Object[]{"serviceA", 0};
+        IMockService serviceA = factory.instance(MockServiceA.class, pA);
         System.out.format("new instance : %s \n", serviceA);
+        
+        Object[] pB = new Object[]{serviceA, "serviceB", 1};
+        IMockService serviceB = factory.instance(MockServiceB.class, pB);
         System.out.format("new instance : %s \n", serviceB);
+        
+        Object[] pC = new Object[]{serviceA, "serviceB", 1, new ArrayList()};
+        IMockService serviceC = factory.instance(MockServiceC.class, pC);
         System.out.format("new instance : %s \n", serviceC);
         
     }

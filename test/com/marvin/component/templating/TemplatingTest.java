@@ -1,24 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.templating;
 
 import com.marvin.component.templating.template.Template;
-import com.marvin.service.Services;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author cdi305
- */
 public class TemplatingTest {
 
     public static void main(String[] args) {
@@ -28,7 +16,7 @@ public class TemplatingTest {
             
             Map<String, Object> context = new HashMap<>();
             context.put("name", "Mitchell");
-            context.put("test", Services.serviceA);
+            context.put("test", new Object());
             
             PrintWriter writer = new PrintWriter(System.out, true);
             

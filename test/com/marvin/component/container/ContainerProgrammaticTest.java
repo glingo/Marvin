@@ -1,68 +1,242 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.container;
 
-import com.marvin.component.container.exception.ContainerException;
-import com.marvin.service.Services;
-import com.marvin.service.IService;
-import com.marvin.service.TestServiceA;
-import com.marvin.service.TestServiceB;
-import com.marvin.service.TestServiceC;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.ConcurrentMap;
+import junit.framework.TestCase;
 
-/**
- *
- * @author cdi305
- */
-public class ContainerProgrammaticTest {
+public class ContainerProgrammaticTest extends TestCase {
     
-    public static void main(String[] args) {
-        String name = ContainerProgrammaticTest.class.getName();
-        
-        System.out.format("Debut du test %s. \n", name);
-        System.out.println("--------------------");
-        
-        System.out.println("Creating a new Container");
-        IContainer container = new Container();
-        
-        up(container);
-        
-        try {
-            
-            IService serviceA = container.get("test.service.a", TestServiceA.class);
-            IService serviceB = container.get("test.service.b", TestServiceB.class);
-            IService serviceC = container.get("test.service.c", TestServiceC.class);
-            
-            System.out.format("%s call sayHello\n", serviceA);
-            serviceA.sayHello();
-            
-            System.out.format("%s call sayHello\n", serviceB);
-            serviceB.sayHello();
-            
-            System.out.format("%s call sayHello\n", serviceC);
-            serviceC.sayHello();
-            
-            
-            System.out.println("Fin du test");
-            System.out.println("--------------------");
-            
-        } catch (ContainerException ex) {
-            Logger.getLogger(name).log(Level.SEVERE, null, ex);
-        }
-        
+    private final String MOCK_SERVICE_ID = "mock.service";
+    
+    private IContainer instance;
+    
+    public ContainerProgrammaticTest() {
+        super("Test du container version programmatic");
     }
     
-    public static void up(IContainer container) {
+    @Override
+    protected void setUp() throws Exception {    
         
-        System.out.format("Setting up mock services in container %s\n", container);
+        // Sets up the fixture, for example, open a network connection.
+	// This method is called before a test is executed.
         
-        container.set("test.service.a", Services.serviceA);
-        container.set("test.service.b", Services.serviceB);
-        container.set("test.service.c", Services.serviceC);
+        super.setUp();
+
+        // we initialize a container to test it.
+        this.instance = new Container();
         
+        // we should test if we can initilize it with paramters :
+        
+//        ConcurrentHashMap<String, Object> parameters = new ConcurrentHashMap();
+//        parameters.put("mock.param.string", "Mock parameter 1");
+//        parameters.put("mock.param.integer", 27);
+//        parameters.put("mock.param.list", new ArrayList<>());
+//        this.instance = new Container(parameters);
     }
+    
+    @Override
+    protected void tearDown() throws Exception {
+        
+        // Tears down the fixture, for example, close a network connection.
+	// This method is called after a test is executed.
+        
+        super.tearDown();
+    }
+
+    /**
+     * Test of set method, of class Container.
+     */
+    public void testSet() {
+        
+        System.out.println("Testing Container::set method");
+        
+        String id = "";
+        Object service = null;
+        
+        instance.set(id, service);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of get method, of class Container.
+     */
+    public void testGet_String() {
+        System.out.println("get");
+        String id = "";
+        Object expResult = null;
+        Object result = instance.get(id);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of get method, of class Container.
+     */
+    public void testGet_String_Class() {
+        System.out.println("get");
+        Object expResult = null;
+        Object result = instance.get(null);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of contains method, of class Container.
+     */
+    public void testContains() {
+        System.out.println("contains");
+        String id = "";
+        Container instance = new Container();
+        boolean expResult = false;
+        boolean result = instance.contains(id);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAliases method, of class Container.
+     */
+    public void testGetAliases() {
+        System.out.println("getAliases");
+        Container instance = new Container();
+        ConcurrentMap<String, String> expResult = null;
+        ConcurrentMap<String, String> result = instance.getAliases();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setAliases method, of class Container.
+     */
+    public void testSetAliases() {
+        System.out.println("setAliases");
+        ConcurrentMap<String, String> aliases = null;
+        Container instance = new Container();
+        instance.setAliases(aliases);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of addAlias method, of class Container.
+     */
+    public void testAddAlias() {
+        System.out.println("addAlias");
+        String id = "";
+        String alias = "";
+        Container instance = new Container();
+        instance.addAlias(id, alias);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getServices method, of class Container.
+     */
+    public void testGetServices() {
+        System.out.println("getServices");
+        Container instance = new Container();
+        ConcurrentMap<String, Object> expResult = null;
+        ConcurrentMap<String, Object> result = instance.getServices();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setServices method, of class Container.
+     */
+    public void testSetServices() {
+        System.out.println("setServices");
+        ConcurrentMap<String, Object> services = null;
+        Container instance = new Container();
+        instance.setServices(services);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getParameter method, of class Container.
+     */
+    public void testGetParameter_String_Object() {
+        System.out.println("getParameter");
+        String key = "";
+        Object def = null;
+        Container instance = new Container();
+        Object expResult = null;
+        Object result = instance.getParameter(key, def);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getParameter method, of class Container.
+     */
+    public void testGetParameter_String() {
+        System.out.println("getParameter");
+        String key = "";
+        Container instance = new Container();
+        Object expResult = null;
+        Object result = instance.getParameter(key);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setParameter method, of class Container.
+     */
+    public void testSetParameter() {
+        System.out.println("setParameter");
+        String key = "";
+        Object value = null;
+        Container instance = new Container();
+        instance.setParameter(key, value);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getParameters method, of class Container.
+     */
+    public void testGetParameters() {
+        System.out.println("getParameters");
+        Container instance = new Container();
+        ConcurrentMap<String, Object> expResult = null;
+        ConcurrentMap<String, Object> result = instance.getParameters();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setParameters method, of class Container.
+     */
+    public void testSetParameters() {
+        System.out.println("setParameters");
+        ConcurrentMap<String, Object> parameters = null;
+        Container instance = new Container();
+        instance.setParameters(parameters);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toString method, of class Container.
+     */
+    public void testToString() {
+        System.out.println("toString");
+        Container instance = new Container();
+        String expResult = "";
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    
 }

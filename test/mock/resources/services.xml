@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    
+    <!-- 
+        Services declaration of : 
+            
+                        Mock application
+    -->
+    
+    <parameters>
+        <!--<parameter id="test.parameter.string" type="java.lang.String" value="My parameter string"/>-->
+
+    </parameters>
+    
+    <!--<import resource="config/imported_config.xml" />-->
+    
+    <services>
+        
+        <!--<service id="request_uri_matcher" class="com.marvin.web.routing.matcher.UriMatcher" />-->
+        
+        <!-- Give a test service named Service A to the container -->
+<!--        <service id="test.service.a" class="com.marvin.service.TestServiceA">
+            <argument type="java.lang.String" value="test.service.a"/>
+            <argument type="int" value="1"/>
+        </service>-->
+        
+        <!-- Give a test service named Service B ( with a reference to Service A ) to the container -->
+<!--        <service id="test.service.b" class="app.service.TestServiceB">
+            <argument type="service" ref="test.service.a"/>
+            <argument type="java.lang.String" value="Service B"/>
+            <argument type="int" value="2"/>
+        </service>-->
+        
+<!--        <service id="test.service.a.with.call" class="com.marvin.service.TestServiceA">
+            <argument type="java.lang.String" value="test.service.a.with.call"/>
+            <argument type="int" value="1"/>
+            <call name="say">
+                <argument type="java.lang.String" value="Service A"/>
+                <argument type="int" value="1"/>
+            </call>
+            <call name="callService">
+                <argument type="service" ref="test.service.a"/>
+            </call>
+        </service>-->
+ 
+    </services>
+</container>

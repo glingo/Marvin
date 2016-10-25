@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routing>
+
+    <route name="welcome_mock" path="/">
+        <default key="_controller">marvin.demo.app.controller.WelcomeController::welcomeAction</default>
+        <default key="type">html</default>
+        <requirement key="type">html|text|fxml</requirement>
+    </route>
+
+</routing>
