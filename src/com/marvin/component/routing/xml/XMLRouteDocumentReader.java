@@ -18,7 +18,10 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     
     public static final String REQUIREMENT_ELEMENT = "requirement";
     public static final String DEFAULT_ELEMENT = "default";
+    
     public static final String KEY_ATTRIBUTE = "key";
+    public static final String PREFIX_ATTRIBUTE = "prefix";
+    private String prefix;
 
     public XmlRouteDocumentReader(XMLReaderContext context) {
         super(context);
@@ -31,6 +34,12 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
         doRegisterRoutes(root, router);
     }
 
+    @Override
+    protected void importResource(Element ele) {
+        this.prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
+        super.importResource(ele); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     protected void doRegisterRoutes(Element root, RouteCollection router) {
 
 //        preProcessXml(root);
@@ -64,6 +73,11 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
         
         if (StringUtils.hasLength(name)) {
             Route route = new Route();
+            
+            if(this.prefix != null) {
+                path = this.prefix + path;
+            }
+            
             route.setPath(path);
             NodeList nl = ele.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {

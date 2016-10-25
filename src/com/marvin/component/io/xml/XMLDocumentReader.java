@@ -25,7 +25,7 @@ public class XMLDocumentReader {
             importResource(ele);
         }
     }
-
+    
     protected void importResource(Element ele) {
         String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
 

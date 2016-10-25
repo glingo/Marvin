@@ -1,7 +1,7 @@
-package com.marvin.component.kernel.controller.argumentResolver;
+package com.marvin.bundle.framework.controller.argument.argumentResolver;
 
-import com.marvin.component.kernel.controller.ArgumentMetadata;
-import com.marvin.component.kernel.controller.ArgumentValueResolverInterface;
+import com.marvin.bundle.framework.controller.argument.ArgumentMetadata;
+import com.marvin.bundle.framework.controller.argument.ArgumentValueResolverInterface;
 
 public class DefaultValueResolver<T> implements ArgumentValueResolverInterface<T> {
 

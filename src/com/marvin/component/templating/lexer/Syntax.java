@@ -5,7 +5,6 @@
  */
 package com.marvin.component.templating.lexer;
 
-import com.marvin.component.templating.token.Delimiter;
 import java.util.regex.Pattern;
 
 /**

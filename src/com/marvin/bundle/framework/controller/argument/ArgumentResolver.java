@@ -1,5 +1,6 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.bundle.framework.controller.argument;
 
+import com.marvin.bundle.framework.controller.ControllerReference;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -8,6 +8,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// c'est plutot un renderer !
+
+// un controller devrait renvoyer <String, HashMap> 
+// (view path/name, model) 
+// ou et quoi.
+
 public class Controller extends ContainerAware {
     
     protected Object render(String templateName, Map<String, Object> context) {

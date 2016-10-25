@@ -4,9 +4,7 @@
     <services>
         
         <!-- Templating definition -->
-    
-        <service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build">
-        </service>
+        <service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build" />
         
     </services>
 </container>

@@ -1,4 +1,4 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.bundle.framework.controller;
 
 import java.lang.reflect.Method;
 

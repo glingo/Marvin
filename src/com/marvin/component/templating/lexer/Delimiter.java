@@ -1,9 +1,5 @@
-package com.marvin.component.templating.token;
+package com.marvin.component.templating.lexer;
 
-/**
- *
- * @author cdi305
- */
 public enum Delimiter {
     
     COMMENT("{#", "#}"),

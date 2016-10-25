@@ -23,10 +23,10 @@ public class FrameworkExtension extends Extension {
             
             reader.read("resources/config/services.xml");
             reader.read("resources/config/templating.xml");
-            reader.read("resources/config/routing.xml");
-            reader.read("resources/config/web.xml");
-            reader.read("resources/config/shell.xml");
-            reader.read("resources/config/server.xml");
+//            reader.read("resources/config/routing.xml");
+//            reader.read("resources/config/web.xml");
+//            reader.read("resources/config/shell.xml");
+//            reader.read("resources/config/server.xml");
         
             ConfigurationInterface configuration = this.getConfiguration();
             HashMap<String, Object> conf = this.processConfiguration(configuration, configs);

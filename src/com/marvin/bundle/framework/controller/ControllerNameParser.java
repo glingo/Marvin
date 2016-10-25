@@ -1,4 +1,4 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.bundle.framework.controller;
 
 import com.marvin.component.kernel.Kernel;
 import com.marvin.component.kernel.bundle.Bundle;

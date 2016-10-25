@@ -1,4 +1,4 @@
-package com.marvin.component.kernel.controller;
+package com.marvin.bundle.framework.controller;
 
 import com.marvin.component.container.awareness.ContainerAwareInterface;
 import com.marvin.component.util.ClassUtils;
@@ -9,6 +9,10 @@ public abstract class ContainerControllerResolver<T> extends ControllerResolver<
     private final ControllerNameParser parser;
     
     public ContainerControllerResolver(ControllerNameParser parser) {
+        if(parser == null) {
+            String msg = "ControllerNamePArser could not be null";
+            throw new IllegalArgumentException(msg);
+        }
         this.parser = parser;
     }
 
