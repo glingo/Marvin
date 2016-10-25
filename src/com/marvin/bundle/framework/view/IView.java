@@ -1,6 +1,6 @@
 package com.marvin.bundle.framework.view;
 
-public interface ViewInterface {
+public interface IView {
     
     // devrait connaitre :
     //      - le model
