@@ -1,6 +1,6 @@
 package com.marvin.bundle.framework.model;
 
-public class AbstractModel {
+public abstract class AbstractModel {
     
     // devrait connaitre :
     //      - la vue

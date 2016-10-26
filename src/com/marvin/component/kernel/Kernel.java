@@ -1,36 +1,31 @@
 package com.marvin.component.kernel;
 
-import com.marvin.component.container.Container;
-import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.extension.ExtensionInterface;
-import com.marvin.component.container.xml.XMLDefinitionReader;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.kernel.bundle.Bundle;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Le Kernel va handle un inputstream et repondre sur un outputstream.
- *
- * @author Dr.Who
- */
+import com.marvin.component.container.Container;
+import com.marvin.component.container.ContainerBuilder;
+import com.marvin.component.container.extension.ExtensionInterface;
+import com.marvin.component.container.xml.XMLDefinitionReader;
+import com.marvin.component.kernel.bundle.Bundle;
+import com.marvin.component.io.loader.ClassPathResourceLoader;
+
 public abstract class Kernel {
     
     protected static final String VERSION = "v0.1";
     
-    protected static final int THREAD = 10;
+//    protected static final int THREAD = 10;
 
     protected boolean booted = false;
-    protected boolean debug = false;
+    protected boolean debug  = false;
 
     protected Map<String, Bundle> bundles;
     protected Container container;
 
     abstract protected Bundle[] registerBundles();
 
-    public Kernel() { }
+    public Kernel() {}
 
     public Kernel(boolean debug) {
         this.debug = debug;
@@ -80,22 +75,24 @@ public abstract class Kernel {
 
     protected void initializeContainer() {
 
-        ClassPathResourceLoader loader = new ClassPathResourceLoader(this.getClass());
+        ClassPathResourceLoader loader = new ClassPathResourceLoader(getClass());
 
-        ContainerBuilder builder = new ContainerBuilder();
+        ContainerBuilder builder       = new ContainerBuilder();
         
-        this.prepareContainer(builder);
+        prepareContainer(builder);
 
         XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
 
         reader.read("resources/parameters.xml");
         reader.read("resources/services.xml");
 
-        // Inject the kernel as a service
+        // Inject the kernel as a service.
         builder.set("kernel", this);
-//         Inject the container as a service
+        // Inject the container as a service.
         builder.set("container", builder.getContainer());
+        // Inject the resource loader.
         builder.set("kernel.resource_loader", loader);
+        
         // Inject a thread_pool
 //        builder.set("thread_pool", Executors.newFixedThreadPool(THREAD));
 
