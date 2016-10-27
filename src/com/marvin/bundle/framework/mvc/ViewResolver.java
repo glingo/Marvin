@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.view;
+package com.marvin.bundle.framework.mvc;
 
 public class ViewResolver {
     

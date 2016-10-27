@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.model;
+package com.marvin.bundle.framework.mvc;
 
 public abstract class AbstractModel {
     

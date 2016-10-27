@@ -1,8 +1,8 @@
-package com.marvin.bundle.framework.view;
+package com.marvin.bundle.framework.mvc;
 
 import java.util.Locale;
 
-public interface IViewresolver {
+public interface IViewResolver {
     
     IView resolveView(String name, Locale locale);
 }

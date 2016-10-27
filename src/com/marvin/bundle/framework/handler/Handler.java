@@ -148,13 +148,10 @@ public class Handler<T, R> {
         // ? A ModelAndView object.
         // ? A View object or his name.
         // ? A Model object
+        // ? A HashMap object as the model
         
         
-        
-        
-        
-        
-        
+        // we need to check the returned value type and handle it 
         
         
         // typer la response
@@ -162,6 +159,9 @@ public class Handler<T, R> {
         //  - the view ( as an object or name )
         //  - the model ( as a Map or complete it )
 
+        
+        
+        
         if(!(controllerResult instanceof String)) {
             
             // get response for controller result
