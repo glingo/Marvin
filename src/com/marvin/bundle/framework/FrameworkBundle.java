@@ -12,7 +12,4 @@ public class FrameworkBundle extends Bundle {
         super.build(builder);
         builder.addCompilerPass(new RegisterSubscribersPass(), PassConfig.BEFORE_REMOVING);
     }
-
-    
-    
 }
