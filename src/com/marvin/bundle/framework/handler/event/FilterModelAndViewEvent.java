@@ -1,27 +1,28 @@
 package com.marvin.bundle.framework.handler.event;
 
 import com.marvin.bundle.framework.handler.Handler;
+import com.marvin.bundle.framework.mvc.ModelAndView;
 
-public class FilterResponseEvent<T, R> extends HandlerEvent<T, R> {
+public class FilterModelAndViewEvent<R, T> extends HandlerEvent<R, T> {
 
-    private R response;
+    private ModelAndView mav;
     
-    public FilterResponseEvent(Handler handler, T request, R response) {
-        super(handler, request);
-        this.response = response;
+    public FilterModelAndViewEvent(Handler<R, T> handler, ModelAndView mav) {
+        super(handler);
+        this.mav = mav;
     }
 
-    public R getResponse() {
-        return response;
+    public ModelAndView getModelAndView() {
+        return mav;
     }
 
-    public void setResponse(R response) {
-        this.response = response;
+    public void setModelAndView(ModelAndView mav) {
+        this.mav = mav;
         this.stopEventPropagation();
     }
     
-    public boolean hasResponse() {
-        return this.response != null;
+    public boolean hasModelAndView() {
+        return this.mav != null;
     }
     
 }

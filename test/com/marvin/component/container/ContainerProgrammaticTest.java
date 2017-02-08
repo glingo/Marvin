@@ -1,5 +1,6 @@
 package com.marvin.component.container;
 
+import com.marvin.component.container.exception.ContainerException;
 import java.util.concurrent.ConcurrentMap;
 import junit.framework.TestCase;
 
@@ -59,8 +60,9 @@ public class ContainerProgrammaticTest extends TestCase {
 
     /**
      * Test of get method, of class Container.
+     * @throws java.lang.Exception
      */
-    public void testGet_String() {
+    public void testGet_String() throws Exception {
         System.out.println("get");
         String id = "";
         Object expResult = null;
@@ -72,8 +74,9 @@ public class ContainerProgrammaticTest extends TestCase {
 
     /**
      * Test of get method, of class Container.
+     * @throws java.lang.Exception
      */
-    public void testGet_String_Class() {
+    public void testGet_String_Class() throws Exception {
         System.out.println("get");
         Object expResult = null;
         Object result = instance.get(null);
@@ -168,7 +171,7 @@ public class ContainerProgrammaticTest extends TestCase {
         Object def = null;
         Container instance = new Container();
         Object expResult = null;
-        Object result = instance.getParameter(key, def);
+        Object result = instance.getParameterWithDefault(key, def);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

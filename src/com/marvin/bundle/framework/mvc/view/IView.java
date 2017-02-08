@@ -1,5 +1,8 @@
-package com.marvin.bundle.framework.mvc;
+package com.marvin.bundle.framework.mvc.view;
 
-public interface IView {
+import java.util.HashMap;
+
+public interface IView<R, T> {
     
+    void render(HashMap<String, ?> model, R request, T response) throws Exception;
 }

@@ -9,11 +9,11 @@ public class TreeBuilder {
     protected NodeDefinition root;
     protected NodeBuilder builder;
     
-    public NodeDefinition root(String name) throws Exception {
+    public NodeDefinition root(String name) {
         return root(name, "array", null);
     }
     
-    public NodeDefinition root(String name, String type, NodeBuilder builder) throws Exception {
+    public NodeDefinition root(String name, String type, NodeBuilder builder) {
         
         if(builder == null) {
             builder = new NodeBuilder();
@@ -27,10 +27,10 @@ public class TreeBuilder {
         return getRoot();
     }
     
-    public Node buildTree() throws Exception {
+    public Node buildTree() {
         
         if(getRoot() == null) {
-            throw new Exception("The configuration tree has no root node.");
+            throw new RuntimeException("The configuration tree has no root node.");
         }
         
         if(getTree() != null) {
@@ -66,11 +66,11 @@ public class TreeBuilder {
         this.tree = tree;
     }
     
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("TreeBuilder : \n");
-        sb.append(this.root);
-        return sb.toString();
-    }
+//    @Override
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("TreeBuilder : \n");
+//        sb.append(this.root);
+//        return sb.toString();
+//    }
 }

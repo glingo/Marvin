@@ -1,13 +1,12 @@
 package com.marvin.component.io.xml;
 
-import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.IResource;
+import java.io.File;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,19 +14,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public abstract class XMLReader {
+    
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     protected DocumentLoader documentLoader;
     protected ResourceLoader resourceLoader;
     protected XMLReaderContext context;
 
     public XMLReader() {
-        this.context = new XMLReaderContext(this);
-        this.resourceLoader = new DefaultResourceLoader();
-        this.documentLoader = new DocumentLoader();
+        this(new DefaultResourceLoader(), new DocumentLoader());
     }
 
     public XMLReader(ResourceLoader resourceLoader, DocumentLoader documentLoader) {
-        this.context = new XMLReaderContext(this);
+        this.context = new XMLReaderContext(resourceLoader, this);
         this.resourceLoader = resourceLoader;
         this.documentLoader = documentLoader;
     }
@@ -40,28 +39,27 @@ public abstract class XMLReader {
 
     public void read(String location) {
         IResource resource = this.resourceLoader.load(location);
-        
+
         if (!resource.exists()) {
-            System.err.format("Resource %s does not exists, %s\n", location, this.resourceLoader);
+            String msg = String.format("Resource %s does not exists, %s\n", location, this.resourceLoader);
+            this.logger.severe(msg);
             return;
         }
+        
+        this.context.setParent(location.substring(0, location.lastIndexOf("/")));
 
         read(resource);
     }
 
     private void read(IResource resource) {
         try {
-
-            InputStream inputStream = resource.getInputStream();
-
-            try {
+            try (InputStream inputStream = resource.getInputStream()) {
                 InputSource inputSource = new InputSource(inputStream);
                 doRead(inputSource, resource);
-            } finally {
-                inputStream.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(XMLDefinitionReader.class.getName()).log(Level.SEVERE, null, ex);
+            String msg = String.format("Unable to read resource %s, %s\n", resource, this.resourceLoader);
+            this.logger.severe(msg);
         }
     }
 
@@ -72,7 +70,7 @@ public abstract class XMLReader {
     }
 
     public DocumentLoader getDocumentLoader() {
-        return documentLoader;
+        return this.documentLoader;
     }
 
     public void setDocumentLoader(DocumentLoader documentLoader) {
@@ -80,7 +78,7 @@ public abstract class XMLReader {
     }
 
     public ResourceLoader getResourceLoader() {
-        return resourceLoader;
+        return this.resourceLoader;
     }
 
     public void setResourceLoader(ResourceLoader resourceLoader) {

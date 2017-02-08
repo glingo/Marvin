@@ -55,11 +55,11 @@ public class VariableNode extends Node implements PrototypeNodeInterface {
     }
 
     @Override
-    protected Object finalizeValue(Object value) throws Exception {
+    protected Object finalizeValue(Object value) {
         
         if(!isAllowEmptyValue() && ObjectUtils.isEmpty(value)) {
             String msg = String.format("The path '%s' cannot contain an empty value, but got %s.", this.getPath(), value);
-            throw new Exception(msg);
+            throw new RuntimeException(msg);
         }
         
         return value;

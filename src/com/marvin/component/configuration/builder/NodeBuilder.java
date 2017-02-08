@@ -25,48 +25,52 @@ public class NodeBuilder {
         this.parent = parent;
     }
     
-    public NodeDefinition node(String name, String type) throws Exception {
-        Class<NodeDefinition> cl = this.definitionMapping.getOrDefault(type, null);
-        Constructor<NodeDefinition> ctr = cl.getConstructor(new Class[]{String.class});
-        NodeDefinition node = ctr.newInstance(name);
-        
-        if(node instanceof NodeParentDefinitionInterface) {
-            NodeBuilder builder = (NodeBuilder) this.clone();
-            ((NodeParentDefinitionInterface) node).setBuilder(builder);
+    public NodeDefinition node(String name, String type) {
+        try {
+            Class<NodeDefinition> cl = this.definitionMapping.getOrDefault(type, null);
+            Constructor<NodeDefinition> ctr = cl.getConstructor(new Class[]{String.class});
+            NodeDefinition node = ctr.newInstance(name);
+            
+            if(node instanceof NodeParentDefinitionInterface) {
+                NodeBuilder builder = (NodeBuilder) clone();
+                ((NodeParentDefinitionInterface) node).setBuilder(builder);
+            }
+            
+            if(this.parent != null) {
+                this.parent.append(node);
+            }
+            
+            return node;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
         }
-        
-        if(this.parent != null) {
-            parent.append(node);
-        }
-        
-        return node;
     }
     
-    public VariableNodeDefinition variableNode(String name) throws Exception {
-        return (VariableNodeDefinition) this.node(name, "variable");
+    public VariableNodeDefinition variableNode(String name) {
+        return (VariableNodeDefinition) node(name, "variable");
     }
      
-    public EnumNodeDefinition enumNode(String name) throws Exception {
-        return (EnumNodeDefinition) this.node(name, "enum");
+    public EnumNodeDefinition enumNode(String name) {
+        return (EnumNodeDefinition) node(name, "enum");
     }
     
-    public FloatNodeDefinition floatNode(String name) throws Exception {
-        return (FloatNodeDefinition) this.node(name, "float");
+    public FloatNodeDefinition floatNode(String name) {
+        return (FloatNodeDefinition) node(name, "float");
     }
     
-    public IntegerNodeDefinition integerNode(String name) throws Exception {
-        return (IntegerNodeDefinition) this.node(name, "integer");
+    public IntegerNodeDefinition integerNode(String name) {
+        return (IntegerNodeDefinition) node(name, "integer");
     }
     
-    public BooleanNodeDefinition booleanNode(String name) throws Exception {
-        return (BooleanNodeDefinition) this.node(name, "boolean");
+    public BooleanNodeDefinition booleanNode(String name) {
+        return (BooleanNodeDefinition) node(name, "boolean");
     }
     
-    public ScalarNodeDefinition scalarNode(String name) throws Exception {
-        return (ScalarNodeDefinition) this.node(name, "scalar");
+    public ScalarNodeDefinition scalarNode(String name) {
+        return (ScalarNodeDefinition) node(name, "scalar");
     }
     
-    public ArrayNodeDefinition arrayNode(String name) throws Exception {
-        return (ArrayNodeDefinition) this.node(name, "array");
+    public ArrayNodeDefinition arrayNode(String name) {
+        return (ArrayNodeDefinition) node(name, "array");
     }
 }

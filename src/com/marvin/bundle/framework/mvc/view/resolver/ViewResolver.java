@@ -1,10 +1,10 @@
-package com.marvin.bundle.framework.mvc;
+package com.marvin.bundle.framework.mvc.view.resolver;
 
-public class ViewResolver {
+import com.marvin.bundle.framework.mvc.view.IView;
+
+public abstract class ViewResolver implements IViewResolver {
     
-    private String prefix;
-    
-    private String suffix;
-    
+    @Override
+    public abstract IView resolveView(String name) throws Exception;
     
 }

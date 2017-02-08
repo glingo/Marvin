@@ -20,8 +20,8 @@ public class MatcherDelegate implements MatcherInterface {
             return null;
         }
         
-        MatcherInterface matcher = this.matchers.stream().filter((MatcherInterface deleguate) -> {
-            return deleguate.support(matchable);
+        MatcherInterface matcher = this.matchers.stream().filter((MatcherInterface delegate) -> {
+            return delegate.support(matchable);
         }).findFirst().orElse(null);
         
         if(matcher == null) {

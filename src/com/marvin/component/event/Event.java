@@ -1,7 +1,7 @@
 package com.marvin.component.event;
 
 import com.marvin.component.event.dispatcher.Dispatcher;
-import java.util.Date;
+import java.util.UUID;
 
 public class Event {
 
@@ -11,7 +11,7 @@ public class Event {
 
     public Event() {
         super();
-        this.id = (new Date().getTime() + Math.round(Math.random() * 10));
+        this.id = UUID.randomUUID().getMostSignificantBits();
     }
 
     public long getId() {

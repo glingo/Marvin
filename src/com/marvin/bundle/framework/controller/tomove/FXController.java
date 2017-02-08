@@ -1,5 +1,6 @@
-package com.marvin.bundle.framework.controller;
+package com.marvin.bundle.framework.controller.tomove;
 
+import com.marvin.bundle.framework.controller.tomove.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;

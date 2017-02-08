@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.controller;
+package com.marvin.bundle.framework.controller.tomove;
 
 public class ControllerInterface {
     

@@ -5,6 +5,7 @@ import com.marvin.component.io.xml.XMLReaderContext;
 import com.marvin.component.routing.Route;
 import com.marvin.component.routing.RouteCollection;
 import com.marvin.component.util.StringUtils;
+import java.util.logging.Level;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,31 +14,36 @@ import org.w3c.dom.NodeList;
 
 public class XmlRouteDocumentReader extends XMLDocumentReader {
 
-    public static final String ROUTE_ELEMENT = "route";
-    public static final String ROUTES_ELEMENT = "routes";
+    public static final String ROUTE_ELEMENT        = "route";
+    public static final String ROUTES_ELEMENT       = "routes";
     
-    public static final String REQUIREMENT_ELEMENT = "requirement";
-    public static final String DEFAULT_ELEMENT = "default";
+    public static final String REQUIREMENT_ELEMENT  = "requirement";
+    public static final String DEFAULT_ELEMENT      = "default";
     
-    public static final String KEY_ATTRIBUTE = "key";
-    public static final String PREFIX_ATTRIBUTE = "prefix";
-    private String prefix;
+    public static final String KEY_ATTRIBUTE        = "key";
+    public static final String PREFIX_ATTRIBUTE     = "prefix";
+    public static final String NAME_ATTRIBUTE       = "name";
+    public static final String PATH_ATTRIBUTE       = "path";
+    
+    protected String prefix;
 
     public XmlRouteDocumentReader(XMLReaderContext context) {
         super(context);
     }
     
     public void registerRoutes(Document doc, RouteCollection router) {
-//            this.readerContext = readerContext;
-//            logger.debug("Loading bean definitions");
         Element root = doc.getDocumentElement();
         doRegisterRoutes(root, router);
     }
 
     @Override
     protected void importResource(Element ele) {
-        this.prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
-        super.importResource(ele); //To change body of generated methods, choose Tools | Templates.
+        String prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
+        if(StringUtils.hasLength(prefix)) {
+            this.prefix = prefix;
+            this.logger.log(Level.INFO, "Found a prefix : {0}", this.prefix);
+        }
+        super.importResource(ele);
     }
     
     protected void doRegisterRoutes(Element root, RouteCollection router) {
@@ -68,8 +74,8 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     }
 
     protected void processRoute(Element ele, RouteCollection collection) {
-        String name = ele.getAttribute("name");
-        String path = ele.getAttribute("path");
+        String name = ele.getAttribute(NAME_ATTRIBUTE);
+        String path = ele.getAttribute(PATH_ATTRIBUTE);
         
         if (StringUtils.hasLength(name)) {
             Route route = new Route();
@@ -77,6 +83,8 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
             if(this.prefix != null) {
                 path = this.prefix + path;
             }
+            
+            this.logger.log(Level.INFO, "Processing route path : {0}", path);
             
             route.setPath(path);
             NodeList nl = ele.getChildNodes();

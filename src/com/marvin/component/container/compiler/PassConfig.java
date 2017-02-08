@@ -7,11 +7,11 @@ import java.util.List;
 
 public class PassConfig {
     
-    public final static String AFTER_REMOVING = "after_removing";
-    public final static String BEFORE_REMOVING = "before_removing";
-    public final static String BEFORE_OPTIMIZATION = "before_optimization";
-    public final static String REMOVING = "removing";
-    public final static String OPTIMIZATION = "optimization";
+    public final static String AFTER_REMOVING       = "after_removing";
+    public final static String BEFORE_REMOVING      = "before_removing";
+    public final static String BEFORE_OPTIMIZATION  = "before_optimization";
+    public final static String REMOVING             = "removing";
+    public final static String OPTIMIZATION         = "optimization";
     
     protected CompilerPassInterface mergePass;
     
@@ -154,10 +154,10 @@ public class PassConfig {
 //        return passes;
 //    }
     
-    public static void main(String[] args) {
-        PassConfig config = new PassConfig();
-        System.out.println("lenght : " + config.getPasses().size());
-        System.out.println(config.getPasses());
-    }
+//    public static void main(String[] args) {
+//        PassConfig config = new PassConfig();
+//        System.out.println("lenght : " + config.getPasses().size());
+//        System.out.println(config.getPasses());
+//    }
     
 }

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.HashMap;
 
 import java.text.NumberFormat;
@@ -22,6 +20,9 @@ import com.marvin.component.io.xml.XMLReaderContext;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
 import com.marvin.component.util.StringUtils;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,56 +32,63 @@ import org.w3c.dom.NodeList;
 
 public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
-    public static final String SERVICE_ELEMENT = "service";
-    public static final String SERVICES_ELEMENT = "services";
-    public static final String ARGUMENT_ELEMENT = "argument";
-    public static final String PARAMETERS_ELEMENT = "parameters";
-    public static final String PARAMETER_ELEMENT = "parameter";
-    public static final String VALUE_ELEMENT = "value";
-    public static final String TAG_ELEMENT = "tag";
-    public static final String CALL_ELEMENT = "call";
+    public static final String SERVICE_ELEMENT      = "service";
+    public static final String SERVICES_ELEMENT     = "services";
+    public static final String ARGUMENT_ELEMENT     = "argument";
+    public static final String PARAMETERS_ELEMENT   = "parameters";
+    public static final String PARAMETER_ELEMENT    = "parameter";
+    public static final String VALUE_ELEMENT        = "value";
+    public static final String TAG_ELEMENT          = "tag";
+    public static final String CALL_ELEMENT         = "call";
 
-    public static final String ARRAY_ELEMENT = "array";
-    public static final String LIST_ELEMENT = "list";
-    public static final String MAP_ELEMENT = "map";
-    public static final String SET_ELEMENT = "set";
+    public static final String ARRAY_ELEMENT        = "array";
+    public static final String LIST_ELEMENT         = "list";
+    public static final String MAP_ELEMENT          = "map";
+    public static final String SET_ELEMENT          = "set";
 
-    public static final String TYPE_ATTRIBUTE = "type";
-    public static final String NAME_ATTRIBUTE = "name";
-    public static final String INDEX_ATTRIBUTE = "index";
-    public static final String REF_ATTRIBUTE = "ref";
-    public static final String VALUE_ATTRIBUTE = "value";
+    public static final String ID_ATTRIBUTE         = "id";
+    public static final String CLASS_ATTRIBUTE      = "class";
+    public static final String FACTORY_ATTRIBUTE    = "factory";
+    public static final String FACT_MET_ATTRIBUTE   = "factoryMethod";
+    public static final String TYPE_ATTRIBUTE       = "type";
+    public static final String NAME_ATTRIBUTE       = "name";
+    public static final String INDEX_ATTRIBUTE      = "index";
+    public static final String REF_ATTRIBUTE        = "ref";
+    public static final String VALUE_ATTRIBUTE      = "value";
 
     public XMLDefinitionDocumentReader(XMLReaderContext context) {
         super(context);
     }
 
+//    @Override
+//    protected void importResource(Element ele) {
+//        
+//        super.importResource(ele);
+//    }
+    
     public void registerDefinitions(Document doc, ContainerBuilder builder) {
+//        this.logger.info("URI : " + doc.);
         Element root = doc.getDocumentElement();
         doRegisterDefinitions(root, builder);
     }
 
     protected void doRegisterDefinitions(Element root, ContainerBuilder builder) {
 
-        try {
-//        preProcessXml(root);
-            NodeList nl = root.getChildNodes();
-            for (int i = 0; i < nl.getLength(); i++) {
-                Node node = nl.item(i);
-                if (node instanceof Element) {
-                    Element ele = (Element) node;
-                    parseDefinitionElement(ele, builder);
-                    parseExtensionElement(ele, builder);
-                }
+        preProcessXml(root, builder);
+        NodeList nl = root.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node node = nl.item(i);
+            if (node instanceof Element) {
+                Element ele = (Element) node;
+                parseDefinitionElement(ele, builder);
+                parseExtensionElement(ele, builder);
             }
-//        postProcessXml(root); 
-        } catch (Exception ex) {
-            Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        postProcessXml(root); 
 
     }
 
-    private void parseExtensionElement(Element ele, ContainerBuilder builder) throws Exception {
+    private void parseExtensionElement(Element ele, ContainerBuilder builder) {
         if (builder.getExtensions().containsKey(ele.getNodeName())
                 || builder.getExtensions().containsKey(ele.getLocalName())) {
             processExtension(ele, builder);
@@ -124,7 +132,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
                     definition.replaceArgument(index, arg);
                 }
             } catch (NumberFormatException ex) {
-                System.err.println("Attribute 'index' of tag 'constructor-arg' must be an integer");
+                this.logger.severe("Attribute 'index' of tag 'constructor-arg' must be an integer");
             }
         } else {
             definition.addArgument(arg);
@@ -141,7 +149,8 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             if (node instanceof Element) {
                 // Child element is what we're looking for.
                 if (subElement != null) {
-                    System.err.println(ele.getNodeName() + " must not contain more than one sub-element");
+                    String msg = String.format("%s must not contain more than one sub-element", ele.getNodeName());
+                    this.logger.severe(msg);
                 } else {
                     subElement = (Element) node;
                 }
@@ -162,10 +171,10 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         } else if (hasValueAttribute) {
             try {
                 String value = ele.getAttribute(VALUE_ATTRIBUTE);
-                Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
+                Class type = ClassUtils.forName(typeAttr, getClass().getClassLoader());
                 return parser.parse(type, value);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
+                this.logger.severe(ex.getMessage());
             }
         } else if (subElement != null) {
             return parseSubElement(subElement);
@@ -219,7 +228,8 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         } else if (nodeNameEquals(ele, ARGUMENT_ELEMENT)) {
             return parseArgumentValue(ele);
         } else {
-            System.err.println("Unknown property sub-element: [" + ele.getNodeName() + "]");
+            String msg = String.format("Unknown property sub-element: [%s]", ele.getNodeName());
+            this.logger.severe(msg);
             return null;
         }
     }
@@ -238,25 +248,18 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
     }
 
     protected void processParameter(Element ele, ContainerBuilder builder) {
-        String id = ele.getAttribute("id");
+        String id = ele.getAttribute(ID_ATTRIBUTE);
         String valueAttr = ele.getAttribute(VALUE_ATTRIBUTE);
         String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);
 
         if (StringUtils.hasLength(id)) {
             Class type = ClassUtils.resolveClassName(typeAttr, null);
-            builder.addParameter(id, parser.parse(type, valueAttr));
-//            try {
-//                Class type = ClassUtils.resolveClassName(typeAttr, null);
-//                Class type = ClassUtils.forName(typeAttr, this.getClass().getClassLoader());
-//                builder.addParameter(id, parser.parse(type, valueAttr));
-//            } catch (ClassNotFoundException ex) {
-//                Logger.getLogger(XMLDefinitionDocumentReader.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            builder.addParameter(id, this.parser.parse(type, valueAttr));
         }
     }
 
     protected void processDefinition(Element ele, ContainerBuilder builder) {
-        String id = ele.getAttribute("id");
+        String id = ele.getAttribute(ID_ATTRIBUTE);
 
         if (!StringUtils.hasLength(id)) {
             return;
@@ -264,9 +267,9 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
         Definition definition = new Definition();
 
-        String className = ele.getAttribute("class");
-        String factoryMethod = ele.getAttribute("factoryMethod");
-        String factory = ele.getAttribute("factory");
+        String className     = ele.getAttribute(CLASS_ATTRIBUTE);
+        String factoryMethod = ele.getAttribute(FACT_MET_ATTRIBUTE);
+        String factory       = ele.getAttribute(FACTORY_ATTRIBUTE);
 
         if (StringUtils.hasLength(factoryMethod)) {
             definition.setFactoryMethodName(factoryMethod);
@@ -347,8 +350,8 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
         }
     }
 
-    protected void processExtension(Element ele, ContainerBuilder builder) throws Exception {
-        HashMap values = (HashMap) convertElementToMap(ele, true);
+    protected void processExtension(Element ele, ContainerBuilder builder) {
+        Map values = (HashMap) convertElementToMap(ele, true);
         builder.loadFromExtension(ele.getNodeName(), values);
     }
 
@@ -380,7 +383,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 
             if (node.getNodeType() == Node.TEXT_NODE) {
                 if (!"".equals(node.getNodeValue().trim())) {
-                    nodeValue = node.getNodeValue();
+                    nodeValue = node.getNodeValue().trim();
                     empty = false;
                 }
             } else if (node.getNodeType() != Node.COMMENT_NODE) {
@@ -460,4 +463,34 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
 //    private boolean isCandidateElement(Node node) {
 //        return (node instanceof Element && (isDefaultNamespace(node) || !isDefaultNamespace(node.getParentNode())));
 //    }
+
+    private void preProcessXml(Element root, ContainerBuilder builder) {
+        replacePlaceHolders(root, builder);
+    }
+    
+    private void replacePlaceHolders(Node node, ContainerBuilder builder) {
+        Pattern paramPattern = Pattern.compile("(%.*%)");
+        NodeList nl = node.getChildNodes();
+        
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node child = nl.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE) {
+                String content = child.getNodeValue().trim();
+                if (StringUtils.hasLength(content)) {
+                    Matcher paramMatcher = paramPattern.matcher(content);
+                    StringBuffer sb = new StringBuffer();
+                    while (paramMatcher.find()) {  
+                        String holder   = paramMatcher.group();
+                        String key      = holder.replaceAll("%", "");
+                        String value    = builder.getParameter(key, String.class);
+                        paramMatcher.appendReplacement(sb, value);
+                    }
+                    paramMatcher.appendTail(sb);
+                    child.setNodeValue(sb.toString());
+                }
+            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+                replacePlaceHolders(child, builder);
+            }
+        }
+    }
 }

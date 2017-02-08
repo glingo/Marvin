@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.controller;
+package com.marvin.component.kernel.controller;
 
 public interface ControllerResolverInterface<T> {
     

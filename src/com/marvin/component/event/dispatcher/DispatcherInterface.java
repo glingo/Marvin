@@ -1,6 +1,5 @@
 package com.marvin.component.event.dispatcher;
 
-import com.marvin.component.event.Event;
 import com.marvin.component.event.subscriber.SubscriberInterface;
 
 public interface DispatcherInterface<T> {

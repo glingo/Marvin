@@ -1,11 +1,11 @@
 package com.marvin.component.container.extension;
 
 import com.marvin.component.container.ContainerBuilder;
-import java.util.HashMap;
+import java.util.Map;
 
 public interface ExtensionInterface {
 
     public String getAlias();
     
-    public void load(HashMap<String, Object> configs, ContainerBuilder builder);
+    public void load(Map<String, Object> configs, ContainerBuilder builder);
 }

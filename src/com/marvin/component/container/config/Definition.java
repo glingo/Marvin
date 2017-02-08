@@ -134,6 +134,7 @@ public class Definition {
     }
     
     public void addTag(Tag tag) {
+        
         if(this.tags == null) {
             this.tags = new Tag[0];
         }

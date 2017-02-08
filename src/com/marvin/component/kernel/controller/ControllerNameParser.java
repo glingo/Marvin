@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.controller;
+package com.marvin.component.kernel.controller;
 
 import com.marvin.component.kernel.Kernel;
 import com.marvin.component.kernel.bundle.Bundle;
@@ -35,7 +35,7 @@ public class ControllerNameParser {
         }     
         
         return distance[lhs.length()][rhs.length()];                           
-    }   
+    }
     
     private String findAlternative(String nonExistant){
         Set<String> names = this.kernel.getBundles().keySet();

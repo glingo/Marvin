@@ -1,9 +1,9 @@
-package com.marvin.bundle.framework.controller.argument;
+package com.marvin.component.kernel.controller.argument;
 
-import com.marvin.bundle.framework.controller.ControllerReference;
+import com.marvin.component.kernel.controller.ControllerReference;
 import java.util.List;
 
 public interface ArgumentMetadataFactoryInterface {
     
-    List<ArgumentMetadata> createArgumentMetadata(ControllerReference controller);
+    List<ArgumentMetadata> createArgumentMetadata(ControllerReference reference);
 }

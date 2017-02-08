@@ -18,8 +18,6 @@ import java.util.concurrent.ExecutorService;
  * The main class used for compiling templates. The PebbleEngine is responsible
  * for delegating responsibility to the lexer, parser, compiler, and template
  * cache.
- *
- * @author Mitchell
  */
 public class Engine {
 

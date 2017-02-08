@@ -1,45 +1,59 @@
 package com.marvin.bundle.framework.handler;
 
-import java.io.IOException;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
-import com.marvin.bundle.framework.controller.ControllerReference;
-import com.marvin.bundle.framework.controller.ControllerResolverInterface;
-import com.marvin.bundle.framework.controller.argument.ArgumentResolver;
+import com.marvin.component.kernel.controller.ControllerReference;
+import com.marvin.component.kernel.controller.ControllerResolverInterface;
+import com.marvin.component.kernel.controller.argument.ArgumentResolver;
 
 import com.marvin.bundle.framework.handler.event.FilterControllerArgumentsEvent;
 import com.marvin.bundle.framework.handler.event.FilterControllerEvent;
-import com.marvin.bundle.framework.handler.event.FilterResponseEvent;
-import com.marvin.bundle.framework.handler.event.GetResponseEvent;
-import com.marvin.bundle.framework.handler.event.GetResponseForControllerResultEvent;
-import com.marvin.bundle.framework.handler.event.GetResponseForExceptionEvent;
-import com.marvin.bundle.framework.handler.event.HandlerEvent;
+import com.marvin.bundle.framework.handler.event.FilterModelAndViewEvent;
+import com.marvin.bundle.framework.handler.event.FinishRequestEvent;
+import com.marvin.bundle.framework.handler.event.GetModelAndViewEvent;
+import com.marvin.bundle.framework.handler.event.GetModelAndViewForControllerResultEvent;
+import com.marvin.bundle.framework.handler.event.GetModelAndViewForExceptionEvent;
 import com.marvin.bundle.framework.handler.event.HandlerEvents;
 import com.marvin.bundle.framework.handler.exception.ControllerNotFoundException;
 import com.marvin.bundle.framework.handler.exception.HandlerException;
+import com.marvin.bundle.framework.mvc.view.IView;
+import com.marvin.bundle.framework.mvc.view.resolver.IViewResolver;
+
+import com.marvin.bundle.framework.mvc.ModelAndView;
 
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.util.ReflectionUtils;
+import java.util.logging.Logger;
 
-public class Handler<T, R> {
+// This is the handler for the front controller.
+// it will handle every requests and actions that the user do.
+// I thik that it should look for a ModelAndView response.
+// and return it to the front controller who called it.
+// which may be different in web than in swing or javafx.
+// for instance, in web there is a servlet that the servlet container call.
+
+public class Handler<R, T> {
+
+    protected final Logger logger = Logger.getLogger(getClass().getName());
     
-    private final Stack<T> stack;
+    private final Stack<R> stack;
     private final ControllerResolverInterface ctrlResolver;
     private final DispatcherInterface dispatcher;
     private final ArgumentResolver argsResolver;
+    private final IViewResolver viewResolver;
     
-    public Handler(DispatcherInterface dispatcher, ControllerResolverInterface ctrlResolver, ArgumentResolver argsResolver, Stack<T> stack) {
+    public Handler(DispatcherInterface dispatcher, ControllerResolverInterface ctrlResolver, ArgumentResolver argsResolver, IViewResolver viewResolver, Stack<R> stack) {
         this.dispatcher   = dispatcher;
         this.ctrlResolver = ctrlResolver;
         this.argsResolver = argsResolver;
+        this.viewResolver = viewResolver;
         this.stack        = stack;
     }
     
-    public Handler(DispatcherInterface dispatcher, ControllerResolverInterface ctrlResolver, ArgumentResolver argsResolver) {
-        this(dispatcher, ctrlResolver, argsResolver, new Stack<>());
+    public Handler(DispatcherInterface dispatcher, ControllerResolverInterface ctrlResolver, ArgumentResolver argsResolver, IViewResolver viewResolver) {
+        this(dispatcher, ctrlResolver, argsResolver, viewResolver, new Stack<>());
     }
     
     /**
@@ -49,29 +63,40 @@ public class Handler<T, R> {
      * If capture is false, it will finish and re-throw the exception.
      * 
      * @param request
-     * @param response
      * @param capture boolean that tell handler to capture exceptions or not.
+     * @return 
      * 
      * @throws Exception Only if one occured and we didn't captured it.
      */
-    public void handle(T request, R response, boolean capture) throws Exception {
+    public ModelAndView handle(R request, T response, boolean capture) throws Exception {
+        
+        this.logger.info("Handling a request");
+        
+        ModelAndView mav = null;
+        
         try { 
             
             // delegate to a private method the handle job.
-            handle(request, response);
+            mav = handle(request, response);
             
         } catch(Exception e) {
             
             // look if we choose to capture exceptions.
             if(!capture) {
                 // finish and re-throw it.
-                finish(request);
+                finish(request, mav);
                 throw e;
             }
             
+            this.logger.info("Handler has capture an exception.");
+            
             // handle it.
-            handleException(e, request, response);
+            mav = handleException(e, request, response);
         }
+        
+        this.logger.info("A request have been handled.");
+        
+        return mav;
     }
     
     /**
@@ -89,20 +114,20 @@ public class Handler<T, R> {
      * 
      * @throws Exception If something wrong happened.
      */
-    private R handle(T request, R response) throws Exception {
+    private ModelAndView handle(R request, T response) throws Exception {
         long start = new Date().getTime();
         
         // stack request
         this.stack.push(request);
         
-        // Dispatch event Request ( get response )
-        GetResponseEvent<T, R> re = new GetResponseEvent(this, request);
+        // Dispatch event Request ( getModelAndView )
+        GetModelAndViewEvent<R, T> re = new GetModelAndViewEvent<>(this, request, response);
         this.dispatcher.dispatch(HandlerEvents.REQUEST, re);
         
         // If a response has been set, we do not need to do something else.
-        if(re.hasResponse()) {
+        if(re.hasModelAndView()) {
             // Just return the filtered response
-            return filterResponse(request, re.getResponse());
+            return filter(request, response, re.getModelAndView());
         }
         
         request = re.getRequest();
@@ -110,38 +135,33 @@ public class Handler<T, R> {
         // Find controller via resolver
         ControllerReference controller = this.ctrlResolver.resolveController(request);
 
-        // At this point "controller" should be :
-        // a Controller name or an object.
+        // At this point "controller" should be an object.
         if(controller == null){
             // if controller is null we have a problem.
-            String msg = String.format(
-                    "No controller found for %s", request);
-            
+            String msg = "No controller found for this request";
+            this.logger.severe(msg);
             throw new ControllerNotFoundException(msg);
         }
         
         // Filter controller
-        FilterControllerEvent<T, R> fe = new FilterControllerEvent(this, controller, request);
+        FilterControllerEvent<R, T> fe = new FilterControllerEvent<>(this, controller);
         this.dispatcher.dispatch(HandlerEvents.CONTROLLER, fe);
        
         // Get the controller in case that the event changed it.
         controller = fe.getController();
         
         // Resolve arguments to pass
-        List<Object> arguments = this.argsResolver.getArguments(request, controller);
+        List<Object> arguments = this.argsResolver.getArguments(request, response, controller);
         
         // Filter controller arguments
-        FilterControllerArgumentsEvent<T, R> argsEvent = new FilterControllerArgumentsEvent(this, controller, arguments, request);
+        FilterControllerArgumentsEvent<R, T> argsEvent = new FilterControllerArgumentsEvent(this, controller, arguments);
         this.dispatcher.dispatch(HandlerEvents.CONTROLLER_ARGUMENTS, argsEvent);
         
         controller = argsEvent.getController();
         arguments  = argsEvent.getArguments();
         
         // invoke controller
-        Object controllerResult = 
-                ReflectionUtils.invokeMethod(controller.getAction(), 
-                controller.getHolder(), arguments.toArray());
-
+        Object controllerResult = ReflectionUtils.invokeMethod(controller.getAction(), controller.getHolder(), arguments.toArray());
         
         // At this point the controller should have return :
         
@@ -150,43 +170,41 @@ public class Handler<T, R> {
         // ? A Model object
         // ? A HashMap object as the model
         
-        
         // we need to check the returned value type and handle it 
-        
         
         // typer la response
         // controller will not return a String but he should return 
         //  - the view ( as an object or name )
         //  - the model ( as a Map or complete it )
+        
+        if(!(controllerResult instanceof ModelAndView)) {
+            // if a controller return an other type than ModelAndView 
+            // we trigger an event to resolve the returned type.
+        
+            // get a ModelAndView for controller result
+            GetModelAndViewForControllerResultEvent<R, T> event = new GetModelAndViewForControllerResultEvent(this, request, controllerResult);
+            this.dispatcher.dispatch(HandlerEvents.RESPONSE, event);
 
-        
-        
-        
-        if(!(controllerResult instanceof String)) {
-            
-            // get response for controller result
-            GetResponseForControllerResultEvent rfce = new GetResponseForControllerResultEvent(this, request, controllerResult);
-            this.dispatcher.dispatch(HandlerEvents.RESPONSE, rfce);
-
-            if(rfce.hasResponse()) {
-                controllerResult = rfce.getResponse();
+            if(event.hasModelAndView()) {
+                controllerResult = event.getModelAndView();
             }
             
-            if(!(controllerResult instanceof String)) {
-                // should it return a response ? 
-                String msg = String.format("The Controller must return a String (%s given).", controllerResult);
+            if(!(controllerResult instanceof ModelAndView)) {
                 
-                if(null == response) {
+                // We still not have a ModelAndView instance, let's throw an exception.
+                String msg = String.format("The Controller must return a ModelAndView (%s given).", controllerResult);
+                
+                // Check if the result is null, they may forget a return in controller.
+                if(null == controllerResult) {
                     msg += " Did you forget to add a return statement in your controller ?";
                 }
                 
                 throw new Exception(msg);
             }
-            
         }
         
         // filter la response ( pop request )
-        response = filterResponse(request, response);
+        ModelAndView mav = filter(request, response, (ModelAndView) controllerResult);
         
         // use a view resolver.
 //        response.getWriter().print(controllerResponse);
@@ -195,46 +213,64 @@ public class Handler<T, R> {
 //        response.flushBuffer();
         
         long end = new Date().getTime();
-        System.out.format("%s executed in %s ms\n", controller, end - start);
+        String msg = String.format("%s executed in %s ms\n", controller, end - start);
+        this.logger.fine(msg);
 
-        return response;
+        return mav;
     }
     
-    private void finish(T request) {
-        this.dispatcher.dispatch(HandlerEvents.FINISH_REQUEST, new HandlerEvent(this, request));
-        this.stack.pop();
-    }
-    
-    private R filterResponse(T request, R response) {
+    private ModelAndView filter(R request, T response, ModelAndView mav) throws Exception {
         
-        FilterResponseEvent<T, R> fe = new FilterResponseEvent(this, request, response);
+        this.logger.fine("Filtering ...");
+
+        FilterModelAndViewEvent<R, T> fe = new FilterModelAndViewEvent(this, mav);
         this.dispatcher.dispatch(HandlerEvents.RESPONSE, fe);
         
-        finish(request);
+        // this is ugly af !
         
-        return fe.getResponse();
+        Object view = mav.getView();
+        
+        // render view ?
+        if(view instanceof String) {
+            view = this.viewResolver.resolveView(view.toString());
+        }
+        
+        if(view == null) {
+            throw new Exception("No view found for this request.");
+        }
+            
+        ((IView) view).render(mav.getModel(), request, response);
+        
+        mav.setView(view);
+        
+        finish(request, mav);
+        
+        return fe.getModelAndView();
+    }
+    
+    private void finish(R request, ModelAndView mav) throws Exception {
+        this.logger.fine("Finishing request...");
+        this.dispatcher.dispatch(HandlerEvents.FINISH_REQUEST, new FinishRequestEvent(this, request));
+        this.stack.pop();
     }
 
-    private void handleException(Exception exception, T request, R response) throws IOException {
-       
-//        if(response.isCommitted()) {
-//            // nothing else to do.
-//            return;
-//        }
+    private ModelAndView handleException(Exception exception, R request, T response) throws Exception {
         
-        GetResponseForExceptionEvent<T, R> exceptionEvent = new GetResponseForExceptionEvent(this, request, exception);
+        this.logger.info("Handle an exception.");
+        
+        GetModelAndViewForExceptionEvent<R, T> exceptionEvent = new GetModelAndViewForExceptionEvent(this, request, response, exception);
         this.dispatcher.dispatch(HandlerEvents.EXCEPTION, exceptionEvent);
         
         exception = exceptionEvent.getException();
+        exception.printStackTrace();
         
-        // in servlet we always have a response !
-//        if(!exceptionEvent.hasResponse()) {
-//            finishRequest(request);
-//            
-//            throw new Exception(exception);
-//        }
+        if(!exceptionEvent.hasModelAndView()) {
+            finish(request, exceptionEvent.getModelAndView());
+            
+            throw new Exception(exception);
+        }
 
-//        response = exceptionEvent.getResponse();
+        ModelAndView mav = exceptionEvent.getModelAndView();
 
         if(exception instanceof HandlerException) {
             HandlerException exc = (HandlerException) exception;
@@ -243,11 +279,11 @@ public class Handler<T, R> {
 //            response.addHeader(null, null);
         }
         
-        filterResponse(request, response);
-        
         // traitement a effectuer dans un getresponseforexception event listener.
         exception.printStackTrace();
 //        exception.printStackTrace(response.getWriter());
+        
+        return filter(request, response, mav);
     }
     
 }

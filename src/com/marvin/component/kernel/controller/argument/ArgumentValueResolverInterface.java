@@ -1,8 +1,8 @@
-package com.marvin.bundle.framework.controller.argument;
+package com.marvin.component.kernel.controller.argument;
 
-public interface ArgumentValueResolverInterface<T> {
+public interface ArgumentValueResolverInterface<R, T> {
     
-    public boolean support(T request, ArgumentMetadata argument);
+    public boolean support(R request, T response, ArgumentMetadata argument);
     
-    public Object resolve(T request, ArgumentMetadata argument);
+    public Object resolve(R request, T response, ArgumentMetadata argument);
 }

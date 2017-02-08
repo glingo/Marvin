@@ -7,8 +7,8 @@ import com.marvin.component.kernel.bundle.Bundle;
 
 public class MockApplicationKernel extends Kernel {
 
-    public MockApplicationKernel(boolean debug) {
-        super(debug);
+    public MockApplicationKernel(String environment, boolean debug) {
+        super(environment, debug);
     }
     
     @Override
@@ -20,7 +20,7 @@ public class MockApplicationKernel extends Kernel {
     }
     
     public static void main(String[] args) {
-        Kernel kernel = new MockApplicationKernel(true);
+        Kernel kernel = new MockApplicationKernel("dev", true);
         kernel.boot();
     }
     

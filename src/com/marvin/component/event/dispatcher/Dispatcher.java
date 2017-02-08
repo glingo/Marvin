@@ -9,8 +9,11 @@ import com.marvin.component.event.subscriber.SubscriberInterface;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 public abstract class Dispatcher<T extends Event> implements DispatcherInterface<T> {
+
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     private List<SubscriberInterface<T>> subscribers;
     
@@ -45,14 +48,32 @@ public abstract class Dispatcher<T extends Event> implements DispatcherInterface
     @Override
     public void addSubscriber(SubscriberInterface<T> sub) {
         getSubscribers().add(sub);
+        this.logger.info(String.format("Subscriber %s has been added to %s.", sub.getClass().getName(), this.getClass().getName()));
     }
+    
+    @Override
+    public void removeSubscriber(SubscriberInterface<T> subscriber) {
+        
+        if (getSubscribers().isEmpty() || !getSubscribers().contains(subscriber)) {
+            return;
+        }
+
+        getSubscribers().remove(subscriber);
+        
+        this.logger.info(String.format("Subscriber %s has been removed from %s.", subscriber.getClass().getName(), this.getClass().getName()));
+    }
+
 
     @Override
     public void dispatch(String name, T event) {
         
+        String msg = String.format("%s is dispatching an event : %s ", this.getClass().getName(), name);
+        this.logger.info(msg);
+        
         getSubscribers().forEach((SubscriberInterface<T> subscriber) -> {
             
             if (subscriber == null) {
+                this.logger.info(String.format("No subscriber found for %s", name));
                 return;
             }
             
@@ -66,13 +87,14 @@ public abstract class Dispatcher<T extends Event> implements DispatcherInterface
                 Consumer<T> listener = entry.getValue();
                 
                 if(hasStopCondition()) {
-                    if(stopCondition.test(event)) {
-                        System.out.println("stop condition true !");
+                    if(this.stopCondition.test(event)) {
+                        this.logger.info("We got a StopCondition true !");
                         break;
                     }
                 }
                 
                 if(key.equals(name)) {
+                    this.logger.info(String.format("We found a subscriber (%s) !", listener.getClass().getName()));
                     listener.accept(event);
                 }
             }

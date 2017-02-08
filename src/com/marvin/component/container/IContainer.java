@@ -33,16 +33,19 @@ public interface IContainer {
     Object get(String id) throws ContainerException;
 
     <T> T get(String id, Class<T> type) throws ContainerException;
+    
+    boolean contains(String id);
 
     /* Parameters methods */
     
     ConcurrentMap<String, Object> getParameters();
     
-    Object getParameter(String key, Object def);
-    
     Object getParameter(String key);
     
+    <T> T getParameter(String key, Class<T> type);
     
-    /* Definitions methods */
+    Object getParameterWithDefault(String key, Object defaultValue);
+    
+    <T> T getParameterWithDefault(String key, Object defaultValue, Class<T> type);
     
 }

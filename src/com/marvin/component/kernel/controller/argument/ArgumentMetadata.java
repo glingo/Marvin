@@ -1,4 +1,4 @@
-package com.marvin.bundle.framework.controller.argument;
+package com.marvin.component.kernel.controller.argument;
 
 public class ArgumentMetadata {
     

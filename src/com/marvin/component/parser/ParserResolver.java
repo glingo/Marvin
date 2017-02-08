@@ -40,13 +40,13 @@ public class ParserResolver {
     }
     
     public boolean support(Object toParse) {
-        return Arrays.stream(parsers).anyMatch((Parser parser)->{
+        return Arrays.stream(this.parsers).anyMatch((Parser parser)->{
             return Arrays.asList(parser.getTypeKeys()).contains(toParse);
         });
     }
     
     public Parser resolve(Object toParse) {
-        return Arrays.stream(parsers).filter((Parser parser)->{
+        return Arrays.stream(this.parsers).filter((Parser parser)->{
             return Arrays.asList(parser.getTypeKeys()).contains(toParse);
         }).findFirst().get();
     }

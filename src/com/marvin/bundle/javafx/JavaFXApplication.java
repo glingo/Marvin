@@ -1,14 +1,14 @@
 package com.marvin.bundle.javafx;
 
 import com.marvin.component.kernel.Kernel;
-import com.marvin.component.templating.Engine;
-import com.marvin.component.templating.template.Template;
+//import com.marvin.bundle.templating.Engine;
+//import com.marvin.bundle.templating.template.Template;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+//import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.Event;

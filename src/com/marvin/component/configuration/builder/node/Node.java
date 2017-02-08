@@ -33,7 +33,7 @@ public abstract class Node {
         return value;
     }
     
-    final public Object normalize(Object value) throws Exception {
+    final public Object normalize(Object value) {
         
         value = preNormalize(value);
         
@@ -69,7 +69,7 @@ public abstract class Node {
         return mergeValues(left, right);
     }
     
-    final public Object finalize(Object value) throws Exception {
+    final public Object finalize(Object value) {
         
         validateType(value);
         
@@ -84,13 +84,13 @@ public abstract class Node {
         return value;
     }
     
-    abstract protected void validateType(Object value) throws Exception;
+    abstract protected void validateType(Object value);
     
     abstract protected Object normalizeValue(Object value);
     
     abstract protected Object mergeValues(Object left, Object right) throws Exception;
 
-    abstract protected Object finalizeValue(Object value) throws Exception;
+    abstract protected Object finalizeValue(Object value);
     
     abstract public boolean hasDefaultValue();
     
@@ -193,28 +193,27 @@ public abstract class Node {
         return rank;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        
-        int rank = this.getRank();
-        builder.append("|");
-        
-        for (int i = 0; i < rank; i++) {
-            builder.append("-----");
-        }
-        
-        builder.append(this.name);
-        builder.append("\n");
-        
-        if(this.children != null) {
-            this.children.values().forEach((Node child) -> {
-                builder.append(child);
-            });
-        }
-        
-        return builder.toString();
-    }
-    
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        
+//        int rank = this.getRank();
+//        builder.append("|");
+//        
+//        for (int i = 0; i < rank; i++) {
+//            builder.append("-----");
+//        }
+//        
+//        builder.append(this.name);
+//        builder.append("\n");
+//        
+//        if(this.children != null) {
+//            this.children.values().forEach((Node child) -> {
+//                builder.append(child);
+//            });
+//        }
+//        
+//        return builder.toString();
+//    }
     
 }

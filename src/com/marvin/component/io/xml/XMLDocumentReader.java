@@ -3,17 +3,21 @@ package com.marvin.component.io.xml;
 import com.marvin.component.parser.DelegatingParser;
 import com.marvin.component.parser.ParserResolver;
 import com.marvin.component.util.StringUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class XMLDocumentReader {
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
-    public static final String IMPORT_ELEMENT = "import";
-    public static final String RESOURCE_ATTRIBUTE = "resource";
+    public static final String IMPORT_ELEMENT       = "import";
+    public static final String RESOURCE_ATTRIBUTE   = "resource";
 
-    protected final ParserResolver parserResolver = new ParserResolver();
-    protected DelegatingParser parser = new DelegatingParser(parserResolver);
+    protected final ParserResolver parserResolver   = new ParserResolver();
+    
+    protected DelegatingParser parser               = new DelegatingParser(this.parserResolver);
     protected XMLReaderContext context;
 
     public XMLDocumentReader(XMLReaderContext context) {
@@ -30,10 +34,16 @@ public class XMLDocumentReader {
         String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
 
         if (!StringUtils.hasText(location)) {
-            System.err.println("Resource location must not be empty");
-//            getReaderContext().error("Resource location must not be empty", ele);
+            String msg = String.format("Resource location must not be empty at %s", ele);
+            this.logger.severe(msg);
             return;
         }
+        
+        if(!location.startsWith("/")) {
+            location = String.format("%s/%s", this.context.getParent(), location);
+        }
+        
+        this.logger.log(Level.INFO, "IMPORT from : {0}", location);
 
         this.context.getReader().read(location);
     }

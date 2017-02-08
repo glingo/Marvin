@@ -1,8 +1,12 @@
 package com.marvin.component.container.awareness;
 
 import com.marvin.component.container.IContainer;
+import com.marvin.component.container.exception.ContainerException;
+import java.util.logging.Logger;
 
 public abstract class ContainerAware implements ContainerAwareInterface {
+    
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     private IContainer container;
     
@@ -17,11 +21,24 @@ public abstract class ContainerAware implements ContainerAwareInterface {
     }
     
     protected Object get(String id) {
-        return getContainer().get(id);
+        Object service = null;
+        try {
+            service = getContainer().get(id);
+        } catch (ContainerException ex) {
+            this.logger.severe(ex.getMessage());
+        }
+        
+        return service;
     }
     
     protected <T> T get(String id, Class<T> type) {
-        return getContainer().get(id, type);
+        T service = null;
+        try {
+            service = getContainer().get(id, type);
+        } catch (ContainerException ex) {
+            this.logger.severe(ex.getMessage());
+        }
+        return service;
     }
     
 }

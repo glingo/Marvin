@@ -1,14 +1,14 @@
 package com.marvin.bundle.framework.handler.event;
 
-import com.marvin.bundle.framework.controller.ControllerReference;
+import com.marvin.component.kernel.controller.ControllerReference;
 import com.marvin.bundle.framework.handler.Handler;
 
-public class FilterControllerEvent<T, R> extends HandlerEvent<T, R> {
+public class FilterControllerEvent<R, T> extends HandlerEvent<R, T> {
     
     private ControllerReference controller;
 
-    public FilterControllerEvent(Handler<T, R> handler, ControllerReference controller, T request) {
-        super(handler, request);
+    public FilterControllerEvent(Handler<R, T> handler, ControllerReference controller) {
+        super(handler);
         this.controller = controller;
     }
 

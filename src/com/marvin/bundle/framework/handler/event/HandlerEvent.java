@@ -3,28 +3,19 @@ package com.marvin.bundle.framework.handler.event;
 import com.marvin.bundle.framework.handler.Handler;
 import com.marvin.component.event.Event;
 
-public class HandlerEvent<T, R> extends Event {
+public class HandlerEvent<R, T> extends Event {
 
-    private Handler handler;
-    private T request;
+    private Handler<R, T> handler;
     
-    public HandlerEvent(Handler handler, T request) {
+    public HandlerEvent(Handler<R, T> handler) {
         this.handler = handler;
     }
 
-    public T getRequest() {
-        return request;
-    }
-
-    public void setRequest(T request) {
-        this.request = request;
-    }
-    
-    public Handler getHandler() {
+    public Handler<R, T> getHandler() {
         return handler;
     }
 
-    public void setHandler(Handler handler) {
+    public void setHandler(Handler<R, T> handler) {
         this.handler = handler;
     }
     

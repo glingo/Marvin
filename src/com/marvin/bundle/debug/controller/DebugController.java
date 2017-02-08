@@ -1,6 +1,6 @@
 package com.marvin.bundle.debug.controller;
 
-import com.marvin.bundle.framework.controller.Controller;
+import com.marvin.bundle.framework.controller.tomove.Controller;
 import com.marvin.component.event.EventDispatcher;
 import com.marvin.component.event.Event;
 import java.util.HashMap;

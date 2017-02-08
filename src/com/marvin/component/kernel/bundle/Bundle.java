@@ -4,10 +4,18 @@ import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.awareness.ContainerAware;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.util.ClassUtils;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import java.util.logging.Level;
+
+/**
+ * This is the first class-citizen.
+ * 
+ * @author cailly
+ */
 public abstract class Bundle extends ContainerAware {
+
+    private static final String EXTENSION_PATH = "%s.container.%sExtension";
+    private static final String BUNDLE_SUFFIX  = "Bundle";
     
     protected ExtensionInterface extension;
     
@@ -41,7 +49,7 @@ public abstract class Bundle extends ContainerAware {
      * @return string The Bundle namespace
      */
     public String getNamespace() {
-        return this.getClass().getPackage().getName();
+        return getClass().getPackage().getName();
     }
     
     /**
@@ -49,9 +57,8 @@ public abstract class Bundle extends ContainerAware {
      *
      * @return string The Bundle absolute path
      */
-    public String getName()
-    {
-        return this.getClass().getSimpleName().replace("Bundle", "");
+    public String getName() {
+        return getClass().getSimpleName().replace(BUNDLE_SUFFIX, "");
     }
     
     /**
@@ -60,7 +67,7 @@ public abstract class Bundle extends ContainerAware {
      * @return string The Bundle absolute path
      */
     public String getPath() {
-        return this.getClass().getName();
+        return getClass().getName();
     }
     
     /**
@@ -69,7 +76,7 @@ public abstract class Bundle extends ContainerAware {
      * @return string
      */
     protected String getContainerExtensionPath() {
-        return String.format("%s.container.%sExtension", this.getNamespace(), this.getName());
+        return String.format(EXTENSION_PATH, getNamespace(), getName());
     }
     
     protected Class getContainerExtensionClass() {
@@ -81,24 +88,28 @@ public abstract class Bundle extends ContainerAware {
         }
     }
     
+    public ExtensionInterface getContainerExtension() {
+        
+        // Lazy initialize extension.
+        if(null == this.extension) {
+            this.extension = createContainerExtension();
+        }
+        
+        return this.extension;
+    }
+    
     protected ExtensionInterface createContainerExtension() {
+        this.logger.info(String.format("Creating ContainerExtension for %s", getName()));
         Class cl = getContainerExtensionClass();
         
         if(cl != null) {
             try {
                 return (ExtensionInterface) cl.newInstance();
             } catch (InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(Bundle.class.getName()).log(Level.SEVERE, null, ex);
+                this.logger.log(Level.SEVERE, null, ex);
             }
         }
-        return null;
-    }
-    
-    public ExtensionInterface getContainerExtension() {
-        if(null == this.extension) {
-            this.extension = createContainerExtension();
-        }
         
-        return this.extension;
+        return null;
     }
 }

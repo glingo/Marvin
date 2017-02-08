@@ -1,8 +1,8 @@
-package com.marvin.bundle.framework.controller;
+package com.marvin.bundle.framework.controller.tomove;
 
 import com.marvin.component.container.awareness.ContainerAware;
-import com.marvin.component.templating.Engine;
-import com.marvin.component.templating.template.Template;
+//import com.marvin.bundle.templating.Engine;
+//import com.marvin.bundle.templating.template.Template;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.logging.Level;
@@ -21,11 +21,11 @@ public class Controller extends ContainerAware {
 //        Response response = new Response();
         try {
             
-            Engine engine = this.get("templating_engine", Engine.class);
-
-            Template template = engine.getTemplate(templateName);
-            
-            template.evaluate(writer, context);
+//            Engine engine = this.get("templating_engine", Engine.class);
+//
+//            Template template = engine.getTemplate(templateName);
+//            
+//            template.evaluate(writer, context);
             
             writer.flush();
             

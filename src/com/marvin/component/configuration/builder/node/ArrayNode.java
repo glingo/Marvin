@@ -46,23 +46,27 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     }
     
     @Override
-    protected void validateType(Object value) throws Exception {
+    protected void validateType(Object value) {
         if(!ObjectUtils.isArray(value) 
                 && !(value instanceof Map) 
                 && !(value instanceof Set) 
                 && !(value instanceof List)) {
             String msg = String.format("Invalid type for path %s. Expected array but got %s", this.getPath(), value == null ? null: value.getClass());
-            throw new Exception(msg);
+            throw new RuntimeException(msg);
         }
     }
 
     @Override
     protected Object normalizeValue(Object value) {
         
+        HashMap<String, Object> normalized = new HashMap<>();
+        
+        if(value == null) {
+            return normalized;
+        }
+        
         HashMap<String, Object> casted = (HashMap<String, Object>) value;
         casted = remapXml(casted);
-        
-        HashMap<String, Object> normalized = new HashMap<>();
         
         casted.forEach((String key, Object val) -> {
             if(getChildren().containsKey(key)) {
@@ -116,7 +120,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
     }
 
     @Override
-    protected Object finalizeValue(Object value) throws Exception {
+    protected Object finalizeValue(Object value) {
         HashMap<String, Object> casted = (HashMap<String, Object>) value;
         
         if(getChildren() != null) {
@@ -127,7 +131,7 @@ public class ArrayNode extends Node implements PrototypeNodeInterface {
                 if(!casted.containsKey(key)) {
                     if(child.isRequired()) {
                         String msg = String.format("The child node '%s' at path '%s' must be configured.", key, this.getPath());
-                        throw new Exception(msg);
+                        throw new RuntimeException(msg);
                     }
 
                     if(child.hasDefaultValue()) {

@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
     
+    <parameters>
+    </parameters>
+    
     <!-- 
-        Service declartion de : 
+        Services declaration of : 
             
                         FrameworkBundle
     -->
-    
-    <parameters>
-        <parameter id="router.resource" type="java.lang.String" value="resources/routing.xml"/>
-    </parameters>
-    
     <services>
+        
+        <!-- resource loader -->
+        <service id="resource_loader" class="com.marvin.component.io.loader.DefaultResourceLoader" />
         
         <!-- Translator definition -->
         <service id="translator" class="com.marvin.component.translation.Translator" />
-        
-        <!-- XmlRouteReader definition -->
-        <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
-            <argument type="service" ref="kernel.resource_loader"/>
-        </service>
         
         <!-- event dispatcher definition -->
         <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher" />
         
         <!-- controller name parser -->
-        <service id="controller.name_parser" class="com.marvin.bundle.framework.controller.ControllerNameParser">
+        <service id="controller.name_parser" class="com.marvin.component.kernel.controller.ControllerNameParser">
             <argument type="service" ref="kernel"/>
+        </service>
+        
+        <!-- XmlRouteReader definition -->
+        <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
+            <argument type="service" ref="resource_loader"/>
         </service>
         
         <service id="path_matcher" class="com.marvin.component.routing.matcher.PathMatcher" />
@@ -34,7 +35,6 @@
         <service id="matcher" class="com.marvin.component.routing.matcher.MatcherDelegate">
             <argument>
                 <list>
-                    <!--<argument type="service" ref="request_uri_matcher"/>-->
                     <argument type="service" ref="path_matcher"/>
                 </list>
             </argument>
@@ -42,10 +42,18 @@
         
         <!-- Router definition -->
         <service id="router" class="com.marvin.component.routing.Router">
-            <argument type="service" ref="router.reader_xml" />
-            <argument type="parameter" ref="router.resource" />
-            <argument type="service" ref="matcher" />
+            <argument type="service"    ref="router.reader_xml" />
+            <argument type="parameter"  ref="router.resource" />
+            <argument type="service"    ref="matcher" />
         </service>
+        
+        <!-- Handler subscriber definition -->
+        <service id="handler.subscriber" class="com.marvin.bundle.framework.handler.subscriber.ViewResolverHandlerSubscriber">
+            <tag name="event_subscriber"/>
+        </service>
+        
+        <!-- Templating definition -->
+        <!--<service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build" />-->
         
     </services>
 </container>

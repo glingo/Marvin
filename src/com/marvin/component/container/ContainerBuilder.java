@@ -24,7 +24,6 @@ import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.compiler.Compiler;
 import com.marvin.component.container.compiler.PassConfig;
 import com.marvin.component.container.compiler.passes.CompilerPassInterface;
-import com.marvin.component.templating.token.Type;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ObjectUtils;
 import com.marvin.component.util.ReflectionUtils;
@@ -33,22 +32,18 @@ import java.util.List;
 
 public class ContainerBuilder {
 
-    private static final Logger LOG = Logger.getLogger(ContainerBuilder.class.getName());
+    protected final Logger logger = Logger.getLogger(getClass().getName());
     
     protected Compiler compiler;
 
-    /**
-     * The map where we stack Definitions.
-     */
+    /** The map where we stack Definitions. */
     protected ConcurrentMap<String, Definition> definitions;
     
-    protected HashMap<String, ExtensionInterface> extensions;
+    protected Map<String, ExtensionInterface> extensions;
 
-    protected HashMap<String, HashMap<String, Object>> extensionConfigs;
+    protected Map<String, Map<String, Object>> extensionConfigs;
     
-    /**
-     * The Container to build
-     */
+    /** The Container to build. */
     protected Container container;
 
     public ContainerBuilder() {
@@ -57,15 +52,27 @@ public class ContainerBuilder {
 
     public Container build() {
         
-        getCompiler().compile(this);
+        this.logger.info("Building a Container.");
+        
+        compile();
         
         getDefinitions().keySet().forEach(this::get);
         
+        this.logger.info("Container has been built.");
+        
         return getContainer();
+    }
+    
+    private void compile(){
+        this.logger.info("Compiling a Container.");
+        getCompiler().compile(this);
+        this.logger.info("Container is compiled.");
     }
 
     private Object resolveArgument(Object arg) {
 
+        this.logger.info(String.format("Resolving an argument (%s) .", arg));
+        
         if (arg instanceof Reference) {
             arg = get(((Reference) arg).getTarget());
         }
@@ -94,6 +101,8 @@ public class ContainerBuilder {
     
     private Class resolveArgumentType(Object argument, Class given) {
         
+        this.logger.info(String.format("Resolving an argument type (%s::%s) .", argument, given));
+        
         if(null == argument) {
             return given;
         }
@@ -112,7 +121,6 @@ public class ContainerBuilder {
         }
         
         int len = arguments.length;
-        
         int givenLength = 0;
         
         if(given != null) {
@@ -122,6 +130,7 @@ public class ContainerBuilder {
         Class[] types = new Class[len];
         for (int i = 0; i < len; i++) {
             Class wanted = null;
+            
             if(i < givenLength) {
                 wanted = given[i];
             }
@@ -133,6 +142,9 @@ public class ContainerBuilder {
     }
     
     private Constructor<Object> resolveConstructor(String className, Object[] arguments) {
+        
+        this.logger.info(String.format("Resolving constructor %s(%s) .", 
+                className, Arrays.toString(arguments)));
         
         Class type = ClassUtils.resolveClassName(className, null);
         
@@ -177,7 +189,7 @@ public class ContainerBuilder {
             }
         } catch(Exception ex) {
             String msg = String.format("InstantiationException, we could not instatiate the service %s.", id);
-            LOG.log(Level.WARNING, msg, ex);
+            this.logger.log(Level.WARNING, msg, ex);
         }
 
         // apply post instanciation
@@ -205,7 +217,7 @@ public class ContainerBuilder {
     private Object callConstructor(String id, Definition definition, Object[] arguments) throws Exception {
         Constructor<Object> constructor = resolveConstructor(definition.getClassName(), arguments);
         if(null == constructor) {
-            throw new Exception(String.format("we could not find constructor for %s", id));
+            throw new Exception(String.format("We could not find constructor for %s", id));
         }
         return constructor.newInstance(arguments);
     }
@@ -284,9 +296,13 @@ public class ContainerBuilder {
         addExtensions(builder.getExtensions());
     }
     
-    public void loadFromExtension(String key, HashMap values) throws Exception {
-        String ns = getExtension(key).getAlias();
-        getExtensionConfigs().put(ns, values);
+    public void loadFromExtension(String key, Map values) {
+        try {
+            String ns = getExtension(key).getAlias();
+            getExtensionConfigs().put(ns, values);
+        } catch (Exception ex) {
+            Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public HashMap<String, Definition> findTaggedDefinitions(String name){
@@ -371,18 +387,26 @@ public class ContainerBuilder {
     public Map<String, Object> getParameters() {
         return getContainer().getParameters();
     }
-
+    
     public Object getParameter(String key) {
-        return getContainer().getParameter(key, null);
+        return getParameterWithDefault(key, null);
     }
     
-    public Object getParameter(String key, Object defaultValue) {
-        return getContainer().getParameter(key, defaultValue);
+    public <T> T getParameter(String key, Class<T> type) {
+        return (T) getParameter(key);
+    }
+    
+    public Object getParameterWithDefault(String key, Object defaultValue) {
+        return getContainer().getParameterWithDefault(key, defaultValue);
+    }
+    
+    public <T> T getParameterWithDefault(String key, Object defaultValue, Class<T> type) {
+        return getContainer().getParameterWithDefault(key, defaultValue, type);
     }
     
     /* Extensions methods */
     
-    public HashMap<String, Object> getExtensionConfig(String name) {
+    public Map<String, Object> getExtensionConfig(String name) {
         if(!getExtensionConfigs().containsKey(name)) {
             getExtensionConfigs().put(name, new HashMap());
         }
@@ -390,7 +414,7 @@ public class ContainerBuilder {
         return getExtensionConfigs().get(name);
     }
     
-    public HashMap<String, HashMap<String, Object>> getExtensionConfigs() {
+    public Map<String, Map<String, Object>> getExtensionConfigs() {
         if(this.extensionConfigs == null) {
             this.extensionConfigs = new HashMap<>();
         }
@@ -408,26 +432,36 @@ public class ContainerBuilder {
     }
     
     public ExtensionInterface getExtension(String name) throws Exception {
+        
         if(!getExtensions().containsKey(name)) {
             String msg = String.format("Container's extension '%s' is not registered", name);
             throw new Exception(msg);
         }
+        
         return getExtensions().get(name);
     }
     
     public void addExtensions(Map<String, ExtensionInterface> extensions) {
+        
+        if(extensions == null) {
+            return;
+        }
+        
         extensions.values().forEach(this::addExtension);
     }
     
     public void addExtension(ExtensionInterface extension) {
+        
+        if(extension == null) {
+            return;
+        }
+        
         getExtensions().putIfAbsent(extension.getAlias(), extension);
+        getExtensionConfigs().put(extension.getAlias(), new HashMap<>());
     }
 
     public void registerExtension(ExtensionInterface extension) {
-        if(extension != null) {
-            getExtensions().putIfAbsent(extension.getAlias(), extension);
-            getExtensionConfigs().put(extension.getAlias(), new HashMap<>());
-        }
+        addExtension(extension);
     }
     
     /* Compiler methods */
@@ -444,9 +478,18 @@ public class ContainerBuilder {
         addCompilerPass(pass, PassConfig.BEFORE_OPTIMIZATION);
     }
     
-    public void addCompilerPass(CompilerPassInterface pass, String type) throws Exception {
-        getCompiler().getPassConfig().addPass(pass, type);
-    }
+    public void addCompilerPass(CompilerPassInterface pass, String type) {
+        
+        if(pass == null) {
+            return;
+        }
+        
+        try {
+            getCompiler().getPassConfig().addPass(pass, type);
+        } catch (Exception ex) {
+            this.logger.log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }        
     
     
     /* static methods */
@@ -460,26 +503,26 @@ public class ContainerBuilder {
 
     /* others */
     
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n  ContainerBuilder \n");
-        
-        builder.append("\n----------------Liste des Extensions----------------");
-        
-        this.getExtensions().forEach((String id, Object extension) -> {
-            builder.append("\n").append(id).append(": ").append(extension);
-        });
-        
-        builder.append("\n----------------Liste des Definitions----------------");
-        this.getDefinitions().forEach((String id, Object definition) -> {
-            builder.append("\n").append(id).append(": ").append(definition);
-        });
-        
-        
-        builder.append("\n----------------Fin ContainerBuilder----------------");
-        
-        return builder.toString();
-    }
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("\n  ContainerBuilder \n");
+//        
+//        builder.append("\n----------------Liste des Extensions----------------");
+//        
+//        this.getExtensions().forEach((String id, Object extension) -> {
+//            builder.append("\n").append(id).append(": ").append(extension);
+//        });
+//        
+//        builder.append("\n----------------Liste des Definitions----------------");
+//        this.getDefinitions().forEach((String id, Object definition) -> {
+//            builder.append("\n").append(id).append(": ").append(definition);
+//        });
+//        
+//        
+//        builder.append("\n----------------Fin ContainerBuilder----------------");
+//        
+//        return builder.toString();
+//    }
     
 }

@@ -27,7 +27,7 @@ public abstract class NodeDefinition {
         return this.parent;
     }
     
-    public NodeDefinition append(NodeDefinition definition) throws CloneNotSupportedException {
+    public NodeDefinition append(NodeDefinition definition) {
         
         if(this.children == null) {
             this.children = new LinkedHashMap<>();
@@ -115,31 +115,31 @@ public abstract class NodeDefinition {
     
     public abstract Node createNode();
     
-    public VariableNodeDefinition variableNode(String name) throws Exception {
+    public VariableNodeDefinition variableNode(String name) {
         return getNodeBuilder().variableNode(name);
     }
      
-    public EnumNodeDefinition enumNode(String name) throws Exception {
+    public EnumNodeDefinition enumNode(String name) {
         return getNodeBuilder().enumNode(name);
     }
     
-    public FloatNodeDefinition floatNode(String name) throws Exception {
+    public FloatNodeDefinition floatNode(String name) {
         return getNodeBuilder().floatNode(name);
     }
     
-    public IntegerNodeDefinition integerNode(String name) throws Exception {
+    public IntegerNodeDefinition integerNode(String name) {
         return getNodeBuilder().integerNode(name);
     }
     
-    public BooleanNodeDefinition booleanNode(String name) throws Exception {
+    public BooleanNodeDefinition booleanNode(String name) {
         return getNodeBuilder().booleanNode(name);
     }
     
-    public ScalarNodeDefinition scalarNode(String name) throws Exception {
+    public ScalarNodeDefinition scalarNode(String name) {
         return getNodeBuilder().scalarNode(name);
     }
     
-    public ArrayNodeDefinition arrayNode(String name) throws Exception {
+    public ArrayNodeDefinition arrayNode(String name) {
         return getNodeBuilder().arrayNode(name);
     }
     
