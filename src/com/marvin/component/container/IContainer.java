@@ -1,6 +1,5 @@
 package com.marvin.component.container;
 
-import com.marvin.component.container.exception.ContainerException;
 import java.util.concurrent.ConcurrentMap;
 
 public interface IContainer {
@@ -28,11 +27,10 @@ public interface IContainer {
      * @param id the String id
      * 
      * @return the Object service
-     * @throws ContainerException if the service does not exists
      */
-    Object get(String id) throws ContainerException;
+    Object get(String id);
 
-    <T> T get(String id, Class<T> type) throws ContainerException;
+    <T> T get(String id, Class<T> type);
     
     boolean contains(String id);
 

@@ -12,8 +12,6 @@ import com.marvin.component.container.IContainer;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.kernel.bundle.Bundle;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
 import java.util.HashMap;
 
 
@@ -122,11 +120,6 @@ public abstract class Kernel {
         
         registerContainerConfiguration(builder);
 
-//        ClassPathResourceLoader loader  = new ClassPathResourceLoader(getClass());
-//        XMLDefinitionReader     reader  = new XMLDefinitionReader(loader, builder);
-        
-//        reader.read("config/config.xml");
-        
         this.bundles.values().forEach((Bundle bundle) -> {
             bundle.build(builder);
         });

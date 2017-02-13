@@ -1,14 +1,17 @@
 package com.marvin.component.container;
 
+import com.marvin.component.container.config.Definition;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.marvin.component.container.exception.ContainerException;
+import com.marvin.component.container.factory.ServiceFactory;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Container implements IContainer {
-    
     protected final Logger logger = Logger.getLogger(getClass().getName());
+    
+    protected ServiceFactory factory;
     
     /** The map where we stack aliases. */
     protected ConcurrentMap<String, String> aliases;
@@ -18,6 +21,9 @@ public class Container implements IContainer {
     
     /** The map where we stack parameters. */
     protected ConcurrentMap<String, Object> parameters;
+    
+    /** The map where we stack Definitions. */
+    protected ConcurrentMap<String, Definition> definitions;
     
     /** 
      * Constructor whithout any arguments.
@@ -68,11 +74,10 @@ public class Container implements IContainer {
     }
     
     /**
-     * @throws com.marvin.component.container.exception.ContainerException
      * @see IContainer#get(java.lang.String)  
      */
     @Override
-    public Object get(String id) throws ContainerException {
+    public Object get(String id) {
         this.logger.info(String.format("Trying to get %s from container.", id));
         
         // look into aliases map
@@ -84,9 +89,12 @@ public class Container implements IContainer {
         
         // check if container have this service
         if(!contains(id)) {
-            // the service does not exists throw an exception
-            String msg = String.format("Service %s not found in container.", id);
-            throw new ContainerException(msg);
+            if(!hasDefinition(id)) {
+                return null;
+            }
+            
+            Object service = getFactory().instanciate(id, getDefinition(id));
+            set(id, service);
         }
         
         // return the service
@@ -94,18 +102,50 @@ public class Container implements IContainer {
     }
 
     @Override
-    public <T> T get(String id, Class<T> type) throws ContainerException {
+    public <T> T get(String id, Class<T> type) {
         return (T) get(id);
     }
     
     @Override
     public boolean contains(String id){
-        return getServices() != null && getServices().containsKey(id);
+        return getServices().containsKey(id);
+    }
+    
+     /* Definitions methods */
+    
+    public boolean hasDefinition(String id) {
+        return getDefinitions().containsKey(id);
+    }
+     
+    public void addDefinition(String id, Definition definition) {
+        getDefinitions().put(id, definition);
+    }
+    
+    public void addDefinitions(Map<String, Definition> definitions) {
+        if(definitions == null) {
+            return;
+        }
+        definitions.forEach(this::addDefinition);
+    }
+    
+    public Definition getDefinition(String id) {
+        if(!hasDefinition(id)) {
+            return null;
+        }
+        return getDefinitions().get(id);
     }
     
 // *************************************************************************
 // *                      GETTERS and SETTERS                              *
 // *************************************************************************
+    
+    private ServiceFactory getFactory() {
+        if(this.factory == null) {
+            this.factory = new ServiceFactory(this);
+        }
+        
+        return this.factory;
+    }
 
     /* Aliases */
     
@@ -129,7 +169,6 @@ public class Container implements IContainer {
     /* Services */
 
     public ConcurrentMap<String, Object> getServices() {
-        
         if(this.services == null) {
             setServices(new ConcurrentHashMap<>());
         }
@@ -139,6 +178,21 @@ public class Container implements IContainer {
 
     public void setServices(ConcurrentMap<String, Object> services) {
         this.services = services;
+    }
+    
+    /* Definitions */
+    
+    public ConcurrentMap<String, Definition> getDefinitions() {
+        
+        if(this.definitions == null) {
+            this.definitions = new ConcurrentHashMap<>();
+        }
+        
+        return this.definitions;
+    }
+
+    public void setDefinitions(ConcurrentMap<String, Definition> definitions) {
+        this.definitions = definitions;
     }
     
     /* Parameters */
@@ -180,31 +234,4 @@ public class Container implements IContainer {
     public final void setParameters(ConcurrentMap<String, Object> parameters) {
         this.parameters = parameters;
     }
-    
-    
-    /* others */
-
-//    @Override
-//    public String toString() {
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("\n  Container \n");
-//        
-//        builder.append("\n----------------Liste des parametres----------------");
-//        getParameters().forEach((String id, Object parameter) -> {
-//            builder.append("\n").append(id).append(": ").append(parameter);
-//        });
-//        
-//        builder.append("\n----------------Liste des services----------------");
-//        getServices().forEach((String id, Object service) -> {
-//            if("container".equals(id)) {
-//                builder.append("\n").append(id).append(": ").append("service_container");
-//                return;
-//            }
-//            builder.append("\n").append(id).append(": ").append(service);
-//        });
-//        
-//        builder.append("\n----------------Fin Container----------------");
-//        
-//        return builder.toString();
-//    }
 }
