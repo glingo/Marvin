@@ -31,28 +31,22 @@ public class ContainerProgrammaticPersonnalTest {
         
         up(container);
         
-        try {
-            
-            IMockService serviceA = container.get("test.service.a", MockServiceA.class);
-            IMockService serviceB = container.get("test.service.b", MockServiceB.class);
-            IMockService serviceC = container.get("test.service.c", MockServiceC.class);
-            IMockService serviceD = container.get("test.service.d", MockServiceD.class);
-            
-            System.out.format("%s call \n", serviceA);
-            serviceA.mockMethod();
-            
-            System.out.format("%s call \n", serviceB);
-            serviceB.mockMethod();
-            
-            System.out.format("%s call \n", serviceC);
-            serviceC.mockMethod();
-            
-            System.out.println("Fin du test");
-            System.out.println("--------------------");
-            
-        } catch (ContainerException ex) {
-            Logger.getLogger(name).log(Level.SEVERE, null, ex);
-        }
+        IMockService serviceA = container.get("test.service.a", MockServiceA.class);
+        IMockService serviceB = container.get("test.service.b", MockServiceB.class);
+        IMockService serviceC = container.get("test.service.c", MockServiceC.class);
+        IMockService serviceD = container.get("test.service.d", MockServiceD.class);
+
+        System.out.format("%s call \n", serviceA);
+        serviceA.mockMethod();
+
+        System.out.format("%s call \n", serviceB);
+        serviceB.mockMethod();
+
+        System.out.format("%s call \n", serviceC);
+        serviceC.mockMethod();
+
+        System.out.println("Fin du test");
+        System.out.println("--------------------");
         
     }
     

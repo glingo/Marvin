@@ -51,24 +51,17 @@ public class ContainerBuilderProgrammaticTest {
         builder.build();
         Container container = builder.getContainer();
         
-        try {
-            
-            IMockService a = container.get("test.service.a", MockServiceA.class);
-            IMockService b = container.get("test.service.b", MockServiceB.class);
-            IMockService c = container.get("test.service.c", MockServiceC.class);
-            IMockService d = container.get("test.service.c", MockServiceD.class);
-            
-            System.out.println(a);
-            System.out.println(b);
-            System.out.println(c);
-            
-            a.mockMethod();
-            b.mockMethod();
-            c.mockMethod();
-            
-        } catch (ContainerException ex) {
-            Logger.getLogger(ContainerBuilderProgrammaticTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        IMockService a = container.get("test.service.a", MockServiceA.class);
+        IMockService b = container.get("test.service.b", MockServiceB.class);
+        IMockService c = container.get("test.service.c", MockServiceC.class);
+        IMockService d = container.get("test.service.c", MockServiceD.class);
+
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(c);
+
+        a.mockMethod();
+        b.mockMethod();
+        c.mockMethod();
     }
 }
