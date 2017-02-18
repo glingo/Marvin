@@ -55,8 +55,6 @@ public class Route {
         String regex = sb.toString().replaceAll("[*]", ".*");
         this.pattern = Pattern.compile(regex);
         
-        Logger.getGlobal().log(Level.INFO, "Pattern : {0}", this.pattern.pattern());
-        
         this.compiled = true;
     }
  
@@ -131,46 +129,5 @@ public class Route {
     
     public void addVariableName(String name) {
         getVariableNames().add(name);
-    }
-    
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        
-//        sb
-//            .append("\n---")
-//            .append(super.toString())
-//            .append("---")
-//            .append("\n\t static prefix : \n\t\t")
-//            .append(getStaticPrefix())
-//            .append("\n\t pattern : \n\t\t")
-//            .append(getPattern())
-//            .append("\n\t defaults : \n\t\t")
-//            .append(getDefaults())
-//            .append("\n\t requierements : \n\t\t")
-//            .append(getRequirements())
-//            .append("\n");
-//        
-//        
-//        return sb.toString();
-//    }
-
-    public static void main(String[] args) {
-        
-        Pattern p = Pattern.compile("\\{.*?\\}");
-//        Pattern p = Pattern.compile("cat");
-        Matcher m = p.matcher("one {animal} two {animal}s in the yard");
-        
-        HashMap<String, String> context = new HashMap<>();
-        context.put("animal", "dog");
-        StringBuffer sb = new StringBuffer();
-        while (m.find()) {
-            String key = m.group().replaceAll("[{}]", "");
-            System.out.println(key);
-            m.appendReplacement(sb, context.get(key));
-        }
-        m.appendTail(sb);
-        System.out.println(sb.toString());
-        
     }
 }

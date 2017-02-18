@@ -28,7 +28,6 @@ public class FrameworkExtension extends Extension {
 
         ConfigurationInterface configuration = getConfiguration();
         Map<String, Object> config = processConfiguration(configuration, configs);
-        this.logger.info(String.format("recieving a config : %s\n%s", config, configs));
 
         registerRouterConfiguration(config.get("router"), builder, reader);
         
@@ -41,8 +40,6 @@ public class FrameworkExtension extends Extension {
     }
 
     private void registerRouterConfiguration(Object config, ContainerBuilder builder, XMLReader reader) {
-        this.logger.info(String.format("recieving a router config : %s", config));
-        
         if(!(config instanceof Map)) {
             return;
         }

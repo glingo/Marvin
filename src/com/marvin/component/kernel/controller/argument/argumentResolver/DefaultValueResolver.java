@@ -14,5 +14,4 @@ public class DefaultValueResolver<R, T> implements ArgumentValueResolverInterfac
     public Object resolve(R request, T response, ArgumentMetadata argument) {
         return argument.getDefaultValue();
     }
-    
 }

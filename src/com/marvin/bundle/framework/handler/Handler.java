@@ -69,7 +69,6 @@ public class Handler<R, T> {
      * @throws Exception Only if one occured and we didn't captured it.
      */
     public ModelAndView handle(R request, T response, boolean capture) throws Exception {
-        
         this.logger.info("Handling a request");
         
         ModelAndView mav = null;

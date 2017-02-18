@@ -15,7 +15,6 @@ public class MatcherDelegate implements MatcherInterface {
     
     @Override
     public HashMap<String, Object> match(RouteCollection collection, String matchable) {
-        
         if(this.matchers == null) {
             return null;
         }
@@ -45,5 +44,4 @@ public class MatcherDelegate implements MatcherInterface {
     public Collection<MatcherInterface> getMatchers() {
         return matchers;
     }
-    
 }

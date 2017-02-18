@@ -14,7 +14,6 @@ public class PathMatcher implements MatcherInterface {
     }
     
     protected HashMap<String, Object> matchCollection(String path, RouteCollection collection) {
-        
         Route route = collection.getRoutes().values().stream().filter((Route filtered) -> {
             return filtered.getPattern().matcher(path).find();
         }).findFirst().orElse(null);

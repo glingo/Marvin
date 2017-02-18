@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class ControllerNameParser {
     
+    private static final String CONTROLLER_PATTERN = "%s.controller.%sController::%s";
     private final Kernel kernel;
 
     public ControllerNameParser(Kernel kernel) {
@@ -22,7 +23,7 @@ public class ControllerNameParser {
         for (int j = 1; j <= rhs.length(); j++) {        
             distance[0][j] = j;   
         }                                                                       
-                                                                                 
+                                                   
         for (int i = 1; i <= lhs.length(); i++) {
             for (int j = 1; j <= rhs.length(); j++){                 
                 distance[i][j] = Math.min(
@@ -92,7 +93,7 @@ public class ControllerNameParser {
             throw new Exception(msg);
         }
         
-        return String.format("%s.controller.%sController::%s", bundle.getNamespace(), ctrl, action);
+        return String.format(CONTROLLER_PATTERN, bundle.getNamespace(), ctrl, action);
     }
     
 }

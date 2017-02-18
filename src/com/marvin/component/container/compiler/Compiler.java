@@ -27,9 +27,7 @@ public class Compiler {
     }
     
     public void compile(ContainerBuilder builder){
-        this.logger.info("Compiling contianer.");
         getPassConfig().getPasses().forEach((CompilerPassInterface pass) -> {
-            this.logger.info(String.format("Applying pass %s.", pass.getClass().getName()));
             pass.accept(builder);
         });
     }

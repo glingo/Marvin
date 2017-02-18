@@ -41,7 +41,7 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
         String prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
         if(StringUtils.hasLength(prefix)) {
             this.prefix = prefix;
-            this.logger.log(Level.INFO, "Found a prefix : {0}", this.prefix);
+            this.logger.log(Level.INFO, "Found a prefix : {}", this.prefix);
         }
         super.importResource(ele);
     }
@@ -62,7 +62,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     }
 
     private void parseRouteElement(Element ele, RouteCollection router) {
-        
         parseElement(ele);
         
         if (nodeNameEquals(ele, ROUTE_ELEMENT)) {
@@ -83,9 +82,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
             if(this.prefix != null) {
                 path = this.prefix + path;
             }
-            
-            this.logger.log(Level.INFO, "Processing route path : {0}", path);
-            
             route.setPath(path);
             NodeList nl = ele.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
@@ -123,7 +119,6 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
     }
     
     private void parseRequirementElement(Element ele, Route route) {
-        
         if (nodeNameEquals(ele, REQUIREMENT_ELEMENT)) {
             processRequirement(ele, route);
         }

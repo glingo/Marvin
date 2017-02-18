@@ -5,8 +5,6 @@ import com.marvin.component.container.awareness.ContainerAware;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.util.ClassUtils;
 
-import java.util.logging.Level;
-
 /**
  * This is the first class-citizen.
  * 
@@ -89,8 +87,6 @@ public abstract class Bundle extends ContainerAware {
     }
     
     public ExtensionInterface getContainerExtension() {
-        
-        // Lazy initialize extension.
         if(null == this.extension) {
             this.extension = createContainerExtension();
         }
@@ -99,14 +95,13 @@ public abstract class Bundle extends ContainerAware {
     }
     
     protected ExtensionInterface createContainerExtension() {
-        this.logger.info(String.format("Creating ContainerExtension for %s", getName()));
         Class cl = getContainerExtensionClass();
         
         if(cl != null) {
             try {
                 return (ExtensionInterface) cl.newInstance();
             } catch (InstantiationException | IllegalAccessException ex) {
-                this.logger.log(Level.SEVERE, null, ex);
+                this.logger.severe("Cannot instantiate extension.");
             }
         }
         

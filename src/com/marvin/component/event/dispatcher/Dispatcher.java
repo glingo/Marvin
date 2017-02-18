@@ -3,11 +3,8 @@ package com.marvin.component.event.dispatcher;
 import com.marvin.component.event.Event;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import com.marvin.component.event.subscriber.SubscriberInterface;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -53,52 +50,31 @@ public abstract class Dispatcher<T extends Event> implements DispatcherInterface
     
     @Override
     public void removeSubscriber(SubscriberInterface<T> subscriber) {
-        
         if (getSubscribers().isEmpty() || !getSubscribers().contains(subscriber)) {
             return;
         }
 
         getSubscribers().remove(subscriber);
-        
         this.logger.info(String.format("Subscriber %s has been removed from %s.", subscriber.getClass().getName(), this.getClass().getName()));
     }
 
-
     @Override
     public void dispatch(String name, T event) {
-        
         String msg = String.format("%s is dispatching an event : %s ", this.getClass().getName(), name);
         this.logger.info(msg);
-        
-        getSubscribers().forEach((SubscriberInterface<T> subscriber) -> {
-            
-            if (subscriber == null) {
-                this.logger.info(String.format("No subscriber found for %s", name));
-                return;
-            }
-            
-            Iterator<Map.Entry<String, Consumer<T>>> iterator = subscriber.getSubscribedEvents().entrySet().stream().filter((en) -> {
-                return en.getKey().equals(name);
-            }).iterator();
-            
-            while (iterator.hasNext()) {
-                Map.Entry<String, Consumer<T>> entry = iterator.next();
-                Object key = entry.getKey();
-                Consumer<T> listener = entry.getValue();
-                
-                if(hasStopCondition()) {
-                    if(this.stopCondition.test(event)) {
-                        this.logger.info("We got a StopCondition true !");
-                        break;
-                    }
-                }
-                
-                if(key.equals(name)) {
-                    this.logger.info(String.format("We found a subscriber (%s) !", listener.getClass().getName()));
-                    listener.accept(event);
-                }
-            }
-        });
+
+        getSubscribers().stream()
+            .filter(subscriber -> subscriber != null)
+            .forEach((SubscriberInterface<T> subscriber) -> {
+                subscriber.getSubscribedEvents().entrySet().stream()
+                    .filter(entry -> name.equals(entry.getKey()))
+                    .map(entry -> entry.getValue())
+                    .forEach(listener -> {
+                        if(!hasStopCondition() || !this.stopCondition.test(event)) {
+                            listener.accept(event);
+                        }
+                    });
+            });
     }
     
 }

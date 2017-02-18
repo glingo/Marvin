@@ -11,8 +11,12 @@ import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.IContainer;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.xml.XMLDefinitionReader;
+import com.marvin.component.io.IResource;
+import com.marvin.component.io.loader.ClassPathResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.LogManager;
 
 
 public abstract class Kernel {
@@ -55,21 +59,18 @@ public abstract class Kernel {
     }
 
     public void boot() {
-        
-        this.logger.info("Booting kernel ...");
-
         if (isBooted()) {
             this.logger.info("Kernel is already booted ...");
             return;
         }
+        
+        registerLoggingConfiguration();
 
         initializeBundles();
         
         initializeContainer();
 
-        this.logger.info("Booting bundles ...");
         this.bundles.values().forEach((Bundle bundle) -> {
-            this.logger.info(String.format("Booting bundle %s.", bundle.getName()));
             bundle.setContainer(container);
             bundle.boot();
         });
@@ -86,35 +87,36 @@ public abstract class Kernel {
     }
     
     protected void initializeBundles() {
-        this.logger.info("Initializing bundles ...");
         this.bundles = Arrays.stream(registerBundles()).collect(this.bundleCollector);
     }
     
     protected void prepareContainer(ContainerBuilder builder) {
-        this.logger.info("Preparing container ...");
         
         // add kernel parameters.
         builder.addParameters(getKernelParameters());
         
         this.bundles.values().forEach((Bundle bundle) -> {
-            this.logger.info(String.format("Registering %s bundle extension ...", bundle.getName()));
             ExtensionInterface extension = bundle.getContainerExtension();
             builder.registerExtension(extension);
         });
     }
     
     protected void registerContainerConfiguration(ContainerBuilder builder) {
-        this.logger.info("Registering Container configuration :");
-        this.logger.info(String.format("%s/config/config_%s.xml", getRootDir(), getEnvironment()));
-        
-        
         XMLDefinitionReader reader  = new XMLDefinitionReader(builder);
         reader.read(String.format("%s/config/config_%s.xml", getRootDir(), getEnvironment()));
     }
+    
+    protected void registerLoggingConfiguration() {
+        try {
+            ClassPathResourceLoader loader = new ClassPathResourceLoader(getClass());
+            IResource resource = loader.load(String.format("./config/logging_%s.properties", getEnvironment()));
+            LogManager.getLogManager().readConfiguration(resource.getInputStream());
+        } catch(IOException e) {
+            this.logger.info("Unable to load any logging configuration.");
+        }
+    }
 
     protected void initializeContainer() {
-        this.logger.info("Initializing container ...");
-        
         ContainerBuilder builder = new ContainerBuilder();
         prepareContainer(builder);
         
@@ -125,15 +127,8 @@ public abstract class Kernel {
         });
         
         // Inject the kernel as a service.
-        this.logger.info("Inject kernel as a service in container");
         builder.set("kernel", this);
-        
-        // Inject the resource loader.
-//        this.logger.info("Inject resource loader as a service in container");
-//        builder.set("kernel.resource_loader", loader);
-        
         // Inject the container as a service.
-        this.logger.info("Inject container it self as a service in container");
         builder.set("container", builder.getContainer());
 
         this.container = builder.build();
@@ -167,10 +162,8 @@ public abstract class Kernel {
     
     protected String getRootDir() {
         if(this.rootDir == null) {
-//            Matcher.quoteReplacement(File.separator)
             this.rootDir = getClass().getPackage().getName().replaceAll("\\.", "/");
         }
         return this.rootDir;
     }
-    
 }

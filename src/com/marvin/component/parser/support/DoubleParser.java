@@ -1,7 +1,6 @@
 package com.marvin.component.parser.support;
 
 import com.marvin.component.parser.Parser;
-import com.marvin.component.parser.Parser;
 
 /**
  * Convert to a double by parsing the value as a string

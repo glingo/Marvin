@@ -47,8 +47,6 @@ public class Container implements IContainer {
     /** @see IContainer#get(java.lang.String) */
     @Override
     public void set(String id, Object service) {
-        this.logger.info(String.format("Trying to set (%s:%s) in container.", id, service));
-        
         // check if id is null or empty
         if(id == null || "".equals(id)){
             this.logger.info("An id is required to register a service in container.");
@@ -68,9 +66,6 @@ public class Container implements IContainer {
         
         // inject service in map of services if it is not already set
         getServices().putIfAbsent(id, service);
-        
-        // maybe change this info in case we didn't inject.
-        this.logger.info("The service has been injected in container.");
     }
     
     /**
@@ -78,8 +73,6 @@ public class Container implements IContainer {
      */
     @Override
     public Object get(String id) {
-        this.logger.info(String.format("Trying to get %s from container.", id));
-        
         // look into aliases map
         if(getAliases().containsKey(id)) {
             // this is an alias, retrive the real id

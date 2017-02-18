@@ -69,5 +69,4 @@ public class ViewResolverHandlerSubscriber extends EventSubscriber<HandlerEvent>
         subscribed.put(HandlerEvents.RESPONSE, this::onResponse);
         return subscribed;
     }
-    
 }

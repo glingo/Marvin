@@ -28,19 +28,12 @@ public class ContainerBuilder {
     }
 
     public Container build() {
-        this.logger.info("Building a Container.");
-        
         compile();
-        
-        this.logger.info("Container has been built.");
-        
         return getContainer();
     }
     
     private void compile(){
-        this.logger.info("Compiling a Container.");
         getCompiler().compile(this);
-        this.logger.info("Container is compiled.");
     }
     
     /* Container methods */
@@ -73,7 +66,7 @@ public class ContainerBuilder {
             String ns = getExtension(key).getAlias();
             getExtensionConfigs().put(ns, values);
         } catch (Exception ex) {
-            Logger.getLogger(ContainerBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            this.logger.severe(ex.getMessage());
         }
     }
 
@@ -188,7 +181,6 @@ public class ContainerBuilder {
     }
     
     public Map<String, ExtensionInterface> getExtensions() {
-        
         if(this.extensions == null) {
             this.extensions = new HashMap<>();
         }
@@ -197,7 +189,6 @@ public class ContainerBuilder {
     }
     
     public ExtensionInterface getExtension(String name) throws Exception {
-        
         if(!getExtensions().containsKey(name)) {
             String msg = String.format("Container's extension '%s' is not registered", name);
             throw new Exception(msg);
@@ -207,7 +198,6 @@ public class ContainerBuilder {
     }
     
     public void addExtensions(Map<String, ExtensionInterface> extensions) {
-        
         if(extensions == null) {
             return;
         }
@@ -216,7 +206,6 @@ public class ContainerBuilder {
     }
     
     public void addExtension(ExtensionInterface extension) {
-        
         if(extension == null) {
             return;
         }
@@ -252,7 +241,7 @@ public class ContainerBuilder {
         try {
             getCompiler().getPassConfig().addPass(pass, type);
         } catch (Exception ex) {
-            this.logger.log(Level.SEVERE, ex.getMessage(), ex);
+            this.logger.severe(ex.getMessage());
         }
     }
     

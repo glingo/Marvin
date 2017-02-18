@@ -1,7 +1,6 @@
 package com.marvin.component.container.factory;
 
 import com.marvin.component.container.Container;
-import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.awareness.ContainerAwareInterface;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Parameter;
@@ -31,8 +30,6 @@ public class ServiceFactory {
     }
     
     private Object resolveArgument(Object arg) {
-        this.logger.info(String.format("Resolving an argument (%s) .", arg));
-        
         if (arg instanceof Reference) {
             arg = container.get(((Reference) arg).getTarget());
         }
@@ -60,8 +57,6 @@ public class ServiceFactory {
     }
     
     private Class resolveArgumentType(Object argument, Class given) {
-        this.logger.info(String.format("Resolving an argument type (%s::%s) .", argument, given));
-        
         if(null == argument) {
             return given;
         }
@@ -100,24 +95,17 @@ public class ServiceFactory {
     }
     
     private Constructor<Object> resolveConstructor(String className, Object[] arguments) {
-        this.logger.info(String.format("Resolving constructor %s(%s) .", 
-                className, Arrays.toString(arguments)));
-        
         Class type = ClassUtils.resolveClassName(className, null);
-        
         Class[] argumentsTypes = resolveArgumentsTypes(arguments, null);
         
         if(ClassUtils.hasConstructor(type, argumentsTypes)) {
-            // we got a contructor !
             return ClassUtils.getConstructorIfAvailable(type, argumentsTypes);
         }
 
-        // we need to find it in an other way
         int len = arguments.length;
         Constructor<Object>[] constructors = type.getConstructors();
 
-        Predicate<Constructor<Object>> filter = (Constructor<Object> cstr) -> {
-            
+        return Arrays.stream(constructors).filter((Constructor<Object> cstr) -> {
             if(len != cstr.getParameterCount()) {
                 return false;
             }
@@ -126,9 +114,7 @@ public class ServiceFactory {
             Class[] types = resolveArgumentsTypes(arguments, wanted);
             
             return ClassUtils.hasConstructor(type, types);
-        };
-
-        return Arrays.stream(constructors).filter(filter).findFirst().orElse(null);
+        }).findFirst().orElse(null);
     }
     
     public Object instanciate(String id, Definition definition) {
@@ -146,13 +132,13 @@ public class ServiceFactory {
             }
         } catch(Exception ex) {
             String msg = String.format("InstantiationException, we could not instatiate the service %s.", id);
-            this.logger.log(Level.WARNING, msg, ex);
+            this.logger.severe(msg);
         }
 
         // apply post instanciation
         postInstanciate(id, definition, service);
 
-        container.set(id, service);
+        this.container.set(id, service);
 
         return service;
     }

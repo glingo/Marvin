@@ -96,7 +96,6 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
     }
 
     private void parseDefinitionElement(Element ele, ContainerBuilder builder) {
-
         parseElement(ele);
         if (nodeNameEquals(ele, SERVICE_ELEMENT)) {
             processDefinition(ele, builder);
@@ -341,11 +340,9 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
             }
             
             tag.setParameter(node.getNodeName(), convert(node.getNodeValue()));
-            
         }
         
         if (StringUtils.hasLength(nameAttr)) {
-            
             definition.addTag(tag);
         }
     }

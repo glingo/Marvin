@@ -12,8 +12,6 @@ public class Processor {
     protected final Logger logger = Logger.getLogger(getClass().getName());
     
     public HashMap<String, Object> process(Node root, Map<String, Object> config) {
-        this.logger.info(String.format("processing %s %s", root, config));
-
         if(config == null) {
             return null;
         }

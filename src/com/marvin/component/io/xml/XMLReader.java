@@ -47,23 +47,20 @@ public abstract class XMLReader {
         }
         
         this.context.setParent(location.substring(0, location.lastIndexOf("/")));
-
         read(resource);
     }
 
     private void read(IResource resource) {
-        try {
-            try (InputStream inputStream = resource.getInputStream()) {
-                InputSource inputSource = new InputSource(inputStream);
-                doRead(inputSource, resource);
-            }
-        } catch (IOException ex) {
+        try (InputStream inputStream = resource.getInputStream()) {
+            InputSource inputSource = new InputSource(inputStream);
+            doRead(inputSource, resource);
+        } catch (Exception ex) {
             String msg = String.format("Unable to read resource %s, %s\n", resource, this.resourceLoader);
             this.logger.severe(msg);
         }
     }
 
-    protected abstract void doRead(InputSource inputSource, IResource resource);
+    protected abstract void doRead(InputSource inputSource, IResource resource) throws Exception;
 
     protected Document doLoadDocument(InputSource inputSource, IResource resource) throws Exception {
         return this.documentLoader.load(inputSource, DocumentLoader.VALIDATION_NONE, true);

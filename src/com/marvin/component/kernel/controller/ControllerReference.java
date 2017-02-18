@@ -31,8 +31,7 @@ public class ControllerReference {
 
     @Override
     public String toString() {
-        String ts = String.format("ControllerReference (%s, %s)", this.holder, this.action);
-        return ts;
+        return String.format("ControllerReference (%s, %s)", this.holder, this.action);
     }
     
 }
