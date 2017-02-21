@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-public class ViewResolverHandlerSubscriber extends EventSubscriber<HandlerEvent>{
+public class ViewResolverHandlerSubscriber extends EventSubscriber<HandlerEvent> {
     
     public static final String VIEW_PARAMETER = "_view";
     

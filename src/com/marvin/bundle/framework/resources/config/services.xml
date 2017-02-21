@@ -12,6 +12,9 @@
     <services>
         
         <!-- resource loader -->
+        <service id="form_builder" class="com.marvin.component.io.loader.DefaultResourceLoader" />
+        
+        <!-- resource loader -->
         <service id="resource_loader" class="com.marvin.component.io.loader.DefaultResourceLoader" />
         
         <!-- Translator definition -->
@@ -47,13 +50,27 @@
             <argument type="service"    ref="matcher" />
         </service>
         
-        <!-- Handler subscriber definition -->
-        <service id="handler.subscriber" class="com.marvin.bundle.framework.handler.subscriber.ViewResolverHandlerSubscriber">
+        <!-- ViewResolverHandlerSubscriber definition -->
+        <service id="view.resolver_subscriber" class="com.marvin.bundle.framework.handler.subscriber.ViewResolverHandlerSubscriber">
             <tag name="event_subscriber"/>
         </service>
         
         <!-- Templating definition -->
         <!--<service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build" />-->
         
+        <service id="argument_metadata.factory" class="com.marvin.component.kernel.controller.argument.ArgumentMetadataFactory" />
+
+        <!-- ViewResolverHandlerSubscriber definition -->
+        <service id="argument_resolver" class="com.marvin.component.kernel.controller.argument.ArgumentResolver">
+            <argument type="service" ref="argument_metadata.factory" />
+        </service>
+        
+        <service id="default.argument_resolver" class="com.marvin.component.kernel.controller.argument.argumentResolver.DefaultValueResolver">
+            <tag name="argument_resolver" />
+        </service> 
+        
+        <service id="model.argument_resolver" class="com.marvin.bundle.framework.mvc.controller.ModelAndViewArgumentResolver">
+            <tag name="argument_resolver" />
+        </service>
     </services>
 </container>

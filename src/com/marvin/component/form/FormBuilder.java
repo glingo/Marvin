@@ -1,28 +1,41 @@
 package com.marvin.component.form;
 
 import com.marvin.component.form.support.CheckboxType;
+import com.marvin.component.form.support.FormType;
 import com.marvin.component.form.support.PasswordType;
 import com.marvin.component.form.support.TextType;
 import java.util.HashMap;
 
 public class FormBuilder {
     
+    private FormTypeInterface type;
+    private Object data;
+    
     private final String name;
     private HashMap<String, FormBuilder> children;
 //    private HashMap<String, FormTypeInterface> types;
     
-    public FormBuilder(String name) {
+    public FormBuilder(String name, Object data) {
         this.name = name;
+        this.data = data;
     }
     
-    public Form getForm(){
-        Form form = new Form(this.name);
+    public FormBuilder(String name, FormTypeInterface type) {
+        this.name = name;
+        this.type = type;
+    }
+    
+    public FormTypeInterface getForm(){
+        
+        if(this.type == null) {
+            this.type = new FormType(name, this.data);
+        }
         
         getChildren().values().forEach((FormBuilder builder) -> {
-            form.addChild(builder.getForm());
+            this.type.addChild(builder.getForm());
         });
         
-        return form;
+        return this.type;
     }
     
 //    public HashMap<String, FormTypeInterface> getTypes() {
@@ -47,9 +60,14 @@ public class FormBuilder {
     }
     
     public FormBuilder add(String name, FormTypeInterface type) {
-        type.setName(name);
+//        type.setName(name);
 //        getTypes().put(name, type);
         add(name, create(name, type));
+        return this;
+    }
+    
+    public FormBuilder add(String name, Class clazz) throws Exception {
+        add(name, create(name, (FormTypeInterface) clazz.newInstance()));
         return this;
     }
     
@@ -74,31 +92,61 @@ public class FormBuilder {
         StringBuilder sb = new StringBuilder();
         
         sb
-            .append("\n---")
-            .append(super.toString())
-            .append("---")
-            .append("\n\tname : \n\t\t")
+//            .append("\n---")
+//            .append(super.toString())
+            .append("name : ")
             .append(this.name) 
-            .append("\n\tchildren : \n\t\t")
-            .append(getChildren())
-            .append("\n---- * ----\n");
+            .append(", children : ")
+            .append(getChildren());
         
         return sb.toString();
     }
     
-    public static void main(String[] args) {
+    
+    private static class LoginForm {
+        private String login;
+        private String password;
+
+        public LoginForm() {
+        }
+
+        public LoginForm(String login, String password) {
+            this.login = login;
+            this.password = password;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getLogin() {
+            return login;
+        }
+
+        public void setLogin(String login) {
+            this.login = login;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+    
+    public static void main(String[] args) throws Exception {
         
-        FormBuilder builder = new FormBuilder("testForm");
+        FormBuilder builder = new FormBuilder("testForm", new LoginForm());
         
-        Form form = builder
+        FormTypeInterface form = builder
                 .add("username", new TextType("User :"))
                 .add("password", new PasswordType("Password :"))
                 .add("remember_me", new CheckboxType("Remember me :"))
+                .add("username", new TextType("User initilized:", "user"))
+                .add("usernameClass", TextType.class)
+                .add("usernameClass", TextType.class)
                 .getForm();
         
-        System.out.println(builder);
+//        System.out.println(builder);
         System.out.println(form);
-        
     }
     
 //    public FormBuilder create(String name) {

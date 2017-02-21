@@ -4,14 +4,22 @@ import com.marvin.component.kernel.controller.ControllerReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ArgumentResolver {
+public class ArgumentResolver {
     
     private final ArgumentMetadataFactoryInterface factory;
-    private final List<ArgumentValueResolverInterface> resolvers;
-
-    public ArgumentResolver(ArgumentMetadataFactoryInterface factory, List<ArgumentValueResolverInterface> resolvers) {
+    private List<ArgumentValueResolverInterface> resolvers = new ArrayList<>();
+    
+    public ArgumentResolver() {
+        this.factory = new ArgumentMetadataFactory();
+    }
+    
+    public ArgumentResolver(ArgumentMetadataFactoryInterface factory) {
         super();
         this.factory = factory;
+    }
+
+    public ArgumentResolver(ArgumentMetadataFactoryInterface factory, List<ArgumentValueResolverInterface> resolvers) {
+        this(factory);
         this.resolvers = resolvers;
     }
     
@@ -34,14 +42,19 @@ public abstract class ArgumentResolver {
         return arguments;
     }
     
-//    public static List<ArgumentValueResolverInterface> getDefaultResolvers(){
-//        List<ArgumentValueResolverInterface> resolvers = new ArrayList<>();
-//        
-//        resolvers.add(new DefaultValueResolver());
-//        resolvers.add(new RequestAtributeValueResolver());
-//        resolvers.add(new RequestValueResolver());
-//        
-//        return resolvers;
-//    } 
+    public void addResolver(ArgumentValueResolverInterface resolver) {
+        getResolvers().add(resolver);
+    }
 
+    public ArgumentMetadataFactoryInterface getFactory() {
+        return factory;
+    }
+
+    public void setResolvers(List<ArgumentValueResolverInterface> resolvers) {
+        this.resolvers = resolvers;
+    }
+
+    public List<ArgumentValueResolverInterface> getResolvers() {
+        return resolvers;
+    }
 }

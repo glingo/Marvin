@@ -1,23 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.marvin.component.form.support;
 
+import com.marvin.component.form.AbstractFormType;
 import com.marvin.component.form.FormBuilder;
 
-/**
- *
- * @author caill
- */
-public class FormType extends AbstractFormType<String> {
+public class FormType extends AbstractFormType<Object> {
 
-    public FormType(String name) {
-        super(name);
+    public FormType(String name, Object data) {
+        super(name, null, data);
     }
 
     @Override
-    public void buildForm(FormBuilder builder) { }
+    public void buildForm(FormBuilder builder) {
+    
+    }
     
 }
