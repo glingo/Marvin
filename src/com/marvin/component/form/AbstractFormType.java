@@ -30,10 +30,6 @@ public abstract class AbstractFormType<T> implements FormTypeInterface<T> {
         this.data = data;
     }
     
-    public AbstractFormType(String name, T data) {
-        this(name, null, data);
-    }
-    
     @Override
     public FormBuilder createBuilder() {
         return new FormBuilder(getName(), this);

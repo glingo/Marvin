@@ -15,8 +15,6 @@ import java.util.List;
  * will apply when performing operators. This can be found in section 5.6.2 of
  * the Java 7 spec, under Binary Numeric Promotion.
  *
- * @author Mitchell
- *
  */
 public class OperatorUtils {
 

@@ -4,7 +4,6 @@ import com.marvin.component.templating.template.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.node.operator.OperatorUtils;
 
-
 public class AddExpression extends BinaryExpression<Object> {
 
     @Override

@@ -37,7 +37,7 @@ public abstract class ContainerControllerResolver<T> extends ControllerResolver<
                         break;
                     case 2:     // service:method notation
                         Object service = getContainer().get(fragments[0]);
-                        Method action = ClassUtils.getMethod(service.getClass(), fragments[1], new Class[]{});
+                        Method action = ClassUtils.getMethod(service.getClass(), fragments[1], (Class[]) null);
                         return new ControllerReference(service, action);
                 }
             }

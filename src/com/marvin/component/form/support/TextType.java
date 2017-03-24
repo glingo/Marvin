@@ -14,7 +14,11 @@ public class TextType extends AbstractFormType<String> {
     }
     
     public TextType(String name, String data) {
-        super(name, data);
+        super(name, null, data);
+    }
+    
+    public TextType(String name, String label, String data) {
+        super(name, label, data);
     }
 
     @Override

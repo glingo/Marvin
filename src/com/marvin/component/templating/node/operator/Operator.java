@@ -20,5 +20,4 @@ public abstract class Operator {
     public Class<? extends Expression<?>> getNodeClass() {
         return nodeClass;
     }
-    
 }

@@ -14,6 +14,6 @@ public abstract class View<R, T> implements IView<R, T> {
     }
     
     @Override
-    public abstract void render(HashMap<String, ?> model, R request, T response) throws Exception;
+    public abstract void render(HashMap<String, Object> model, R request, T response) throws Exception;
     
 }

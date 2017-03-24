@@ -4,7 +4,6 @@ import com.marvin.component.templating.template.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import com.marvin.component.templating.node.expression.Expression;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import javafx.util.Pair;

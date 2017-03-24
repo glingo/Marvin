@@ -17,10 +17,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
-/**
- *
- * @author cdi305
- */
 public class EngineBuilder {
 
     private LoaderInterface<?> loader;

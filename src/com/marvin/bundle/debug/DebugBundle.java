@@ -13,6 +13,4 @@ public class DebugBundle extends Bundle {
         XMLDefinitionReader reader = new XMLDefinitionReader(loader, builder);
         reader.read("resources/config/services.xml");
     }
-
-    
 }

@@ -6,13 +6,13 @@ public abstract class BinaryExpression<T> implements Expression<T> {
 
     private int lineNumber;
 
-    public BinaryExpression() {
-
-    }
-
     private Expression<?> leftExpression;
 
     private Expression<?> rightExpression;
+
+    public BinaryExpression() {
+
+    }
 
     public void setLeft(Expression<?> left) {
         this.leftExpression = left;

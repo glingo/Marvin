@@ -2,10 +2,6 @@ package com.marvin.component.templating.node.operator;
 
 import com.marvin.component.templating.node.expression.BinaryExpression;
 
-/**
- *
- * @author cdi305
- */
 public class BinaryOperator extends Operator {
     
     protected int precedence;

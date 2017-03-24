@@ -12,7 +12,7 @@ public class ButtonType extends AbstractFormType<String> {
     }
 
     public ButtonType(String name, String label, String action) {
-        super(name, label);
+        super(name, label, null);
         this.action = action;
     }
 
