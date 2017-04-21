@@ -20,5 +20,4 @@ public class FilterControllerArgumentsEvent<R, T> extends FilterControllerEvent<
     public List<Object> getArguments() {
         return arguments;
     }
-    
 }

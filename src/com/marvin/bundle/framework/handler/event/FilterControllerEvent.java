@@ -19,5 +19,4 @@ public class FilterControllerEvent<R, T> extends HandlerEvent<R, T> {
     public void setController(ControllerReference controller) {
         this.controller = controller;
     }
-    
 }
