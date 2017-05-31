@@ -27,7 +27,7 @@ public class DelegatingLoader implements LoaderInterface<DelegatingLoaderCacheKe
      * soon as one of them finds a template, the others will not be given a
      * chance to do so.
      */
-    private final List<LoaderInterface<?>> loaders;
+    private final List<LoaderInterface> loaders;
 
     /**
      * Constructor provided with a list of children loaders.
@@ -35,7 +35,7 @@ public class DelegatingLoader implements LoaderInterface<DelegatingLoaderCacheKe
      * @param loaders
      *            A list of loaders to delegate to
      */
-    public DelegatingLoader(List<LoaderInterface<?>> loaders) {
+    public DelegatingLoader(List<LoaderInterface> loaders) {
         this.loaders = Collections.unmodifiableList(new ArrayList<>(loaders));
     }
 
@@ -47,7 +47,7 @@ public class DelegatingLoader implements LoaderInterface<DelegatingLoaderCacheKe
 
         final int size = this.loaders.size();
         for (int i = 0; i < size; i++) {
-            LoaderInterface<?> loader = this.loaders.get(i);
+            LoaderInterface loader = this.loaders.get(i);
             Object delegatingKey = cacheKey.getDelegatingCacheKeys().get(i);
             try {
                 reader = this.getReaderInner(loader, delegatingKey);

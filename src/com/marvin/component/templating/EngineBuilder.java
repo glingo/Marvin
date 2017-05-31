@@ -1,15 +1,18 @@
 package com.marvin.component.templating;
 
 import com.marvin.component.templating.extension.Extension;
+import com.marvin.component.templating.extension.ExtensionRegistry;
 import com.marvin.component.templating.extension.core.CoreExtension;
 import com.marvin.component.templating.extension.escaper.EscaperExtension;
 import com.marvin.component.templating.extension.escaper.EscapingStrategy;
 import com.marvin.component.templating.extension.i18n.I18nExtension;
+import com.marvin.component.templating.lexer.Lexer;
 import com.marvin.component.templating.lexer.Syntax;
 import com.marvin.component.templating.loader.ClasspathLoader;
 import com.marvin.component.templating.loader.DelegatingLoader;
 import com.marvin.component.templating.loader.FileLoader;
 import com.marvin.component.templating.loader.LoaderInterface;
+import com.marvin.component.templating.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 
 public class EngineBuilder {
 
-    private LoaderInterface<?> loader;
+    private LoaderInterface loader;
 
     private final List<Extension> userProvidedExtensions = new ArrayList<>();
 
@@ -31,9 +34,6 @@ public class EngineBuilder {
 
     private ExecutorService executorService;
 
-//        private Cache<Object, PebbleTemplate> templateCache;
-//        private boolean cacheActive = true;
-//        private Cache<BaseTagCacheKey, Object> tagCache;
     private final EscaperExtension escaperExtension = new EscaperExtension();
 
     /**
@@ -49,7 +49,7 @@ public class EngineBuilder {
      * @param loader A template loader
      * @return This builder object
      */
-    public EngineBuilder loader(LoaderInterface<?> loader) {
+    public EngineBuilder loader(LoaderInterface loader) {
         this.loader = loader;
         return this;
     }
@@ -123,27 +123,6 @@ public class EngineBuilder {
     }
 
     /**
-     * Sets the cache used by the engine to store compiled PebbleTemplate
-     * instances.
-     *
-     * @param templateCache The template cache
-     * @return This builder object
-     */
-//        public Builder templateCache(Cache<Object, PebbleTemplate> templateCache) {
-//            this.templateCache = templateCache;
-//            return this;
-//        }
-    /**
-     * Sets the cache used by the "cache" tag.
-     *
-     * @param tagCache The tag cache
-     * @return This builder object
-     */
-//        public Builder tagCache(Cache<BaseTagCacheKey, Object> tagCache) {
-//            this.tagCache = tagCache;
-//            return this;
-//        }
-    /**
      * Sets whether or not escaping should be performed automatically.
      *
      * @param autoEscaping The auto escaping setting
@@ -178,21 +157,9 @@ public class EngineBuilder {
     }
 
     /**
-     * Enable/disable all caches, i.e. cache used by the engine to store
-     * compiled PebbleTemplate instances and tags cache
-     *
-     * @param cacheActive toggle to enable/disable all caches
-     * @return This builder object
-     */
-//        public Builder cacheActive(boolean cacheActive) {
-//            this.cacheActive = cacheActive;
-//            return this;
-//        }
-    /**
      * Creates the Engine instance.
      *
-     * @return A Engine object that can be used to create Template
-     * objects.
+     * @return A Engine object that can be used to create Template objects.
      */
     public Engine build() {
 
@@ -205,7 +172,7 @@ public class EngineBuilder {
 
         // default loader
         if (loader == null) {
-            List<LoaderInterface<?>> defaultLoadingStrategies = new ArrayList<>();
+            List<LoaderInterface> defaultLoadingStrategies = new ArrayList<>();
             defaultLoadingStrategies.add(new ClasspathLoader());
             defaultLoadingStrategies.add(new FileLoader());
             loader = new DelegatingLoader(defaultLoadingStrategies);
@@ -216,18 +183,10 @@ public class EngineBuilder {
             defaultLocale = Locale.getDefault();
         }
 
-//            if (cacheActive) {
-        // default caches
-//                if (templateCache == null) {
-//                    templateCache = CacheBuilder.newBuilder().maximumSize(200).build();
-//                }
-//                if (tagCache == null) {
-//                    tagCache = CacheBuilder.newBuilder().maximumSize(200).build();
-//                }
-//            } else {
-//                templateCache = CacheBuilder.newBuilder().maximumSize(0).build();
-//                tagCache = CacheBuilder.newBuilder().maximumSize(0).build();
-//            }
-        return new Engine(loader, syntax, strictVariables, defaultLocale, executorService, extensions);
+        ExtensionRegistry registry = new ExtensionRegistry(extensions);
+        Lexer lexer = new Lexer(syntax, registry.getUnaryOperators().values(), registry.getBinaryOperators().values());
+        Parser parser = new Parser(registry.getUnaryOperators(), registry.getBinaryOperators(), registry.getTokenParsers());
+
+        return new Engine(loader, lexer, parser, registry, strictVariables, defaultLocale, executorService);
     }
 }

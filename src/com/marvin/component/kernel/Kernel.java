@@ -1,40 +1,44 @@
 package com.marvin.component.kernel;
 
+
+import com.marvin.component.container.ContainerBuilder;
+import com.marvin.component.container.IContainer;
+import com.marvin.component.container.xml.XMLDefinitionReader;
+import com.marvin.component.container.extension.ExtensionInterface;
+
+import com.marvin.component.io.IResource;
+import com.marvin.component.io.loader.ClassPathResourceLoader;
+import com.marvin.component.kernel.bundle.Bundle;
+
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Collector;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
-
-import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.IContainer;
-import com.marvin.component.container.extension.ExtensionInterface;
-import com.marvin.component.container.xml.XMLDefinitionReader;
-import com.marvin.component.io.IResource;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.kernel.bundle.Bundle;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.logging.LogManager;
 
+import java.io.IOException;
 
 public abstract class Kernel {
     
     protected static final String VERSION = "v0.1";
     
-    protected final Logger logger = Logger.getLogger(getClass().getName());
-    
-    private final Collector<Bundle, ?, ConcurrentMap<String, Bundle>> bundleCollector = Collectors.toConcurrentMap(Bundle::getName, (Bundle bundle) -> {
+    protected final Collector<Bundle, ?, ConcurrentMap<String, Bundle>> bundleCollector = Collectors.toConcurrentMap(Bundle::getName, (Bundle bundle) -> {
         return bundle;
     });
 
+    protected final Logger logger = Logger.getLogger(getClass().getName());
+    
     private String rootDir;
     private String environment;
+    
     private boolean booted = false;
     private boolean debug  = false;
-    private Map<String, Bundle> bundles;
+    
     private IContainer container;
+    private Map<String, Bundle> bundles;
     
     abstract protected Bundle[] registerBundles();
 
@@ -60,7 +64,7 @@ public abstract class Kernel {
 
     public void boot() {
         if (isBooted()) {
-            this.logger.info("Kernel is already booted ...");
+            this.logger.warning("Kernel is already booted ...");
             return;
         }
         
@@ -112,7 +116,7 @@ public abstract class Kernel {
             IResource resource = loader.load(String.format("./config/logging_%s.properties", getEnvironment()));
             LogManager.getLogManager().readConfiguration(resource.getInputStream());
         } catch(IOException e) {
-            this.logger.info("Unable to load any logging configuration.");
+            this.logger.severe("Unable to load any logging configuration.");
         }
     }
 
@@ -160,7 +164,7 @@ public abstract class Kernel {
         return this.environment;
     }
     
-    protected String getRootDir() {
+    public String getRootDir() {
         if(this.rootDir == null) {
             this.rootDir = getClass().getPackage().getName().replaceAll("\\.", "/");
         }

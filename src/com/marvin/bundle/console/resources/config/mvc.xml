@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+<!--        <service id="command_attribute.argument_resolver" class="com.marvin.bundle.console.controller.argumentResolver.CommandAtributeValueResolver">
+            <tag name="argument_resolver" />
+        </service> -->
+        
+        <service id="console.controller_resolver" class="com.marvin.bundle.console.mvc.controller.CommandControllerResolver">
+            <argument type="service" ref="controller.name_parser"/>
+            <tag name="controller_resolver" />
+        </service>
+        
+    </services>
+</container>

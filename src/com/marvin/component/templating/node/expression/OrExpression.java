@@ -1,6 +1,6 @@
 package com.marvin.component.templating.node.expression;
 
-import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 
 public class OrExpression extends BinaryExpression<Boolean> {

@@ -29,8 +29,9 @@ public class FrameworkExtension extends Extension {
         ConfigurationInterface configuration = getConfiguration();
         Map<String, Object> config = processConfiguration(configuration, configs);
 
-        registerRouterConfiguration(config.get("router"), builder, reader);
-        
+        registerRouterConfiguration(config.get("router"), builder);
+        registerTemplatingConfiguration(config.get("templating"), builder);
+
 //            HashMap<String, Definition> taggedDefinitions = builder.findTaggedDefinitions("event_subscriber");
 //            for (Map.Entry<String, Definition> entrySet : taggedDefinitions.entrySet()) {
 //                String id = entrySet.getKey();
@@ -39,7 +40,7 @@ public class FrameworkExtension extends Extension {
 //            }
     }
 
-    private void registerRouterConfiguration(Object config, ContainerBuilder builder, XMLReader reader) {
+    private void registerRouterConfiguration(Object config, ContainerBuilder builder) {
         if(!(config instanceof Map)) {
             return;
         }
@@ -48,4 +49,12 @@ public class FrameworkExtension extends Extension {
         builder.addParameter("router.resource", conf.get("resource"));
     }
 
+    private void registerTemplatingConfiguration(Object config, ContainerBuilder builder) {
+        if(!(config instanceof Map)) {
+            return;
+        }
+        
+        Map<String, Object> conf = (Map<String, Object>) config;
+        builder.addParameter("templating.resource", conf.getOrDefault("resource", "/resources/view/"));
+    }
 }

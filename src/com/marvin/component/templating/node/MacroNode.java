@@ -8,7 +8,7 @@
  ******************************************************************************/
 package com.marvin.component.templating.node;
 
-import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.template.Macro;
 import com.marvin.component.templating.scope.ScopeChain;
 import com.marvin.component.templating.template.Template;

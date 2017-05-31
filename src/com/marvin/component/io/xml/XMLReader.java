@@ -3,9 +3,7 @@ package com.marvin.component.io.xml;
 import com.marvin.component.io.loader.DefaultResourceLoader;
 import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.io.IResource;
-import java.io.File;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,21 +40,21 @@ public abstract class XMLReader {
 
         if (!resource.exists()) {
             String msg = String.format("Resource %s does not exists, %s\n", location, this.resourceLoader);
-            this.logger.severe(msg);
+            this.logger.log(Level.SEVERE, msg);
             return;
         }
         
         this.context.setParent(location.substring(0, location.lastIndexOf("/")));
         read(resource);
     }
-
+    
     private void read(IResource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             InputSource inputSource = new InputSource(inputStream);
             doRead(inputSource, resource);
         } catch (Exception ex) {
             String msg = String.format("Unable to read resource %s, %s\n", resource, this.resourceLoader);
-            this.logger.severe(msg);
+            this.logger.log(Level.SEVERE, msg);
         }
     }
 

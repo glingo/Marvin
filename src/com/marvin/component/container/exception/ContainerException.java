@@ -1,6 +1,6 @@
 package com.marvin.component.container.exception;
 
-public class ContainerException extends Exception {
+public class ContainerException extends RuntimeException {
 
     public ContainerException() {}
 

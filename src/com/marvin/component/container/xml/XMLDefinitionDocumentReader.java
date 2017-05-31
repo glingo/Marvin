@@ -466,28 +466,53 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
     }
     
     private void replacePlaceHolders(Node node, ContainerBuilder builder) {
-        Pattern paramPattern = Pattern.compile("(%.*%)");
-        NodeList nl = node.getChildNodes();
+        if (null == node) {
+            return;
+        }
         
-        for (int i = 0; i < nl.getLength(); i++) {
-            Node child = nl.item(i);
-            if (child.getNodeType() == Node.TEXT_NODE) {
-                String content = child.getNodeValue().trim();
-                if (StringUtils.hasLength(content)) {
-                    Matcher paramMatcher = paramPattern.matcher(content);
-                    StringBuffer sb = new StringBuffer();
-                    while (paramMatcher.find()) {  
-                        String holder   = paramMatcher.group();
-                        String key      = holder.replaceAll("%", "");
-                        String value    = builder.getParameter(key, String.class);
-                        paramMatcher.appendReplacement(sb, value);
+        NamedNodeMap map = node.getAttributes();
+        for (int i = 0; i < map.getLength(); i++) {
+            Node child = map.item(i);
+            switch(child.getNodeType()) {
+                case Node.ATTRIBUTE_NODE: 
+                    String content = child.getNodeValue().trim();
+                    if (StringUtils.hasLength(content)) {
+                        String resolved = resolve(content, builder);
+                        child.setNodeValue(resolved);
                     }
-                    paramMatcher.appendTail(sb);
-                    child.setNodeValue(sb.toString());
-                }
-            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
-                replacePlaceHolders(child, builder);
+                    break;
             }
         }
+        
+        NodeList nl = node.getChildNodes(); 
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node child = nl.item(i);
+            switch(child.getNodeType()) {
+                case Node.TEXT_NODE: 
+                    String content = child.getNodeValue().trim();
+                    if (StringUtils.hasLength(content)) {
+                        child.setNodeValue(resolve(content, builder));
+                    }
+                    break;
+                    
+                case Node.ELEMENT_NODE: 
+                    replacePlaceHolders(child, builder);
+                    break;
+            }
+        }
+    }
+    
+    private String resolve(String content, ContainerBuilder builder) {
+        Pattern paramPattern = Pattern.compile("(%.*%)");
+        Matcher paramMatcher = paramPattern.matcher(content);
+        StringBuffer sb = new StringBuffer();
+        while (paramMatcher.find()) {  
+            String holder   = paramMatcher.group();
+            String key      = holder.replaceAll("%", "");
+            String value    = builder.getParameterWithDefault(key, content, String.class);
+            paramMatcher.appendReplacement(sb, value);
+        }
+        String resolved = paramMatcher.appendTail(sb).toString();
+        return resolved;
     }
 }

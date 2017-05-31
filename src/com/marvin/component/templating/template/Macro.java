@@ -1,5 +1,6 @@
 package com.marvin.component.templating.template;
 
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.extension.NamedArguments;
 import java.util.Map;
 

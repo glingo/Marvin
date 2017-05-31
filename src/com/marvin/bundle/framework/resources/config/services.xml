@@ -1,76 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container>
     
-    <parameters>
-    </parameters>
-    
-    <!-- 
-        Services declaration of : 
-            
-                        FrameworkBundle
-    -->
-    <services>
-        
-        <!-- resource loader -->
-        <service id="form_builder" class="com.marvin.component.io.loader.DefaultResourceLoader" />
-        
-        <!-- resource loader -->
-        <service id="resource_loader" class="com.marvin.component.io.loader.DefaultResourceLoader" />
-        
-        <!-- Translator definition -->
-        <service id="translator" class="com.marvin.component.translation.Translator" />
-        
-        <!-- event dispatcher definition -->
-        <service id="event_dispatcher" class="com.marvin.component.event.EventDispatcher" />
-        
-        <!-- controller name parser -->
-        <service id="controller.name_parser" class="com.marvin.component.kernel.controller.ControllerNameParser">
-            <argument type="service" ref="kernel"/>
-        </service>
-        
-        <!-- XmlRouteReader definition -->
-        <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
-            <argument type="service" ref="resource_loader"/>
-        </service>
-        
-        <service id="path_matcher" class="com.marvin.component.routing.matcher.PathMatcher" />
+    <import resource="resource.xml" />
+    <import resource="event.xml" />
+    <import resource="translator.xml" />
+    <import resource="router.xml" />
+    <import resource="templating.xml" />
+    <import resource="mvc.xml" />
 
-        <service id="matcher" class="com.marvin.component.routing.matcher.MatcherDelegate">
-            <argument>
-                <list>
-                    <argument type="service" ref="path_matcher"/>
-                </list>
-            </argument>
-        </service>
-        
-        <!-- Router definition -->
-        <service id="router" class="com.marvin.component.routing.Router">
-            <argument type="service"    ref="router.reader_xml" />
-            <argument type="parameter"  ref="router.resource" />
-            <argument type="service"    ref="matcher" />
-        </service>
-        
-        <!-- ViewResolverHandlerSubscriber definition -->
-        <service id="view.resolver_subscriber" class="com.marvin.bundle.framework.handler.subscriber.ViewResolverHandlerSubscriber">
-            <tag name="event_subscriber"/>
-        </service>
-        
-        <!-- Templating definition -->
-        <!--<service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build" />-->
-        
-        <service id="argument_metadata.factory" class="com.marvin.component.kernel.controller.argument.ArgumentMetadataFactory" />
-
-        <!-- ViewResolverHandlerSubscriber definition -->
-        <service id="argument_resolver" class="com.marvin.component.kernel.controller.argument.ArgumentResolver">
-            <argument type="service" ref="argument_metadata.factory" />
-        </service>
-        
-        <service id="default.argument_resolver" class="com.marvin.component.kernel.controller.argument.argumentResolver.DefaultValueResolver">
-            <tag name="argument_resolver" />
-        </service> 
-        
-        <service id="model.argument_resolver" class="com.marvin.bundle.framework.mvc.controller.ModelAndViewArgumentResolver">
-            <tag name="argument_resolver" />
-        </service>
-    </services>
 </container>

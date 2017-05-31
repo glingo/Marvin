@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -130,7 +131,7 @@ public class ServiceFactory {
             }
         } catch(Exception ex) {
             String msg = String.format("InstantiationException, we could not instatiate the service %s.", id);
-            this.logger.severe(msg);
+            this.logger.throwing(msg, "instanciate", ex);
         }
 
         // apply post instanciation
@@ -188,12 +189,17 @@ public class ServiceFactory {
         definition.getCalls().entrySet().stream().forEach((entrySet) -> {
             String name = entrySet.getKey();
             List<Object[]> args = entrySet.getValue();
-
-            args.stream().forEach((arg) -> {
-                Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class<?>[]) null);
-                ReflectionUtils.invokeMethod(call, service, resolveArguments(arg));
+            
+            args.stream().map(this::resolveArguments).forEach((arg) -> {
+//                Method call = ReflectionUtils.findMethod(service.getClass(), name, resolveArgumentsTypes(arg, null));
+                Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class[]) null);
+                applyCall(call, service, arg);
             });
         });
+    }
+    
+    private void applyCall(Method call, Object service, Object[] args) {
+        ReflectionUtils.invokeMethod(call, service, args);
     }
     
 }

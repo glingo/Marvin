@@ -1,10 +1,9 @@
 package com.marvin.component.event.subscriber;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import com.marvin.component.event.dispatcher.DispatcherInterface;
 
-public interface SubscriberInterface<T> {
+@FunctionalInterface
+public interface SubscriberInterface {
     
-    Map<String, Consumer<T>> getSubscribedEvents();
-    
+    void subscribe(DispatcherInterface dispatcher);
 }

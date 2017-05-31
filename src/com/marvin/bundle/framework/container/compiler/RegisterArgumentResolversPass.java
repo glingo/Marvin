@@ -3,6 +3,7 @@ package com.marvin.bundle.framework.container.compiler;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.compiler.passes.CompilerPassInterface;
 import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Reference;
 import java.util.HashMap;
 
 public class RegisterArgumentResolversPass implements CompilerPassInterface {
@@ -26,11 +27,10 @@ public class RegisterArgumentResolversPass implements CompilerPassInterface {
             // do nothing if not public
             
             // do nothing if abstract
-            Object resolver = builder.get(name);
+//            Object resolver = builder.get(name);
             
-            dispatcher.addCall("addResolver", resolver);
+            dispatcher.addCall("addResolver", new Reference(name));
         });
-
     }
     
 }

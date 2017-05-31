@@ -1,11 +1,13 @@
 package com.marvin.component.event.subscriber;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import com.marvin.component.event.dispatcher.DispatcherInterface;
+import java.util.logging.Logger;
 
-public abstract class Subscriber<T> implements SubscriberInterface<T> {
+public abstract class Subscriber implements SubscriberInterface {
+    
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
-    public abstract Map<String, Consumer<T>> getSubscribedEvents();
-    
+    public abstract void subscribe(DispatcherInterface dispatcher);
+
 }

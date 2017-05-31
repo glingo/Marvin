@@ -1,6 +1,6 @@
 package com.marvin.component.templating.node;
 
-import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import java.io.IOException;
@@ -9,9 +9,6 @@ import java.io.Writer;
 
 /**
  * Represents static text in a template.
- * 
- * @author mbosecke
- *
  */
 public class TextNode extends AbstractRenderableNode {
 

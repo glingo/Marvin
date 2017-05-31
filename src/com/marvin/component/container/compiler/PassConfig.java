@@ -130,7 +130,6 @@ public class PassConfig {
                 String msg = String.format("Invalid compiler pass type '%s'", type);
                 throw new Exception(msg);
         }
-        
     }
     
     private List<CompilerPassInterface> controlPasses(List<CompilerPassInterface> passes) {

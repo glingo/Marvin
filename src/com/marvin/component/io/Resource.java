@@ -114,5 +114,5 @@ public abstract class Resource implements IResource {
             }
         }
     }
-
+    
 }

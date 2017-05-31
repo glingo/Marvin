@@ -3,8 +3,7 @@ package com.marvin.component.routing;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,5 +128,26 @@ public class Route {
     
     public void addVariableName(String name) {
         getVariableNames().add(name);
+    }
+    
+    public static class RouteBuilder {
+        
+        private static String REPLACE_PATTERN = "\\{.*?\\}";
+        
+        private String path;
+
+        private List<String> variableNames;
+        
+        private Map<String, Object> defaults;
+        
+        private Map<String, Pattern> requirements;
+
+        private Pattern pattern;
+
+        public Route build() {
+            Route route = new Route();
+            
+            return route;
+        }
     }
 }

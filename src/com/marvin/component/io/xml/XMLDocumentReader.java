@@ -34,8 +34,7 @@ public class XMLDocumentReader {
         String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
 
         if (!StringUtils.hasText(location)) {
-            String msg = String.format("Resource location must not be empty at %s", ele);
-            this.logger.severe(msg);
+            this.logger.log(Level.SEVERE, "Resource location must not be empty at {0}", ele);
             return;
         }
         
@@ -43,7 +42,7 @@ public class XMLDocumentReader {
             location = String.format("%s/%s", this.context.getParent(), location);
         }
         
-        this.logger.log(Level.INFO, "IMPORT from : {0}", location);
+        this.logger.log(Level.FINEST, "IMPORT from : {0}", location);
 
         this.context.getReader().read(location);
     }

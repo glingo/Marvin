@@ -55,8 +55,8 @@ public class ContainerBuilder {
     }
     
     public void merge(ContainerBuilder builder) {
-        addDefinitions(builder.getDefinitions());
         addParameters(builder.getParameters());
+        addDefinitions(builder.getDefinitions());
         addAliases(builder.getAliases());
         addExtensions(builder.getExtensions());
     }

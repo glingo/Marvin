@@ -31,8 +31,6 @@ import com.marvin.component.templating.node.TextNode;
  * <p>
  * The implementor does not need to make sure that the implementation is thread-safe.
  *
- * @author Mitchell
- *
  */
 public interface NodeVisitor {
 

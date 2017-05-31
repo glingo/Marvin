@@ -3,11 +3,10 @@ package com.marvin.component.container.config;
 import java.util.HashMap;
 
 public class Tag {
-    
+
     protected String name;
-    
+
     protected HashMap<String, Object> parameters;
-    
 
     public void setName(String name) {
         this.name = name;
@@ -16,7 +15,7 @@ public class Tag {
     public String getName() {
         return name;
     }
-    
+
     public void setParameter(String key, Object parameter) {
         getParameters().put(key, parameter);
     }
@@ -26,10 +25,10 @@ public class Tag {
     }
 
     public HashMap<String, Object> getParameters() {
-        if(this.parameters == null) {
+        if (this.parameters == null) {
             this.parameters = new HashMap<>();
         }
         return parameters;
     }
-    
+
 }

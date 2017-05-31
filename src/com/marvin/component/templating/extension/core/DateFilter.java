@@ -1,6 +1,6 @@
 package com.marvin.component.templating.extension.core;
 
-import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.extension.Filter;
 import com.marvin.component.templating.extension.escaper.SafeString;
 import java.text.DateFormat;

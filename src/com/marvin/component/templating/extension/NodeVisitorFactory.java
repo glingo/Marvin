@@ -9,8 +9,6 @@ import com.marvin.component.templating.template.Template;
  * {@link Extension} can provide own implementation to provide their own
  * {@link NodeVisitor}s.
  *
- * @author Thomas Hunziker
- *
  */
 public interface NodeVisitorFactory {
 

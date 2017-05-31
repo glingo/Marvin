@@ -1,5 +1,7 @@
 package com.marvin.component.templating.template;
 
+import com.marvin.component.templating.Hierarchy;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.Engine;
 import com.marvin.component.templating.FutureWriter;
 import com.marvin.component.templating.scope.ScopeChain;
@@ -14,7 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * The actual implementation of a PebbleTemplate
+ * The actual implementation of a TemplateInterface
  */
 public class Template implements TemplateInterface {
 

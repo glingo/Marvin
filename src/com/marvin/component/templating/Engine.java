@@ -1,17 +1,18 @@
 package com.marvin.component.templating;
 
 import com.marvin.component.templating.template.Template;
-import com.marvin.component.templating.extension.Extension;
 import com.marvin.component.templating.extension.ExtensionRegistry;
 import com.marvin.component.templating.lexer.Lexer;
-import com.marvin.component.templating.lexer.Syntax;
 import com.marvin.component.templating.loader.LoaderInterface;
 import com.marvin.component.templating.node.RootNode;
 import com.marvin.component.templating.parser.Parser;
+import com.marvin.component.templating.scope.ScopeChain;
 import com.marvin.component.templating.token.TokenStream;
 import java.io.Reader;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -21,43 +22,37 @@ import java.util.concurrent.ExecutorService;
  */
 public class Engine {
 
-    private final LoaderInterface<?> loader;
-
-    private final Syntax syntax;
+    private final LoaderInterface loader;
+    
+    private final Lexer lexer;
+    
+    private final Parser parser;
 
     private final boolean strictVariables;
 
     private final Locale defaultLocale;
 
-//    private final Cache<BaseTagCacheKey, Object> tagCache;
     private final ExecutorService executorService;
 
-//    private final Cache<Object, PebbleTemplate> templateCache;
     private final ExtensionRegistry extensionRegistry;
 
-    /**
-     * Constructor for the Pebble Engine given an instantiated Loader. This
-     * method does only load those userProvidedExtensions listed here.
-     *
-     * @param loader The template loader for this engine
-     * @param syntax the syntax to use for parsing the templates.
-     * @param strictVariables
-     * @param defaultLocale
-     * @param executorService
-     * @param extensions The userProvidedExtensions which should be loaded.
-     */
-    public Engine(LoaderInterface<?> loader, Syntax syntax, boolean strictVariables, Locale defaultLocale, ExecutorService executorService, Collection<? extends Extension> extensions) {
+    public Engine(LoaderInterface loader, 
+        Lexer lexer,
+        Parser parser,
+        ExtensionRegistry extensionRegistry,
+        boolean strictVariables, 
+        Locale defaultLocale, 
+        ExecutorService executorService) {
 
         this.loader = loader;
-        this.syntax = syntax;
+        this.lexer = lexer;
+        this.parser = parser;
+        this.extensionRegistry = extensionRegistry;
         this.strictVariables = strictVariables;
         this.defaultLocale = defaultLocale;
-//        this.tagCache = tagCache;
         this.executorService = executorService;
-//        this.templateCache = templateCache;
-        this.extensionRegistry = new ExtensionRegistry(extensions);
     }
-
+        
     /**
      * Loads, parses, and compiles a template into an instance of PebbleTemplate
      * and returns this instance.
@@ -83,12 +78,10 @@ public class Engine {
         final Engine self = this;
         final Object cacheKey = this.loader.createCacheKey(templateName);
 
-        Lexer lexer = new Lexer(syntax, extensionRegistry.getUnaryOperators().values(), extensionRegistry.getBinaryOperators().values());
         Reader templateReader = self.retrieveReaderFromLoader(self.loader, cacheKey);
-        TokenStream tokenStream = lexer.tokenize(templateReader, templateName);
+        TokenStream tokenStream = this.lexer.tokenize(templateReader, templateName);
 
-        Parser parser = new Parser(extensionRegistry.getUnaryOperators(), extensionRegistry.getBinaryOperators(), extensionRegistry.getTokenParsers());
-        RootNode root = parser.parse(tokenStream);
+        RootNode root = this.parser.parse(tokenStream);
 
         Template instance = new Template(self, root, templateName);
 
@@ -98,6 +91,84 @@ public class Engine {
 
         return instance;
     }
+    
+    public void evaluate(Template template) throws Exception {
+        EvaluationContext context = initContext(template, null);
+        evaluate(template, context);
+    }
+
+    public void evaluate(Template template, Locale locale) throws Exception {
+        EvaluationContext context = initContext(template, locale);
+        evaluate(template, context);
+    }
+
+    public void evaluate(Template template, Map<String, Object> map) throws Exception {
+        EvaluationContext context = initContext(template, null);
+        context.getScopeChain().pushScope(map);
+        evaluate(template, context);
+    }
+
+    public void evaluate(Template template, Map<String, Object> map, Locale locale) throws Exception {
+        EvaluationContext context = initContext(template, locale);
+        context.getScopeChain().pushScope(map);
+        evaluate(template, context);
+    }
+    
+    /**
+     * This is the authoritative evaluate method. It will evaluate the template
+     * starting at the root node.
+     *
+     * @param writer  The writer used to write the final output of the template
+     * @param context The evaluation context
+     * @throws PebbleException Thrown if any sort of template error occurs
+     * @throws IOException     Thrown from the writer object
+     */
+    private void evaluate(Template template, EvaluationContext context) throws Exception {
+        
+        // Eval logic HERE 
+//        template.
+        
+//        rootNode.render(this, context);
+
+        /*
+         * If the current template has a parent then we know the current template
+         * was only used to evaluate a very small subset of tags such as "set" and "import".
+         * We now evaluate the parent template as to evaluate all of the actual content.
+         * When evaluating the parent template, it will check the child template for overridden blocks.
+         */
+        if (context.getHierarchy().getParent() != null) {
+            Template parent = context.getHierarchy().getParent();
+            context.getHierarchy().ascend();
+            evaluate(parent, context);
+        }
+    }
+    
+    
+    /**
+     * Initializes the evaluation context with settings from the engine.
+     *
+     * @param locale The desired locale
+     * @return The evaluation context
+     */
+    private EvaluationContext initContext(Template template, Locale locale) {
+        locale = locale == null ? getDefaultLocale() : locale;
+
+        // globals
+        Map<String, Object> globals = new HashMap<>();
+        globals.put("locale", locale);
+        globals.put("template", template);
+        ScopeChain scopeChain = new ScopeChain(globals);
+
+        // global vars provided from extensions
+        scopeChain.pushScope(getExtensionRegistry().getGlobalVariables());
+
+        EvaluationContext context = new EvaluationContext(template,
+                isStrictVariables(), locale,
+                getExtensionRegistry(), getExecutorService(),
+                new ArrayList<>(), scopeChain, null);
+        return context;
+    }
+
 
     /**
      * This method calls the loader and fetches the reader. We use this method
@@ -166,9 +237,9 @@ public class Engine {
      *
      * @return the syntax used by the PebbleEngine.
      */
-    public Syntax getSyntax() {
-        return this.syntax;
-    }
+//    public Syntax getSyntax() {
+//        return this.syntax;
+//    }
 
     /**
      * Returns the extension registry.

@@ -3,13 +3,9 @@ package com.marvin.component.kernel.bundle;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.awareness.ContainerAware;
 import com.marvin.component.container.extension.ExtensionInterface;
+
 import com.marvin.component.util.ClassUtils;
 
-/**
- * This is the first class-citizen.
- * 
- * @author cailly
- */
 public abstract class Bundle extends ContainerAware {
 
     private static final String EXTENSION_PATH = "%s.container.%sExtension";
@@ -65,7 +61,8 @@ public abstract class Bundle extends ContainerAware {
      * @return string The Bundle absolute path
      */
     public String getPath() {
-        return getClass().getName();
+//        return getClass().getName().replace(".", File.separator);
+        return getClass().getPackage().getName().replace(".", "/");
     }
     
     /**

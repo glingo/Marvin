@@ -1,15 +1,6 @@
-/*******************************************************************************
- * This file is part of Pebble.
- * <p>
- * Copyright (c) 2014 by Mitchell Bösecke
- * <p>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- ******************************************************************************/
 package com.marvin.component.templating.node;
 
-
-import com.marvin.component.templating.template.EvaluationContext;
+import com.marvin.component.templating.EvaluationContext;
 import com.marvin.component.templating.template.Template;
 import com.marvin.component.templating.extension.NodeVisitor;
 import java.io.Writer;

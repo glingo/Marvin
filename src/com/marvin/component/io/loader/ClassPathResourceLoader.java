@@ -1,7 +1,6 @@
 package com.marvin.component.io.loader;
 
 import com.marvin.component.io.resource.ClassPathResource;
-import com.marvin.component.io.IResource;
 import com.marvin.component.util.Assert;
 
 public class ClassPathResourceLoader extends DefaultResourceLoader {
@@ -20,7 +19,7 @@ public class ClassPathResourceLoader extends DefaultResourceLoader {
     }
 
     @Override
-    protected IResource getResourceByPath(String path) {
+    protected ClassPathResource getResourceByPath(String path) {
         return new ClassPathResource(path, this.clazz);
     }
 }

@@ -10,7 +10,7 @@ public class MergeExtensionCompilerPass implements CompilerPassInterface {
     
     @Override
     public void accept(ContainerBuilder builder) {
-//        Map<String, Object> parameters = builder.getParameters();
+        Map<String, Object> parameters = builder.getParameters();
 //        Map<String, Definition> definitions = builder.getDefinitions();
 //        Map<String, String> aliases = builder.getAliases();
         
@@ -19,6 +19,8 @@ public class MergeExtensionCompilerPass implements CompilerPassInterface {
         // deal with PrependExtension
         
         ContainerBuilder tmp = new ContainerBuilder();
+        
+        tmp.addParameters(parameters);
         
         builder.getExtensions().forEach((String name, ExtensionInterface extension) -> {
             if(builder.getExtensionConfig(name) == null) {

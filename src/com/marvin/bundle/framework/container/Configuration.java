@@ -1,6 +1,6 @@
 package com.marvin.bundle.framework.container;
 
-import com.marvin.component.configuration.*;
+import com.marvin.component.configuration.ConfigurationInterface;
 import com.marvin.component.configuration.builder.TreeBuilder;
 import com.marvin.component.configuration.builder.definition.NodeDefinition;
 
@@ -19,6 +19,14 @@ public class Configuration implements ConfigurationInterface {
                 .scalarNode("resource")
                     .info("Resource path")
                     .required()
+                .end()
+            .end()
+                
+            .arrayNode("templating")
+                .info("template engine configuration")
+                .scalarNode("resource")
+                    .info("Resource path")
+//                    .defaultValue("/resources/view/")
                 .end()
             .end()
         ;

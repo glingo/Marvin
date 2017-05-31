@@ -38,7 +38,7 @@ public abstract class FileResolvingResource extends Resource {
     protected File getFile(URI uri) throws IOException {
         return ResourceUtils.getFile(uri, getDescription());
     }
-
+    
     @Override
     public boolean exists() {
         try {
@@ -111,5 +111,6 @@ public abstract class FileResolvingResource extends Resource {
     protected void customizeConnection(HttpURLConnection con) throws IOException {
         con.setRequestMethod("HEAD");
     }
+
 
 }

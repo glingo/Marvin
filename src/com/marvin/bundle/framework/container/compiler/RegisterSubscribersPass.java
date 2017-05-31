@@ -3,12 +3,9 @@ package com.marvin.bundle.framework.container.compiler;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.compiler.passes.CompilerPassInterface;
 import com.marvin.component.container.config.Definition;
+import com.marvin.component.container.config.Reference;
 import java.util.HashMap;
 
-/**
- *
- * @author cdi305
- */
 public class RegisterSubscribersPass implements CompilerPassInterface {
     
     public final static String DISPATCHER_NAME = "event_dispatcher";
@@ -31,10 +28,11 @@ public class RegisterSubscribersPass implements CompilerPassInterface {
             
             // do nothing if abstract
             
-            // shall we instanciate the subscriber here ?
-            Object subscriber = builder.get(name);
+//            dispatcher.addCall("addSubscriber", definition);
             
-            dispatcher.addCall("addSubscriber", subscriber);
+            // shall we instanciate the subscriber here ?
+//            Object subscriber = builder.get(name);
+            dispatcher.addCall("register", new Reference(name));
         });
 
     }

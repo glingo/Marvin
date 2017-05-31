@@ -28,13 +28,9 @@ public class XMLDefinitionReader extends XMLReader {
     }
     
     @Override
-    protected void doRead(InputSource inputSource, IResource resource) {
-        try {
-            Document doc = doLoadDocument(inputSource, resource);
-            registerDefinitions(doc, resource);
-        } catch (Exception ex) {
-            this.logger.severe(ex.getMessage());
-        }
+    protected void doRead(InputSource inputSource, IResource resource) throws Exception {
+        Document doc = doLoadDocument(inputSource, resource);
+        registerDefinitions(doc, resource);
     }
     
     public void registerDefinitions(Document doc, IResource resource) {

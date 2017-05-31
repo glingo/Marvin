@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.marvin.component.container.factory.ServiceFactory;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Container implements IContainer {
@@ -58,7 +59,7 @@ public class Container implements IContainer {
         
         // in case of null object
         if(null == service) {
-            this.logger.info("The service you injected in container is null, we removed any instance.");
+            this.logger.log(Level.INFO, "The service {} you injected in container is null, we removed any instance.", id);
             // remove it from map
             getServices().remove(id);
             return;
@@ -123,6 +124,7 @@ public class Container implements IContainer {
     
     public Definition getDefinition(String id) {
         if(!hasDefinition(id)) {
+            this.logger.info(id);
             return null;
         }
         return getDefinitions().get(id);
