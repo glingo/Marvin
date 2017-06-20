@@ -16,5 +16,4 @@ public class CommandControllerResolver extends ContainerControllerResolver<Comma
         Object controller = command.getParameter("_controller");
         return castController(controller);
     }
-
 }

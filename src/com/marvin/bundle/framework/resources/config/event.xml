@@ -2,7 +2,6 @@
 <container>
     <services>
         <!-- event dispatcher definition -->
-        <service id="event_dispatcher" class="com.marvin.component.event.dispatcher.EventDispatcher" />
-        
+        <service id="event_dispatcher" class="com.marvin.component.event.dispatcher.Dispatcher" />
     </services>
 </container>

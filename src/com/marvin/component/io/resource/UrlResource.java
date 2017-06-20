@@ -236,4 +236,9 @@ public class UrlResource extends FileResolvingResource {
         return this.cleanedUrl.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "UrlResource{" + "uri=" + uri + ", url=" + url + ", cleanedUrl=" + cleanedUrl + '}';
+    }
+
 }

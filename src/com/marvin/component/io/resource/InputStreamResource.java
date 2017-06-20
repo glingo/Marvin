@@ -68,4 +68,9 @@ public class InputStreamResource extends Resource {
     public int hashCode() {
         return this.inputStream.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "InputStreamResource{" + "inputStream=" + inputStream + ", description=" + description + ", read=" + read + '}';
+    }
 }

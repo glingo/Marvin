@@ -44,7 +44,10 @@ public class XMLDocumentReader {
         
         this.logger.log(Level.FINEST, "IMPORT from : {0}", location);
 
+        String parent = this.context.getParent();
+        this.context.setParent(location.substring(0, location.lastIndexOf("/")));
         this.context.getReader().read(location);
+        this.context.setParent(parent);
     }
 
     public String getNamespaceURI(Node node) {

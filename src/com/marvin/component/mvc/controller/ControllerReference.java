@@ -33,5 +33,4 @@ public class ControllerReference {
     public String toString() {
         return String.format("ControllerReference (%s, %s)", this.holder, this.action);
     }
-    
 }

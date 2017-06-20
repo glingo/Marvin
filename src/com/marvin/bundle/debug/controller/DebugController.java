@@ -2,7 +2,7 @@ package com.marvin.bundle.debug.controller;
 
 import com.marvin.bundle.framework.controller.tomove.Controller;
 import com.marvin.component.event.Event;
-import com.marvin.component.event.dispatcher.EventDispatcher;
+import com.marvin.component.event.dispatcher.Dispatcher;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,10 +23,10 @@ public class DebugController extends Controller {
     
     public Object debugEvents(){
         HashMap<String, Object> context = new HashMap<>();
-        EventDispatcher dispatcher = this.get("event_dispatcher", EventDispatcher.class);
+        Dispatcher dispatcher = this.get("event_dispatcher", Dispatcher.class);
         
         try {
-            dispatcher.dispatch("event_test", new Event());
+            dispatcher.dispatch(new Event());
         } catch (Exception ex) {
             Logger.getLogger(DebugController.class.getName()).log(Level.SEVERE, null, ex);
         }

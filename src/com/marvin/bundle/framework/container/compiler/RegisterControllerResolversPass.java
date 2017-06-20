@@ -1,12 +1,12 @@
 package com.marvin.bundle.framework.container.compiler;
 
 import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.container.compiler.passes.CompilerPass;
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.Reference;
 import java.util.HashMap;
 
-public class RegisterControllerResolversPass implements CompilerPassInterface {
+public class RegisterControllerResolversPass implements CompilerPass {
     
     public final static String RESOLVER_NAME = "controller_resolver";
     public final static String RESOLVER_TAG = "controller_resolver";

@@ -212,4 +212,9 @@ public class ClassPathResource extends FileResolvingResource {
     public int hashCode() {
         return this.path.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "ClassPathResource{" + "path=" + path + ", classLoader=" + classLoader + ", clazz=" + clazz + '}';
+    }
 }

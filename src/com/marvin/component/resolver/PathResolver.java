@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class PathResolver<O> extends Resolver<String, O> {
+public abstract class PathResolver<O> implements Resolver<String, O> {
 
     private String prefix;
     private String sufix;

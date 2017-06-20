@@ -2,6 +2,7 @@ package com.marvin.component.container;
 
 import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.config.DefinitionBuilderInterface;
+import com.marvin.component.container.factory.ServiceFactory;
 import java.util.List;
 
 public interface ContainerBuilderInterface {

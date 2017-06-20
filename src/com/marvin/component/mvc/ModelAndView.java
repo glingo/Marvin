@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class ModelAndView {
 
-    // Typed as an object so we can store String and View objects in order to resolve it later.
     private Object view;
     private Model model;
 

@@ -5,20 +5,34 @@ import com.marvin.component.event.handler.Handler;
 import com.marvin.component.event.subscriber.SubscriberInterface;
 import java.util.Map;
 
-public interface DispatcherInterface<E extends Event> {
+public interface DispatcherInterface {
 
-    void dispatch(String name, E event) throws Exception;
-    void register(String name, Integer priority, Handler<E> handler);
+    <E extends Event> void dispatch(Class eventType, E event) throws Exception;
     
-    default void register(String name, Handler<E> handler) {
-        register(name, 1, handler);
+    default <E extends Event> void dispatch(E event) throws Exception {
+        if (event == null) {
+            return;
+        }
+        
+         dispatch(event.getClass(), event);
     }
     
-    default void register(String name, Map<Integer, Handler<E>> handlers) {
+    void register(Class eventType, Integer priority, Handler handler);
+    
+    default void register(Class eventType, Handler handler) {
+        register(eventType, 1, handler);
+    }
+    
+    default void register(Class eventType, Map<Integer, Handler> handlers) {
         if (handlers == null || handlers.isEmpty()) {
             return;
         }
         
-        handlers.forEach((priority, handler) -> register(name, priority, handler));
+        handlers.forEach((priority, handler) -> register(eventType, priority, handler));
     }
+    
+    default void register(SubscriberInterface subscriber) {
+        subscriber.subscribe(this);
+    }
+    
 }

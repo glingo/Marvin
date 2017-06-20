@@ -1,21 +1,21 @@
 package com.marvin.bundle.framework;
 
-import com.marvin.component.container.IContainer;
 import com.marvin.component.kernel.Kernel;
 import com.marvin.bundle.framework.mvc.Handler;
 import java.lang.reflect.Constructor;
-import java.util.logging.Logger;
+import java.util.Arrays;
 
-public abstract class Application {
+public abstract class Application extends Kernel {
     
-    protected static final Logger logger = Logger.getLogger(Application.class.getName());
-    protected static Application application = null;
-   
-    private final Kernel kernel;
+    protected static Application instance;
+    
+    protected static final String ENV_PARAMETER_PREFIX = "-env=";
+    protected static final String DEBUG_PARAMETER_PREFIX = "-debug=";
+    
     private Handler handler;
-    
-    protected Application(Kernel kernel) {
-        this.kernel = kernel;
+
+    public Application(String environment, boolean debug) {
+        super(environment, debug);
     }
     
     protected Handler getHandler() {
@@ -25,16 +25,19 @@ public abstract class Application {
         
         return this.handler;
     }
-    
-    public void initialize() throws Exception {
+
+    @Override
+    public void boot() {
+        super.boot();
         this.handler = getHandler();
         startup();
         waitForReady();
         ready();
     }
     
-    public void startup() throws Exception {
-    }
+    public void startup() {}
+    public void waitForReady() {}
+    public void ready() {}
     
     public void shutdown() {}
     
@@ -44,49 +47,50 @@ public abstract class Application {
         Runtime.getRuntime().exit(0);
     }
     
-    public void waitForReady() {};
-    public void ready() {};
-    
-    public IContainer getContainer(){
-        return this.kernel.getContainer();
+    public static synchronized <T extends Application> void launch(final Class<T> applicationClass, String[] args) {
+        try {
+            String env = Arrays.stream(args)
+                .filter(arg -> arg.startsWith(ENV_PARAMETER_PREFIX))
+                .map((param) -> {
+                    return param.replace(ENV_PARAMETER_PREFIX, "");
+                })
+                .findFirst().orElse("dev");
+
+            boolean debug = Arrays.stream(args)
+                .filter(arg -> arg.startsWith(DEBUG_PARAMETER_PREFIX))
+                .map((param) -> {
+                    return Boolean.getBoolean(param.replace(DEBUG_PARAMETER_PREFIX, ""));
+                })
+                .findFirst().orElse(true);
+
+            instance = create(applicationClass, env, debug);
+            instance.boot();
+        } catch (Exception e) {
+            String msg = String.format("Application %s failed to launch", applicationClass);
+            throw new Error(msg, e);
+        }
     }
     
-    public static synchronized <T extends Application> T getInstance(Class<T> applicationClass, Kernel kernel) {
-        if (application == null) {
+    public static synchronized <T extends Application> T getInstance(Class<T> applicationClass, String env, boolean debug) {
+        if (instance == null) {
             try {
-                application = create(applicationClass, kernel);
+                instance = create(applicationClass, env, debug);
             } catch (Exception e) {
                 String msg = String.format("Couldn't construct %s", applicationClass);
                 throw(new Error(msg, e));
             }
         }
-	return applicationClass.cast(application);
+	return applicationClass.cast(instance);
     }
     
-    public static synchronized <T extends Application> void launch(final Class<T> applicationClass, Kernel kernel) {
-        try {
-            application = create(applicationClass, kernel);
-            application.initialize();
-        } catch (Exception e) {
-            String msg = String.format("Application %s failed to launch", applicationClass);
-            throw(new Error(msg, e));
-        }
-    }
-    
-    public static <T extends Application> T create(Class<T> applicationClass, Kernel kernel) throws Exception {
-        /* Construct the Application object.  The following
-         * complications, relative to just calling
-         * applicationClass.newInstance(), allow a privileged app to
-         * have a private static inner Application subclass.
-         */
-        Constructor<T> ctor = applicationClass.getDeclaredConstructor(new Class[]{Kernel.class});
+    public static <T extends Application> T create(Class<T> kernelClass, String env, boolean debug) throws Exception {
+        Constructor<T> ctor = kernelClass.getConstructor(new Class[]{String.class, boolean.class});
+        
         if (!ctor.isAccessible()) {
             ctor.setAccessible(true);
         }
         
-        kernel.boot();
-                
-        T app = ctor.newInstance(kernel);
-        return app;
+        T kernel = ctor.newInstance(env, debug);
+        return kernel;
     }
 }

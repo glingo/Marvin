@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import com.marvin.component.mvc.ModelAndView;
 import com.marvin.component.mvc.controller.ControllerReference;
-import com.marvin.component.mvc.controller.ControllerResolverInterface;
+import com.marvin.component.mvc.controller.ControllerResolver;
 import com.marvin.component.mvc.controller.argument.ArgumentResolverInterface;
 import com.marvin.bundle.framework.mvc.event.ControllerEvents;
 import com.marvin.bundle.framework.mvc.event.FilterControllerArgumentsEvent;
@@ -36,12 +36,12 @@ public class Handler<I, O> {
     
     protected final Stack<I> stack;
     protected final DispatcherInterface dispatcher;
-    protected final ControllerResolverInterface ctrlResolver;
+    protected final ControllerResolver ctrlResolver;
     protected final ArgumentResolverInterface argsResolver;
     
     public Handler(
         DispatcherInterface dispatcher, 
-        ControllerResolverInterface ctrlResolver, 
+        ControllerResolver ctrlResolver, 
         ArgumentResolverInterface argsResolver, 
         Stack<I> stack
     ) {
@@ -53,7 +53,7 @@ public class Handler<I, O> {
     
     public Handler(
         DispatcherInterface dispatcher, 
-        ControllerResolverInterface ctrlResolver, 
+        ControllerResolver ctrlResolver, 
         ArgumentResolverInterface argsResolver
     ) {
         this(dispatcher, ctrlResolver, argsResolver, new Stack<>());
@@ -120,7 +120,7 @@ public class Handler<I, O> {
         
         // Dispatch event Request ( getModelAndView )
         GetResultEvent<I, O, R> re = new GetResultEvent(this, request, response, result);
-        this.dispatcher.dispatch(HandlerEvents.REQUEST, re);
+        this.dispatcher.dispatch(re);
         
         if(re.hasResult()) {
             return re.getResult();
@@ -139,7 +139,7 @@ public class Handler<I, O> {
         
         // Filter controller
         FilterControllerEvent fe = new FilterControllerEvent(this, controller);
-        this.dispatcher.dispatch(ControllerEvents.CONTROLLER, fe);
+        this.dispatcher.dispatch(fe);
        
         // Get the controller in case that the event changed it.
         controller = fe.getController();
@@ -149,7 +149,7 @@ public class Handler<I, O> {
         
         // Filter controller arguments
         FilterControllerArgumentsEvent argsEvent = new FilterControllerArgumentsEvent(this, controller, arguments);
-        this.dispatcher.dispatch(ControllerEvents.CONTROLLER_ARGUMENTS, argsEvent);
+        this.dispatcher.dispatch(argsEvent);
         
         controller = argsEvent.getController();
         arguments  = argsEvent.getArguments();
@@ -162,7 +162,7 @@ public class Handler<I, O> {
             // we trigger an event to resolve the returned type.
         
             FilterControllerResultEvent event = new FilterControllerResultEvent(this, controller, controllerResult, result);
-            this.dispatcher.dispatch(ControllerEvents.VIEW, event);
+            this.dispatcher.dispatch(event);
                 
             // get a ModelAndView for controller result
 //            GetModelAndViewForControllerResultEvent<R, T> event = new GetModelAndViewForControllerResultEvent(this, request, controllerResult);
@@ -196,7 +196,7 @@ public class Handler<I, O> {
         this.logger.finest("pre-filtering ...");
         
         FilterRequestEvent<I, O> fe = new FilterRequestEvent(this, request, response);
-        this.dispatcher.dispatch(HandlerEvents.FILTER_REQUEST, fe);
+        this.dispatcher.dispatch(fe);
     }
     
     protected <R> R filter(I request, O response, R result) throws Exception {
@@ -204,7 +204,7 @@ public class Handler<I, O> {
         this.logger.finest("Filtering ...");
         
         FilterResultEvent<I, O, R> fe = new FilterResultEvent(this, request, response, result);
-        this.dispatcher.dispatch(HandlerEvents.RESPONSE, fe);
+        this.dispatcher.dispatch(fe);
         
         return fe.getResult();
     }
@@ -214,7 +214,7 @@ public class Handler<I, O> {
         this.stack.pop();
         
         FinishRequestEvent<I, O> event = new FinishRequestEvent(this, request, response);
-        this.dispatcher.dispatch(HandlerEvents.FINISH_REQUEST, event);
+        this.dispatcher.dispatch(event);
     }
 
     private <R> R handleException(Exception exception, I request, O response, R result) throws Exception {
@@ -222,7 +222,7 @@ public class Handler<I, O> {
         this.logger.finest("Handle an exception.");
         
         GetResultForExceptionEvent<I, O, R> exceptionEvent = new GetResultForExceptionEvent(this, request, response, result, exception);
-        this.dispatcher.dispatch(HandlerEvents.EXCEPTION, exceptionEvent);
+        this.dispatcher.dispatch(exceptionEvent);
         
         exception = exceptionEvent.getException();
 //        this.logger.log(Level.WARNING, "Handeling an exception {}", exception);

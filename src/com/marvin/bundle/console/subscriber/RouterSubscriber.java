@@ -20,39 +20,37 @@ public class RouterSubscriber extends Subscriber {
         this.router = router;
     }
     
-    public void onRequest(FilterRequestEvent event){
-        Object request = event.getRequest();
+    public Handler<FilterRequestEvent> onRequest(){
+        return event -> {
+            Object request = event.getRequest();
 
-        if (request instanceof Command) {
-            Command command = (Command) event.getRequest();
+            if (request instanceof Command) {
+                Command command = (Command) event.getRequest();
 
-            String[] parts = command.getLine().split(" ");
+                String[] parts = command.getLine().split(" ");
 
-            command.setLine(parts[0]);
+                command.setLine(parts[0]);
 
-            Map<String, Object> attributes = this.router.match(command.getLine());
+                Map<String, Object> attributes = this.router.match(command.getLine());
 
-            if(attributes == null) {
-                attributes = new HashMap<>();
+                if(attributes == null) {
+                    attributes = new HashMap<>();
+                }
+
+    //                action = attributes.entrySet().stream()
+    //                        .filter((entry) -> entry.getValue() != null)
+    //                        .map((entry) -> "-".concat(entry.getKey()).concat("=").concat(entry.getValue().toString()))
+    //                        .map(action::concat)
+    //                        .collect(Collectors.joining(" "));
+
+                command.setParameters(attributes);
+
             }
-
-//                action = attributes.entrySet().stream()
-//                        .filter((entry) -> entry.getValue() != null)
-//                        .map((entry) -> "-".concat(entry.getKey()).concat("=").concat(entry.getValue().toString()))
-//                        .map(action::concat)
-//                        .collect(Collectors.joining(" "));
-
-            command.setParameters(attributes);
-
-        }
+        };
     }
     
-    public Handler<FilterRequestEvent> onRequest() {
-        return e -> onRequest(e);
-    }
-
     @Override
     public void subscribe(DispatcherInterface dispatcher) {
-        dispatcher.register(HandlerEvents.FILTER_REQUEST, 1, onRequest());
+        dispatcher.register(FilterRequestEvent.class, onRequest());
     }
 }

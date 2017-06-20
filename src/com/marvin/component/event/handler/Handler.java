@@ -1,9 +1,6 @@
 package com.marvin.component.event.handler;
 
-import com.marvin.component.event.Event;
-
 @FunctionalInterface
-public interface Handler<E extends Event> {
-    
+public interface Handler<E> {
     void handle(E event) throws Exception;
 }

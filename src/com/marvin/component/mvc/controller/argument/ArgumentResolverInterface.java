@@ -3,8 +3,7 @@ package com.marvin.component.mvc.controller.argument;
 import com.marvin.component.mvc.controller.ControllerReference;
 import java.util.List;
 
-public interface ArgumentResolverInterface {
-    
+@FunctionalInterface
+public interface ArgumentResolverInterface extends ArgumentMetadataFactory  {
     List<Object> getArguments(Object request, Object response, ControllerReference controller);
-    
 }

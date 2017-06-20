@@ -38,11 +38,11 @@ public class XmlRouteDocumentReader extends XMLDocumentReader {
 
     @Override
     protected void importResource(Element ele) {
-        String prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
-        if (StringUtils.hasLength(prefix)) {
-            this.prefix = prefix;
-            this.logger.log(Level.INFO, "Found a prefix : {}", this.prefix);
-        }
+//        String prefix = ele.getAttribute(PREFIX_ATTRIBUTE);
+//        if (StringUtils.hasLength(prefix)) {
+//            this.prefix = prefix;
+//            this.logger.log(Level.INFO, "Found a prefix : {}", this.prefix);
+//        }
         super.importResource(ele);
     }
 

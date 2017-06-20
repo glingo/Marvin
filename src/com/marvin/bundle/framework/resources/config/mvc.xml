@@ -4,11 +4,7 @@
     <services>
         
         <!-- Argument Resolver -->
-        <service id="argument_metadata.factory" class="com.marvin.component.mvc.controller.argument.ArgumentMetadataFactory" />
-        
-        <service id="argument_resolver" class="com.marvin.component.mvc.controller.argument.ArgumentResolver">
-            <argument type="service" ref="argument_metadata.factory" />
-        </service>
+        <service id="argument_resolver" class="com.marvin.component.mvc.controller.argument.ArgumentResolver" />
         
         <service id="default.argument_resolver" class="com.marvin.component.mvc.controller.argument.argumentResolver.DefaultValueResolver">
             <tag name="argument_resolver" />
@@ -26,7 +22,8 @@
         <!-- Controller Resolver -->
         <service id="controller_resolver" class="com.marvin.component.mvc.controller.ControllerResolverDelegate" />
         
-        <service id="class_name.controller_resolver" class="com.marvin.component.mvc.controller.ControllerResolver">
+        <service id="service.controller_resolver" class="com.marvin.bundle.framework.mvc.controller.ContainerControllerResolver">
+            <argument type="service" ref="controller.name_parser"/>
             <tag name="controller_resolver" />
         </service>
         
@@ -39,23 +36,28 @@
         
         <service id="view.container_resolver" class="com.marvin.bundle.framework.mvc.view.ContainerViewResolver">
             <tag name="view_resolver" />
-        </service> 
+        </service>
+        
+        <service id="view.class_resolver" class="com.marvin.bundle.framework.mvc.view.ViewClassResolver">
+            <argument type="service" ref="kernel"/>
+            <tag name="view_resolver" />
+        </service>
         
 <!--        <service id="view.resource_resolver" class="com.marvin.bundle.framework.mvc.view.PathViewResolver">
-            <argument type="java.lang.String" value="/resource/view/" />
-            <argument type="java.lang.String" value=".view"/>
+            <argument type="java.lang.String" value="resource.view." />
+            <argument type="java.lang.String" value="View"/>
             <tag name="view_resolver" />
-        </service> -->
-        
-        <service id="view.bundle_resource_resolver" class="com.marvin.bundle.framework.mvc.view.ResourceViewResolver">
+        </service>-->
+
+<!--        <service id="view.bundle_resource_resolver" class="com.marvin.bundle.framework.mvc.view.ResourceViewResolver">
             <argument type="service" ref="kernel"/>
             <argument type="service" ref="resource_loader"/>
             <argument type="service" ref="templating_engine"/>
             <argument type="java.lang.String" value="/resources/view/" />
             <argument type="java.lang.String" value=".view"/>
             <tag name="view_resolver" />
-        </service> 
-        
+        </service> -->
+
         <service id="response_subscriber" class="com.marvin.bundle.framework.subscriber.ResponseSubscriber">
             <argument type="service" ref="view_resolver"/>
             <tag name="event_subscriber"/>
@@ -70,7 +72,7 @@
         
         <!-- EXCEPTION -->
         <service id="exception.subscriber" class="com.marvin.bundle.framework.subscriber.ErrorSubscriber">
-            <argument type="java.lang.String" value="error/error" />
+            <argument type="java.lang.String" value="Framework:error:error" />
             <tag name="event_subscriber"/>
         </service>
     </services>

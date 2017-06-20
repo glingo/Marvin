@@ -1,6 +1,6 @@
 package com.marvin.component.container.compiler;
 
-import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.container.compiler.passes.CompilerPass;
 import com.marvin.component.container.compiler.passes.MergeExtensionCompilerPass;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +13,21 @@ public class PassConfig {
     public final static String REMOVING             = "removing";
     public final static String OPTIMIZATION         = "optimization";
     
-    protected CompilerPassInterface mergePass;
+    protected CompilerPass mergePass;
     
-    protected List<CompilerPassInterface> beforeOptimizationPasses;
-    protected List<CompilerPassInterface> optimizationPasses;
-    protected List<CompilerPassInterface> beforeRemovingPasses;
-    protected List<CompilerPassInterface> removingPasses;
-    protected List<CompilerPassInterface> afterRemovingPasses;
+    protected List<CompilerPass> beforeOptimizationPasses;
+    protected List<CompilerPass> optimizationPasses;
+    protected List<CompilerPass> beforeRemovingPasses;
+    protected List<CompilerPass> removingPasses;
+    protected List<CompilerPass> afterRemovingPasses;
 
     public PassConfig() {
         this.mergePass = new MergeExtensionCompilerPass();
     }
     
-    public List<CompilerPassInterface> getPasses() {
+    public List<CompilerPass> getPasses() {
         
-        List<CompilerPassInterface> passes = new ArrayList<>();
+        List<CompilerPass> passes = new ArrayList<>();
         
         passes.add(this.mergePass);
         passes.addAll(getBeforeOptimizationPasses());
@@ -39,27 +39,27 @@ public class PassConfig {
         return passes;        
     }
     
-    public List<CompilerPassInterface> getOptimizationPasses(){
+    public List<CompilerPass> getOptimizationPasses(){
         return controlPasses(this.optimizationPasses);
     }
     
-    public List<CompilerPassInterface> getRemovingPasses(){
+    public List<CompilerPass> getRemovingPasses(){
         return controlPasses(this.removingPasses);
     }
     
-    public List<CompilerPassInterface> getAfterRemovingPasses(){
+    public List<CompilerPass> getAfterRemovingPasses(){
         return controlPasses(this.afterRemovingPasses);
     }
     
-    public List<CompilerPassInterface> getBeforeRemovingPasses(){
+    public List<CompilerPass> getBeforeRemovingPasses(){
         return controlPasses(this.beforeRemovingPasses);
     }
     
-    public List<CompilerPassInterface> getBeforeOptimizationPasses(){
+    public List<CompilerPass> getBeforeOptimizationPasses(){
         return controlPasses(this.beforeOptimizationPasses);
     }
     
-    public void addOptimizationPass(CompilerPassInterface pass){
+    public void addOptimizationPass(CompilerPass pass){
         
         if(this.optimizationPasses == null) {
             this.optimizationPasses = new ArrayList<>();
@@ -68,7 +68,7 @@ public class PassConfig {
         this.optimizationPasses.add(pass);
     }
     
-    public void addRemovingPass(CompilerPassInterface pass){
+    public void addRemovingPass(CompilerPass pass){
         
         if(this.removingPasses == null) {
             this.removingPasses = new ArrayList<>();
@@ -77,7 +77,7 @@ public class PassConfig {
         this.removingPasses.add(pass);
     }
     
-    public void addAfterRemovingPass(CompilerPassInterface pass){
+    public void addAfterRemovingPass(CompilerPass pass){
         
         if(this.afterRemovingPasses == null) {
             this.afterRemovingPasses = new ArrayList<>();
@@ -86,7 +86,7 @@ public class PassConfig {
         this.afterRemovingPasses.add(pass);
     }
     
-    public void addBeforeRemovingPass(CompilerPassInterface pass){
+    public void addBeforeRemovingPass(CompilerPass pass){
         
         if(this.beforeRemovingPasses == null) {
             this.beforeRemovingPasses = new ArrayList<>();
@@ -95,7 +95,7 @@ public class PassConfig {
         this.beforeRemovingPasses.add(pass);
     }
     
-    public void addBeforeOptimizationPass(CompilerPassInterface pass){
+    public void addBeforeOptimizationPass(CompilerPass pass){
         
         if(this.beforeOptimizationPasses == null) {
             this.beforeOptimizationPasses = new ArrayList<>();
@@ -104,7 +104,7 @@ public class PassConfig {
         this.beforeOptimizationPasses.add(pass);
     }
     
-    public void addPass(CompilerPassInterface pass, String type) throws Exception {
+    public void addPass(CompilerPass pass, String type) {
         switch(type) {
             case AFTER_REMOVING :
                 addAfterRemovingPass(pass);
@@ -128,11 +128,11 @@ public class PassConfig {
                 
             default:
                 String msg = String.format("Invalid compiler pass type '%s'", type);
-                throw new Exception(msg);
+                throw new IllegalArgumentException(msg);
         }
     }
     
-    private List<CompilerPassInterface> controlPasses(List<CompilerPassInterface> passes) {
+    private List<CompilerPass> controlPasses(List<CompilerPass> passes) {
         
         if(passes == null) {
             passes = new ArrayList<>();

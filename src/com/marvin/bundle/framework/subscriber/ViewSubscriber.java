@@ -2,7 +2,6 @@ package com.marvin.bundle.framework.subscriber;
 
 import com.marvin.component.mvc.ModelAndView;
 import com.marvin.component.mvc.view.ViewInterface;
-import com.marvin.bundle.framework.mvc.event.ControllerEvents;
 import com.marvin.bundle.framework.mvc.event.FilterControllerResultEvent;
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.event.handler.Handler;
@@ -12,9 +11,6 @@ import java.util.Map;
 public class ViewSubscriber extends Subscriber {
 
     public static final String VIEW_PARAMETER = "_view";
-    
-    public ViewSubscriber() {
-    }
     
     public Handler<FilterControllerResultEvent> onView() {
         return event -> {
@@ -48,6 +44,6 @@ public class ViewSubscriber extends Subscriber {
     
     @Override
     public void subscribe(DispatcherInterface dispatcher) {
-        dispatcher.register(ControllerEvents.VIEW, onView());
+        dispatcher.register(FilterControllerResultEvent.class, onView());
     }
 }

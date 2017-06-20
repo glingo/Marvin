@@ -1,5 +1,6 @@
 package com.marvin.bundle.framework.mvc.view;
 
+import com.marvin.component.container.exception.ContainerException;
 import com.marvin.component.mvc.view.ViewInterface;
 import com.marvin.component.mvc.view.ViewResolverInterface;
 import com.marvin.component.resolver.ContainerResolver;
@@ -8,5 +9,10 @@ public class ContainerViewResolver extends ContainerResolver<ViewInterface> impl
 
     public ContainerViewResolver() {
         super(ViewInterface.class);
+    }
+
+    @Override
+    public ViewInterface resolve(String name) throws ContainerException {
+        return super.resolve(name);
     }
 }

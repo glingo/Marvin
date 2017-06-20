@@ -1,7 +1,7 @@
 package com.marvin.component.container.compiler;
 
 import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.container.compiler.passes.CompilerPass;
 import java.util.logging.Logger;
 
 public class Compiler {
@@ -27,7 +27,7 @@ public class Compiler {
     }
     
     public void compile(ContainerBuilder builder){
-        getPassConfig().getPasses().forEach((CompilerPassInterface pass) -> {
+        getPassConfig().getPasses().forEach((CompilerPass pass) -> {
             pass.accept(builder);
         });
     }

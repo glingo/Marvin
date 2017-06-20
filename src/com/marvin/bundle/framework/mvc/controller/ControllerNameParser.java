@@ -32,7 +32,7 @@ public class ControllerNameParser {
         if(bundle == null) {
             String msg = String.format(
                 "The '%s' (from the _controller value '%s') does not exist or is not enabled in your kernel!.", 
-                fragments[0],
+                name,
                 original
             );
             

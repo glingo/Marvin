@@ -2,18 +2,15 @@ package com.marvin.bundle.console;
 
 import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.Application;
-import com.marvin.component.kernel.Kernel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public class ConsoleApplication extends Application {
-    
-    protected static final String ENV_PARAMETER_PREFIX = "-env=";
+public abstract class ConsoleApplication extends Application {
 
-    protected ConsoleApplication(Kernel kernel) {
-        super(kernel);
+    public ConsoleApplication(String env, boolean debug) {
+        super(env, debug);
     }
     
     @Override
@@ -35,9 +32,10 @@ public class ConsoleApplication extends Application {
                 cmd = read();
             }
         } catch (Exception ex) {
-            throw(new Error("Something went wrong ! ", ex));
+            throw new Error("Something went wrong ! ", ex);
         }
     }
+    
     private String read() throws IOException {
         if (System.console() != null) {
             return System.console().readLine();
@@ -48,16 +46,7 @@ public class ConsoleApplication extends Application {
         return bf.readLine();
     }
     
-    private String read(String what) throws IOException {
-        if (System.console() != null) {
-            return System.console().readLine(what);
-        }
-        System.out.println();
+    private void print(String what) throws IOException {
         System.out.println(what);
-        Reader reader = new InputStreamReader(System.in);
-        BufferedReader bf = new BufferedReader(reader);
-        
-        return bf.readLine();
     }
-    
 }

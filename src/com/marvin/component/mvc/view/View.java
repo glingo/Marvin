@@ -1,7 +1,7 @@
 package com.marvin.component.mvc.view;
 
 import com.marvin.bundle.framework.mvc.Handler;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public abstract class View<I, O> implements ViewInterface<I, O> {
@@ -18,6 +18,6 @@ public abstract class View<I, O> implements ViewInterface<I, O> {
     public abstract void load() throws Exception;
 
     @Override
-    public abstract void render(Handler<I, O> handler, HashMap<String, Object> model, I request, O response) throws Exception;
+    public abstract void render(Handler<I, O> handler, Map<String, Object> model, I request, O response) throws Exception;
     
 }

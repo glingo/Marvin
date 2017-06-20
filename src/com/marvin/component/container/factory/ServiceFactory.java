@@ -15,17 +15,43 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ServiceFactory {
-    protected final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
     
     private Container container;
     
     public ServiceFactory(Container container) {
         this.container = container;
+    }
+    
+    
+    public Object instanciate(String id, Definition definition) {
+        Object service = null;
+        
+        // resolve arguments
+        Object[] arguments = resolveArguments(definition.getArguments());
+
+        try{
+            // if we have a factory use it to build the service.
+            if (StringUtils.hasLength(definition.getFactoryName())) {
+                service = callFactory(id, definition, arguments);
+            } else {
+                service = callConstructor(id, definition, arguments);
+            }
+        } catch(Exception ex) {
+            String msg = String.format("We could not instatiate the service %s.", id);
+            throw new IllegalArgumentException(msg);
+        }
+
+        // apply post instanciation
+        postInstanciate(id, definition, service);
+
+        this.container.set(id, service);
+
+        return service;
     }
     
     private Object resolveArgument(Object arg) {
@@ -55,47 +81,9 @@ public class ServiceFactory {
         return Arrays.stream(arguments).map(this::resolveArgument).toArray();
     }
     
-    private Class resolveArgumentType(Object argument, Class given) {
-        if(null == argument) {
-            return given;
-        }
-        
-        if(null != given && ClassUtils.isAssignable(given, argument.getClass())) {
-            return given;
-        }
-        
-        return argument.getClass();
-    }
-    
-    private Class[] resolveArgumentsTypes(Object[] arguments, Class[] given) {
-        if(null == arguments) {
-            return new Class[]{};
-        }
-        
-        int len = arguments.length;
-        int givenLength = 0;
-        
-        if(given != null) {
-            givenLength = given.length;
-        }
-        
-        Class[] types = new Class[len];
-        for (int i = 0; i < len; i++) {
-            Class wanted = null;
-            
-            if(i < givenLength) {
-                wanted = given[i];
-            }
-            
-            types[i] = resolveArgumentType(arguments[i], wanted);
-        }
-        
-        return types;
-    }
-    
     private Constructor<Object> resolveConstructor(String className, Object[] arguments) {
         Class type = ClassUtils.resolveClassName(className, null);
-        Class[] argumentsTypes = resolveArgumentsTypes(arguments, null);
+        Class[] argumentsTypes = ReflectionUtils.resolveArgumentsTypes(arguments, null);
         
         if(ClassUtils.hasConstructor(type, argumentsTypes)) {
             return ClassUtils.getConstructorIfAvailable(type, argumentsTypes);
@@ -110,37 +98,12 @@ public class ServiceFactory {
             }
             
             Class[] wanted = cstr.getParameterTypes();
-            Class[] types = resolveArgumentsTypes(arguments, wanted);
+            Class[] types = ReflectionUtils.resolveArgumentsTypes(arguments, wanted);
             
             return ClassUtils.hasConstructor(type, types);
         }).findFirst().orElse(null);
     }
     
-    public Object instanciate(String id, Definition definition) {
-        Object service = null;
-        
-        // resolve arguments
-        Object[] arguments = resolveArguments(definition.getArguments());
-
-        try{
-            // if we have a factory use it to build the service.
-            if (StringUtils.hasLength(definition.getFactoryName())) {
-                service = callFactory(id, definition, arguments);
-            } else {
-                service = callConstructor(id, definition, arguments);
-            }
-        } catch(Exception ex) {
-            String msg = String.format("InstantiationException, we could not instatiate the service %s.", id);
-            this.logger.throwing(msg, "instanciate", ex);
-        }
-
-        // apply post instanciation
-        postInstanciate(id, definition, service);
-
-        this.container.set(id, service);
-
-        return service;
-    }
     
     private Object callFactory(String id, Definition definition, Object[] arguments) throws Exception {
         // assume that args are resolved !
@@ -156,12 +119,14 @@ public class ServiceFactory {
         return ReflectionUtils.invokeMethod(method, factory.newInstance(), arguments);
     }
     
-    private Object callConstructor(String id, Definition definition, Object[] arguments) throws Exception {
+    private Object callConstructor(String id, Definition definition, Object[] arguments) {
         Constructor<Object> constructor = resolveConstructor(definition.getClassName(), arguments);
-        if(null == constructor) {
-            throw new Exception(String.format("We could not find constructor for %s", id));
+        
+        try {
+            return constructor.newInstance(arguments);
+        } catch (Exception exception) {
+            throw new IllegalArgumentException(String.format("We could not find constructor for %s", id));
         }
-        return constructor.newInstance(arguments);
     }
     
     private void postInstanciate(String id, Definition definition, Object service) {
@@ -171,11 +136,11 @@ public class ServiceFactory {
             
         applyAwareness(service);
 
-        // call methods if there is
+        // call any registered methods if there is
         applyCalls(id, definition, service);
     }
     
-     private void applyAwareness(Object service){
+    private void applyAwareness(Object service){
         if (service instanceof ContainerAwareInterface) {
             ((ContainerAwareInterface) service).setContainer(container);
         }
@@ -190,16 +155,21 @@ public class ServiceFactory {
             String name = entrySet.getKey();
             List<Object[]> args = entrySet.getValue();
             
-            args.stream().map(this::resolveArguments).forEach((arg) -> {
-//                Method call = ReflectionUtils.findMethod(service.getClass(), name, resolveArgumentsTypes(arg, null));
-                Method call = ReflectionUtils.findMethod(service.getClass(), name, (Class[]) null);
-                applyCall(call, service, arg);
-            });
+            args.stream()
+                .map(this::resolveArguments)
+                .forEach((a) -> {
+                    Class[] parameters = ReflectionUtils.resolveArgumentsTypes(a);
+                    Method call = ReflectionUtils.findMethod(service.getClass(), name, parameters);
+                    if (call == null) {
+                        System.out.println(String.format("No method found for %s (%s) (%s)", name, Arrays.toString(parameters), Arrays.toString(a)));
+                        return;
+                    }
+                    applyCall(call, service, a);
+                });
         });
     }
     
     private void applyCall(Method call, Object service, Object[] args) {
         ReflectionUtils.invokeMethod(call, service, args);
     }
-    
 }

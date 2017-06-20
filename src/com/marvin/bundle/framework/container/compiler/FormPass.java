@@ -1,11 +1,11 @@
 package com.marvin.bundle.framework.container.compiler;
 
 import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.container.compiler.passes.CompilerPass;
 import com.marvin.component.container.config.Definition;
 import java.util.HashMap;
 
-public class FormPass implements CompilerPassInterface {
+public class FormPass implements CompilerPass {
     
     public final static String DISPATCHER_NAME = "event_dispatcher";
     public final static String SUBSCRIBER_TAG = "event_subscriber";

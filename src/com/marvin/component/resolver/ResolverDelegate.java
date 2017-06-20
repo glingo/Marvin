@@ -5,42 +5,42 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class ResolverDelegate<I, O> implements ResolverInterface<I, O> {
+public class ResolverDelegate<I, O> implements Resolver<I, O> {
 
-    protected Collection<ResolverInterface<I, O>> resolvers;
+    protected Collection<Resolver> resolvers;
 
     public ResolverDelegate() {
         this.resolvers = new ArrayList<>();
     }
     
-    public ResolverDelegate(Collection<ResolverInterface<I, O>> resolvers) {
+    public ResolverDelegate(Collection<Resolver> resolvers) {
         this.resolvers = resolvers;
     }
     
     @Override
     public O resolve(I name) throws Exception {
-        for (ResolverInterface<I, O> resolver : getResolvers()) {
-            O view = resolver.resolve(name);
-            if (Objects.nonNull(view)) {
-                return view;
+        for (Resolver<I, O> resolver : getResolvers()) {
+            O result = resolver.resolve(name);
+            if (Objects.nonNull(result)) {
+                return result;
             }
         }
         
         return null;
     }
 
-    public Collection<ResolverInterface<I, O>> getResolvers() {
+    public Collection<Resolver> getResolvers() {
         if(this.resolvers == null) {
             this.resolvers = new ArrayList<>();
         }
         return this.resolvers;
     }
 
-    public void setResolvers(List<ResolverInterface<I, O>> resolvers) {
+    public void setResolvers(List<Resolver> resolvers) {
         this.resolvers = resolvers;
     }
     
-    public void addResolver(ResolverInterface<I, O> resolver) {
+    public void addResolver(Resolver resolver) {
         getResolvers().add(resolver);
     }
 }

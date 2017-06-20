@@ -1,16 +1,16 @@
 package com.marvin.component.mvc.controller;
 
+import com.marvin.component.resolver.Resolver;
 import com.marvin.component.util.ClassUtils;
 import java.lang.reflect.Method;
 
-public class ControllerResolver<T> implements ControllerResolverInterface<T> {
+public interface ControllerResolver<T> extends Resolver<T, ControllerReference> {
     
-    protected ControllerReference instantiateController(Class<?> controller, Method meth) throws Exception {
+    default ControllerReference instantiateController(Class<?> controller, Method meth) throws Exception {
         return new ControllerReference(controller.newInstance(), meth);
     }
     
-    protected ControllerReference createController(String name) throws Exception {
-        
+    default ControllerReference createController(String name) throws Exception {
         if (false == name.contains("::")) {
             String msg = String.format("Unable to find controller '%s'.", name);
             throw new Exception(msg);
@@ -27,7 +27,7 @@ public class ControllerResolver<T> implements ControllerResolverInterface<T> {
         return instantiateController(clazz, action);
     }
     
-    protected ControllerReference castController(Object controller) throws Exception {
+    default ControllerReference castController(Object controller) throws Exception {
         if(controller == null) {
             return null;
         }
@@ -43,9 +43,7 @@ public class ControllerResolver<T> implements ControllerResolverInterface<T> {
         return null;
     }
 
-    @Override
-    public ControllerReference resolve(T request) throws Exception {
+    default ControllerReference resolve(T request) throws Exception {
         return castController(request);
     }
-    
 }

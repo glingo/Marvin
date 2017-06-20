@@ -5,7 +5,7 @@ import com.marvin.component.container.extension.ExtensionInterface;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class MergeExtensionCompilerPass implements CompilerPassInterface {
+public class MergeExtensionCompilerPass implements CompilerPass {
     protected final Logger logger = Logger.getLogger(getClass().getName());
     
     @Override

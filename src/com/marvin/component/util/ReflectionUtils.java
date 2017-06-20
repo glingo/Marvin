@@ -170,8 +170,20 @@ public abstract class ReflectionUtils {
         while (searchType != null) {
             Method[] methods = (searchType.isInterface() ? searchType.getMethods() : getDeclaredMethods(searchType));
             for (Method method : methods) {
+                Class[] needs = method.getParameterTypes();
+                Class[] types = Arrays.copyOf(paramTypes, needs.length);
+                if (paramTypes != null && paramTypes.length == needs.length) {
+                    for (int i = 0; i < types.length; i++) {
+                        Class type = types[i];
+                        Class needed = needs[i];
+                        if (needed.isAssignableFrom(type)) {
+                            types[i] = needed;
+                        }
+                    }
+                }
+                
                 if (name.equals(method.getName())
-                        && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
+                        && (types == null || Arrays.equals(types, method.getParameterTypes()))) {
                     return method;
                 }
             }
@@ -258,6 +270,48 @@ public abstract class ReflectionUtils {
         throw new IllegalStateException("Should never get here");
     }
 
+    public static Class resolveArgumentType(Object argument, Class given) {
+        if(null == argument) {
+            return given;
+        }
+        
+        if(null != given && ClassUtils.isAssignable(given, argument.getClass())) {
+            return given;
+        }
+        
+        return argument.getClass();
+    }
+    
+    public static Class[] resolveArgumentsTypes(Object[] arguments, Class[] given) {
+        if(null == arguments) {
+            return new Class[]{};
+        }
+        
+        int len = arguments.length;
+        int givenLength = 0;
+        
+        if(given != null) {
+            givenLength = given.length;
+        }
+        
+        Class[] types = new Class[len];
+        for (int i = 0; i < len; i++) {
+            Class wanted = null;
+            
+            if(i < givenLength) {
+                wanted = given[i];
+            }
+            
+            types[i] = resolveArgumentType(arguments[i], wanted);
+        }
+        
+        return types;
+    }
+    
+    public static Class[] resolveArgumentsTypes(Object[] arguments) {
+        return resolveArgumentsTypes(arguments, null);
+    }
+    
     /**
      * Handle the given reflection exception. Should only be called if no
      * checked exception is expected to be thrown by the target method.

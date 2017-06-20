@@ -9,5 +9,4 @@ public abstract class Subscriber implements SubscriberInterface {
 
     @Override
     public abstract void subscribe(DispatcherInterface dispatcher);
-
 }

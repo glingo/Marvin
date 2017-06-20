@@ -4,20 +4,20 @@ public class ArgumentMetadata {
     
     private String name;
     private Class type;
-    private boolean isVariadic;
+    private boolean variadic;
     private boolean hasDefaultValue = false;
     private Object defaultValue;
 
-    public ArgumentMetadata(String name, Class type, boolean isVariadic) {
+    public ArgumentMetadata(String name, Class type, boolean variadic) {
         this.name = name;
         this.type = type;
-        this.isVariadic = isVariadic;
+        this.variadic = variadic;
     }
     
-    public ArgumentMetadata(String name, Class type, boolean isVariadic, Object defaultValue) {
+    public ArgumentMetadata(String name, Class type, boolean variadic, Object defaultValue) {
         this.name = name;
         this.type = type;
-        this.isVariadic = isVariadic;
+        this.variadic = variadic;
         this.hasDefaultValue = true;
         this.defaultValue = defaultValue;
     }
@@ -38,12 +38,12 @@ public class ArgumentMetadata {
         this.type = type;
     }
 
-    public boolean isIsVariadic() {
-        return isVariadic;
+    public boolean isVariadic() {
+        return variadic;
     }
 
-    public void setIsVariadic(boolean isVariadic) {
-        this.isVariadic = isVariadic;
+    public void setVariadic(boolean variadic) {
+        this.variadic = variadic;
     }
 
     public boolean hasDefaultValue() {
@@ -58,6 +58,4 @@ public class ArgumentMetadata {
         this.defaultValue = defaultValue;
         this.hasDefaultValue = true;
     }
-    
-    
 }

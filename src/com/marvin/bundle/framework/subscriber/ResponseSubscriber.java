@@ -1,14 +1,12 @@
 package com.marvin.bundle.framework.subscriber;
 
 import com.marvin.bundle.framework.mvc.event.FilterResultEvent;
-import com.marvin.bundle.framework.mvc.event.HandlerEvents;
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.event.handler.Handler;
 import com.marvin.component.event.subscriber.Subscriber;
 import com.marvin.component.mvc.ModelAndView;
 import com.marvin.component.mvc.view.ViewInterface;
 import com.marvin.component.mvc.view.ViewResolverInterface;
-import java.util.Objects;
 
 public class ResponseSubscriber extends Subscriber {
     
@@ -31,14 +29,14 @@ public class ResponseSubscriber extends Subscriber {
             ModelAndView mav = (ModelAndView) result;
             Object view = mav.getView();
             
-            if (view == null) {
-                throw new Exception("No view for this controller");
-            }
-            
             if(view instanceof String) {
                 view = this.viewResolver.resolve(view.toString());
             }
 
+            if (view == null) {
+                throw new Exception("No view for this controller");
+            }
+            
             mav.setView(view);
 
             // render view ?
@@ -48,6 +46,6 @@ public class ResponseSubscriber extends Subscriber {
     
     @Override
     public void subscribe(DispatcherInterface dispatcher) {
-        dispatcher.register(HandlerEvents.RESPONSE, onResponse());
+        dispatcher.register(FilterResultEvent.class, onResponse());
     }
 }

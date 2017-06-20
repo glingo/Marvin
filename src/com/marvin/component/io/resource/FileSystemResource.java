@@ -198,4 +198,9 @@ public class FileSystemResource extends Resource implements WritableResource {
         return this.path.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "FileSystemResource{" + "file=" + file + ", path=" + path + '}';
+    }
+
 }

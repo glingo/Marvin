@@ -10,7 +10,7 @@ import com.marvin.component.container.config.Definition;
 import com.marvin.component.container.extension.ExtensionInterface;
 import com.marvin.component.container.compiler.Compiler;
 import com.marvin.component.container.compiler.PassConfig;
-import com.marvin.component.container.compiler.passes.CompilerPassInterface;
+import com.marvin.component.container.compiler.passes.CompilerPass;
 
 public class ContainerBuilder {
     protected final Logger logger = Logger.getLogger(getClass().getName());
@@ -28,11 +28,13 @@ public class ContainerBuilder {
     }
 
     public Container build() {
+        this.logger.log(Level.FINEST, "building {}", this);
         compile();
         return getContainer();
     }
     
     private void compile(){
+        this.logger.log(Level.FINEST, "compiling {}", this);
         getCompiler().compile(this);
     }
     
@@ -55,6 +57,7 @@ public class ContainerBuilder {
     }
     
     public void merge(ContainerBuilder builder) {
+        this.logger.log(Level.FINEST, "merging {}", builder);
         addParameters(builder.getParameters());
         addDefinitions(builder.getDefinitions());
         addAliases(builder.getAliases());
@@ -188,10 +191,10 @@ public class ContainerBuilder {
         return this.extensions;
     }
     
-    public ExtensionInterface getExtension(String name) throws Exception {
+    public ExtensionInterface getExtension(String name) {
         if(!getExtensions().containsKey(name)) {
             String msg = String.format("Container's extension '%s' is not registered", name);
-            throw new Exception(msg);
+            throw new IllegalArgumentException(msg);
         }
         
         return getExtensions().get(name);
@@ -229,11 +232,11 @@ public class ContainerBuilder {
         return this.compiler;
     }
     
-    public void addCompilerPass(CompilerPassInterface pass) throws Exception {
+    public void addCompilerPass(CompilerPass pass) {
         addCompilerPass(pass, PassConfig.BEFORE_OPTIMIZATION);
     }
     
-    public void addCompilerPass(CompilerPassInterface pass, String type) {
+    public void addCompilerPass(CompilerPass pass, String type) {
         if(null == pass) {
             return;
         }

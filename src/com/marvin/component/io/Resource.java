@@ -114,5 +114,10 @@ public abstract class Resource implements IResource {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "Resource{exists ? " + this.exists() + '}';
+    }
     
 }

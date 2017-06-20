@@ -8,8 +8,6 @@ public class Controller extends ContainerAware {
     
     protected FormBuilder createFormBuilder(String name, Object data) {
         FormBuilder builder = new FormBuilder(name, new FormType(name, data));
-        
         return builder;
     }
-    
 }

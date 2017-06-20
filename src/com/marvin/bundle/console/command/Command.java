@@ -46,4 +46,9 @@ public class Command {
     public Object getParameter(String name, Object orElse) {
         return this.parameters.getOrDefault(name, orElse);
     }
+
+    @Override
+    public String toString() {
+        return "Command{" + "parameters=" + parameters + ", line=" + line + '}';
+    }
 }
