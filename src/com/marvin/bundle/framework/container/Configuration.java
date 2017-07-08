@@ -24,9 +24,9 @@ public class Configuration implements ConfigurationInterface {
                 
             .arrayNode("templating")
                 .info("template engine configuration")
-                .scalarNode("resource")
-                    .info("Resource path")
-//                    .defaultValue("/resources/view/")
+                .scalarNode("engine")
+                    .info("Engine")
+                    .defaultValue("console")
                 .end()
             .end()
         ;

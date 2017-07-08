@@ -1,9 +1,5 @@
 package com.marvin.component.templating.token;
 
-/**
- *
- * @author cdi305
- */
 public enum Type {
     EOF, 
     TEXT, 

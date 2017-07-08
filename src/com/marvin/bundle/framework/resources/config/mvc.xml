@@ -38,11 +38,16 @@
             <tag name="view_resolver" />
         </service>
         
-        <service id="view.class_resolver" class="com.marvin.bundle.framework.mvc.view.ViewClassResolver">
+        <service id="view.name_parser" class="com.marvin.bundle.framework.mvc.view.ViewNameParser">
             <argument type="service" ref="kernel"/>
-            <tag name="view_resolver" />
+            <argument type="parameter" ref="templating.engine"/>
         </service>
         
+        <service id="view.class_resolver" class="com.marvin.bundle.framework.mvc.view.ViewClassResolver">
+            <argument type="service" ref="view.name_parser"/>
+            <tag name="view_resolver" />
+        </service>
+
 <!--        <service id="view.resource_resolver" class="com.marvin.bundle.framework.mvc.view.PathViewResolver">
             <argument type="java.lang.String" value="resource.view." />
             <argument type="java.lang.String" value="View"/>

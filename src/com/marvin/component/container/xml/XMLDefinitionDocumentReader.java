@@ -173,7 +173,7 @@ public class XMLDefinitionDocumentReader extends XMLDocumentReader {
                 Class type = ClassUtils.forName(typeAttr, getClass().getClassLoader());
                 return parser.parse(type, value);
             } catch (ClassNotFoundException ex) {
-                this.logger.severe(ex.getMessage());
+                throw new IllegalArgumentException("Could not find any Type " + typeAttr);
             }
         } else if (subElement != null) {
             return parseSubElement(subElement);

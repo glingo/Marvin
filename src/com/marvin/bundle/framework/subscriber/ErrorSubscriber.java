@@ -13,7 +13,7 @@ public class ErrorSubscriber extends Subscriber {
     public ErrorSubscriber(String errorPath) {
         this.errorPath = errorPath;
     }
-    
+
     private Handler<GetResultForExceptionEvent> onException() {
         // try to get the old model ?
         return e -> {

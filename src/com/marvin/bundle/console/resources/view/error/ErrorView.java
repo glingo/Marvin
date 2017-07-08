@@ -1,6 +1,5 @@
-package com.marvin.bundle.framework.resources.view.error;
+package com.marvin.bundle.console.resources.view.error;
 
-import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.mvc.Handler;
 import com.marvin.component.mvc.model.Model;
 import com.marvin.component.mvc.view.View;

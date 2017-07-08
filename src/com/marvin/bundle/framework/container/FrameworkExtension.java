@@ -20,11 +20,6 @@ public class FrameworkExtension extends Extension {
         XMLReader reader = new XMLDefinitionReader(loader, builder);
 
         reader.read("resources/config/services.xml");
-//            reader.read("resources/config/templating.xml");
-//            reader.read("resources/config/routing.xml");
-//            reader.read("resources/config/web.xml");
-//            reader.read("resources/config/shell.xml");
-//            reader.read("resources/config/server.xml");
 
         ConfigurationInterface configuration = getConfiguration();
         Map<String, Object> config = processConfiguration(configuration, configs);
@@ -55,6 +50,6 @@ public class FrameworkExtension extends Extension {
         }
         
         Map<String, Object> conf = (Map<String, Object>) config;
-        builder.addParameter("templating.resource", conf.getOrDefault("resource", "/resources/view/"));
+        builder.addParameter("templating.engine", conf.getOrDefault("engine", "console"));
     }
 }

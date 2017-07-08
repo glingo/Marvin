@@ -2,7 +2,6 @@ package com.marvin.bundle.console.subscriber;
 
 import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.mvc.event.FilterRequestEvent;
-import com.marvin.bundle.framework.mvc.event.HandlerEvents;
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.event.handler.Handler;
 import com.marvin.component.event.subscriber.Subscriber;

@@ -4,26 +4,15 @@ import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.mvc.Handler;
 import com.marvin.component.mvc.model.Model;
 import com.marvin.component.mvc.view.View;
-import com.marvin.component.mvc.view.ViewInterface;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class ConsoleView extends View<Command, OutputStream> {
@@ -82,6 +71,13 @@ public abstract class ConsoleView extends View<Command, OutputStream> {
         out.write('\n');
     }
     
+    protected void erase(int number, OutputStream out) throws IOException {
+        for (int i = 0; i < number; i++) {
+            out.write('\b');
+        }
+        out.write('\n');
+    }
+    
     protected void center(int w, String value, OutputStream writer) throws IOException {
         int center = ((w/2) - (value.length() / 2) - 1);
         for (int i = 0; i < center; i++) {
@@ -103,8 +99,19 @@ public abstract class ConsoleView extends View<Command, OutputStream> {
                 stream.write(part);
                 stream.flush();
                 Thread.sleep(500);
-                stream.write('\b');
+//                stream.write('\b');
+                stream.write("\033[H\033[2J".getBytes());
                 stream.flush();
+//                
+//                String cmd="cls";
+//                try {
+//                    Runtime r = Runtime.getRuntime();
+//                    Process p = r.exec(cmd);
+//                    //Attente que le process soit fini
+//                    p.waitFor(); 
+//                } catch(IOException | InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
             start = Instant.now();
         }
