@@ -7,7 +7,6 @@ import com.marvin.component.mvc.ModelAndView;
 import com.marvin.component.mvc.controller.ControllerReference;
 import com.marvin.component.mvc.controller.ControllerResolver;
 import com.marvin.component.mvc.controller.argument.ArgumentResolverInterface;
-import com.marvin.bundle.framework.mvc.event.ControllerEvents;
 import com.marvin.bundle.framework.mvc.event.FilterControllerArgumentsEvent;
 import com.marvin.bundle.framework.mvc.event.FilterControllerEvent;
 import com.marvin.bundle.framework.mvc.event.FilterControllerResultEvent;
@@ -16,7 +15,6 @@ import com.marvin.bundle.framework.mvc.event.FilterResultEvent;
 import com.marvin.bundle.framework.mvc.event.FinishRequestEvent;
 import com.marvin.bundle.framework.mvc.event.GetResultEvent;
 import com.marvin.bundle.framework.mvc.event.GetResultForExceptionEvent;
-import com.marvin.bundle.framework.mvc.event.HandlerEvents;
 import com.marvin.bundle.framework.mvc.exception.ControllerNotFoundException;
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.util.ReflectionUtils;
@@ -153,6 +151,8 @@ public class Handler<I, O> {
         
         controller = argsEvent.getController();
         arguments  = argsEvent.getArguments();
+        
+        this.logger.log(Level.FINER, String.format("Invoke %s(%s)", controller.getAction(), arguments));
         
         // invoke controller
         Object controllerResult = ReflectionUtils.invokeMethod(controller.getAction(), controller.getHolder(), arguments.toArray());

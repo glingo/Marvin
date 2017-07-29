@@ -15,6 +15,7 @@ public interface ArgumentMetadataFactory {
                 // maybe throw an exception ?
                 System.err.println("No name provided !");
             }
+            System.err.println("Name : ".concat(param.getName()));
             arguments.add(new ArgumentMetadata(param.getName(), param.getType(), param.isVarArgs()));
         }
         return arguments;

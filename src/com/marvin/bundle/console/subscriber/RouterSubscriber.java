@@ -10,6 +10,8 @@ import com.marvin.component.routing.Router;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import org.jline.reader.ParsedLine;
 
 public class RouterSubscriber extends Subscriber {
 
@@ -22,15 +24,14 @@ public class RouterSubscriber extends Subscriber {
     public Handler<FilterRequestEvent> onRequest(){
         return event -> {
             Object request = event.getRequest();
-
             if (request instanceof Command) {
                 Command command = (Command) event.getRequest();
 
                 String[] parts = command.getLine().split(" ");
-
                 command.setLine(parts[0]);
 
                 Map<String, Object> attributes = this.router.match(command.getLine());
+                this.logger.log(Level.FINEST, String.format("Attributes %s", attributes));
 
                 if(attributes == null) {
                     attributes = new HashMap<>();
@@ -43,7 +44,6 @@ public class RouterSubscriber extends Subscriber {
     //                        .collect(Collectors.joining(" "));
 
                 command.setParameters(attributes);
-
             }
         };
     }

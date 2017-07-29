@@ -17,6 +17,7 @@ public class ErrorSubscriber extends Subscriber {
     private Handler<GetResultForExceptionEvent> onException() {
         // try to get the old model ?
         return e -> {
+            e.getException().printStackTrace();
             e.setResult(ModelAndView.builder()
                 .model("exception", e.getException())
                 .model("result", e.getResult())
