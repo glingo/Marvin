@@ -1,5 +1,7 @@
 package com.marvin.component.routing;
 
+import com.marvin.component.util.PathUtils;
+import com.marvin.component.util.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,16 @@ public class Route {
         super();
     }
     
+    public Route(String path) {
+        super();
+        this.path = path;
+    }
+    
+    public Route(String... parts) {
+        super();
+        this.path = String.join("", parts);
+    }
+    
     public void compile(){
         if(this.compiled) {
             return;
@@ -38,13 +50,14 @@ public class Route {
         
         while (matcher.find()) {
             String key = matcher.group().replaceAll("[{}]", "");
-            addVariableName(key);
+            if(!getRequirements().containsKey(key)){
+                continue;
+            }
             
-            if(getRequirements().containsKey(key)){
-                Pattern value = getRequirements().get(key);
-                if(value != null){
-                    matcher.appendReplacement(sb, "(?<" + key + ">" + value.pattern() + ")");
-                }
+            addVariableName(key);
+            Pattern value = getRequirements().get(key);
+            if(value != null){
+                matcher.appendReplacement(sb, "(?<" + key + ">" + value.pattern() + ")");
             }
         }
         
@@ -81,7 +94,7 @@ public class Route {
         this.defaults = defaults;
     }
 
-    public HashMap<String, Object> getDefaults() {
+    public Map<String, Object> getDefaults() {
         if(this.defaults == null){
             this.defaults = new HashMap<>();
         }
@@ -130,24 +143,17 @@ public class Route {
         getVariableNames().add(name);
     }
     
-    public static class RouteBuilder {
+    public static Route fromPath(String path) {
+        return new Route(path);
+    }
+    
+    public static Route fromPath(String... parts) {
+        String path = String.join("", parts);
         
-        private static String REPLACE_PATTERN = "\\{.*?\\}";
-        
-        private String path;
-
-        private List<String> variableNames;
-        
-        private Map<String, Object> defaults;
-        
-        private Map<String, Pattern> requirements;
-
-        private Pattern pattern;
-
-        public Route build() {
-            Route route = new Route();
-            
-            return route;
+        if (path.endsWith("/") && path.length() > 1) {
+            path = StringUtils.trimTrailingCharacter(path, '/');
         }
+        
+        return new Route(path);
     }
 }

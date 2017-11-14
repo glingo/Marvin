@@ -5,9 +5,10 @@ import com.marvin.component.configuration.ConfigurationInterface;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.extension.Extension;
 import com.marvin.component.container.xml.XMLDefinitionReader;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.xml.XMLReader;
+import com.marvin.component.resource.ResourceService;
+import com.marvin.component.resource.loader.ClasspathResourceLoader;
+import com.marvin.component.resource.reference.ResourceReference;
+import com.marvin.component.xml.XMLReader;
 
 import java.util.Map;
 
@@ -15,8 +16,10 @@ public class ConsoleExtension extends Extension {
 
     @Override
     public void load(Map<String, Object> configs, ContainerBuilder builder) {
-        ResourceLoader loader = new ClassPathResourceLoader(ConsoleBundle.class);
-        XMLReader reader = new XMLDefinitionReader(loader, builder);
+        ResourceService service = ResourceService.builder()
+                .with(ResourceReference.CLASSPATH, new ClasspathResourceLoader(ConsoleBundle.class))
+                .build();
+        XMLReader reader = new XMLDefinitionReader(service, builder);
 
         reader.read("resources/config/services.xml");
         

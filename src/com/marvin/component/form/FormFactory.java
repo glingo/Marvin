@@ -1,6 +1,5 @@
 package com.marvin.component.form;
 
-import com.marvin.component.form.support.FormType;
 import com.marvin.component.util.ClassUtils;
 import com.marvin.component.util.ReflectionUtils;
 import java.lang.reflect.Constructor;

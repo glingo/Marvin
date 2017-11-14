@@ -1,10 +1,9 @@
 package com.marvin.component.container.xml;
 
 import com.marvin.component.container.ContainerBuilder;
-import com.marvin.component.io.loader.ResourceLoader;
-import com.marvin.component.io.IResource;
-import com.marvin.component.io.xml.DocumentLoader;
-import com.marvin.component.io.xml.XMLReader;
+import com.marvin.component.resource.ResourceService;
+import com.marvin.component.xml.DocumentLoader;
+import com.marvin.component.xml.XMLReader;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -13,27 +12,22 @@ public class XMLDefinitionReader extends XMLReader {
 
     protected ContainerBuilder containerBuilder;
     
-    public XMLDefinitionReader(ContainerBuilder containerBuilder) {
-        super();
+    public XMLDefinitionReader(ResourceService resourceService, ContainerBuilder containerBuilder) {
+        this(resourceService);
         this.containerBuilder = containerBuilder;
     }
     
-    public XMLDefinitionReader(ResourceLoader loader) {
-        super(loader, new DocumentLoader());
-    }
-
-    public XMLDefinitionReader(ResourceLoader resourceLoader, ContainerBuilder containerBuilder) {
-        this(resourceLoader);
-        this.containerBuilder = containerBuilder;
+    public XMLDefinitionReader(ResourceService resourceService) {
+        super(resourceService, new DocumentLoader());
     }
     
     @Override
-    protected void doRead(InputSource inputSource, IResource resource) throws Exception {
-        Document doc = doLoadDocument(inputSource, resource);
-        registerDefinitions(doc, resource);
+    protected void doRead(InputSource inputSource) throws Exception {
+        Document doc = doLoadDocument(inputSource);
+        registerDefinitions(doc);
     }
     
-    public void registerDefinitions(Document doc, IResource resource) {
+    public void registerDefinitions(Document doc) {
         XMLDefinitionDocumentReader documentReader = new XMLDefinitionDocumentReader(this.context);
         documentReader.registerDefinitions(doc, getContainerBuilder());
     }

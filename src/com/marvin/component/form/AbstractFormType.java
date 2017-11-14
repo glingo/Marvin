@@ -4,6 +4,7 @@ import com.marvin.component.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public abstract class AbstractFormType<T> implements FormTypeInterface<T> {
     
@@ -64,7 +65,11 @@ public abstract class AbstractFormType<T> implements FormTypeInterface<T> {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
+    @Override
+    public void visit(Consumer<FormTypeInterface> visitor) {
+        this.getChildren().stream().forEach(visitor);
+    }
     
     @Override
     public List<FormTypeInterface> getChildren() {

@@ -1,17 +1,15 @@
 package com.marvin.component.kernel;
 
-
-import com.marvin.bundle.framework.Application;
-import static com.marvin.bundle.framework.Application.create;
 import com.marvin.component.container.ContainerBuilder;
 import com.marvin.component.container.IContainer;
 import com.marvin.component.container.xml.XMLDefinitionReader;
 import com.marvin.component.container.extension.ExtensionInterface;
 
-import com.marvin.component.io.IResource;
-import com.marvin.component.io.loader.ClassPathResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
 import com.marvin.component.kernel.bundle.Bundle;
+import com.marvin.component.resource.ResourceService;
+import com.marvin.component.resource.loader.ClasspathResourceLoader;
+import com.marvin.component.resource.loader.FileResourceLoader;
+import com.marvin.component.resource.reference.ResourceReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.logging.Logger;
 import java.util.logging.LogManager;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
 
@@ -38,7 +36,8 @@ public abstract class Kernel {
     private Map<String, Bundle> bundles;
     
     private IContainer container;
-    private ResourceLoader resourceLoader;
+    private ResourceService resourceService;
+//    private ResourceLoader resourceLoader;
     
     public Kernel() {
         this("dev", true);
@@ -83,10 +82,11 @@ public abstract class Kernel {
     }
     
     protected void registerLoggingConfiguration() {
-        try {
-            IResource resource = getResourceLoader().load(String.format("./config/logging_%s.properties", getEnvironment()));
-            LogManager.getLogManager().readConfiguration(resource.getInputStream());
-        } catch(IOException e) {
+//            IResource resource = getResourceLoader().load(String.format("./config/logging_%s.properties", getEnvironment()));
+        String path = String.format("classpath:config/logging_%s.properties", getEnvironment());
+        try(InputStream is = getResourceService().load(path)) {
+            LogManager.getLogManager().readConfiguration(is);
+        } catch(Exception e) {
             this.logger.info("Unable to load any logging configuration.");
         }
     }
@@ -132,7 +132,8 @@ public abstract class Kernel {
         builder.set("kernel", this);
         // Inject the container as a service.
         builder.set("container", builder.getContainer());
-        builder.set("kernel.resource_loader", getResourceLoader());
+//        builder.set("kernel.resource_loader", getResourceLoader());
+        builder.set("kernel.resource_service", getResourceService());
 
         this.container = builder.build();
 
@@ -145,16 +146,28 @@ public abstract class Kernel {
         
         // maybe add more reader here
         // like an yml reader, Configuration class ...
-        XMLDefinitionReader reader  = new XMLDefinitionReader(getResourceLoader(), builder);
-        String location = String.format("./config/config_%s.xml", getEnvironment());
+        XMLDefinitionReader reader  = new XMLDefinitionReader(getResourceService(), builder);
+        String location = String.format("classpath:config/config_%s.xml", getEnvironment());
         reader.read(location);
     }
     
-    private ResourceLoader getResourceLoader() {
-        if (this.resourceLoader == null) {
-            this.resourceLoader = new ClassPathResourceLoader(getClass());
+//    private ResourceLoader getResourceLoader() {
+//        if (this.resourceLoader == null) {
+//            this.resourceLoader = new ClassPathResourceLoader(getClass());
+//        }
+//        return this.resourceLoader;
+//    }
+    
+    private ResourceService getResourceService() {
+        if (this.resourceService == null) {
+            this.resourceService = ResourceService.builder()
+                .with(ResourceReference.FILE, FileResourceLoader.instance())
+                .with(ResourceReference.CLASSPATH, new ClasspathResourceLoader(getClass()))
+                .with(ResourceReference.CLASSPATH, new ClasspathResourceLoader(ClassLoader.getSystemClassLoader()))
+                .build();
         }
-        return this.resourceLoader;
+        
+        return this.resourceService;
     }
     
     public void terminate() {

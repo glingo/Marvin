@@ -3,7 +3,7 @@ package com.marvin.component.routing.matcher;
 import com.marvin.component.routing.MatcherInterface;
 import com.marvin.component.routing.RouteCollection;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Map;
 
 public class MatcherDelegate implements MatcherInterface {
 
@@ -14,7 +14,7 @@ public class MatcherDelegate implements MatcherInterface {
     }
     
     @Override
-    public HashMap<String, Object> match(RouteCollection collection, String matchable) {
+    public Map<String, Object> match(RouteCollection collection, String matchable) {
         if(this.matchers == null) {
             return null;
         }

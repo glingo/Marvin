@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    
+    <service id="crud_controller" class="marvin.demo.bundle.zombie.controller.ZombieController">
+    </service>
+
+    <service id="location_repository" class="marvin.demo.bundle.zombie.repository.LocationRepository" />
+
+    <service id="location_manager" class="marvin.demo.bundle.zombie.business.LocationManager">
+        <argument type="service" ref="location_repository"/>
+    </service>
+
+    <service id="location_controller" class="marvin.demo.bundle.zombie.controller.LocationController">
+        <argument type="service" ref="location_manager"/>
+    </service>
+    
+</container>

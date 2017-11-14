@@ -4,23 +4,8 @@ import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.mvc.Handler;
 import com.marvin.component.mvc.model.Model;
 import com.marvin.component.mvc.view.View;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.time.Instant;
 import java.util.Map;
-import java.util.Objects;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
 
 public abstract class ConsoleView extends View<Command, Terminal> {
     
@@ -53,7 +38,6 @@ public abstract class ConsoleView extends View<Command, Terminal> {
     protected String getBody(Handler<Command, Terminal> handler, Model model, Command request, Terminal response) throws Exception{
         return "Default body";
     }
-    
 }
     
 //        OutputStream stream = new BufferedOutputStream(AnsiConsole.wrapOutputStream(response));

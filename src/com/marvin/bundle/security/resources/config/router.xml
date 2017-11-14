@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        <!-- Router subscriber definition -->
+        <service id="router.subscriber" class="com.marvin.bundle.console.subscriber.RouterSubscriber">
+            <argument type="service" ref="router"/>
+            <tag name="event_subscriber"/>
+        </service>
+    </services>
+</container>

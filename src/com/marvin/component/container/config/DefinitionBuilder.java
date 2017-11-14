@@ -4,7 +4,6 @@ import java.util.List;
 
 public class DefinitionBuilder implements DefinitionBuilderInterface {
 
-    
     public static void main(String[] args) {
         Definition def = DefinitionBuilderInterface.definition().name("test");
         System.out.println(def);

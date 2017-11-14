@@ -20,7 +20,7 @@ public abstract class Bundle extends ContainerAware {
      * @return Bundle
      */
     public Bundle boot() {
-        this.logger.log(Level.FINEST, "booting {}", this.getName());
+        this.logger.log(Level.FINEST, "booting {0}", getName());
         
         // real bundles will add specific tasks here
         
@@ -33,7 +33,7 @@ public abstract class Bundle extends ContainerAware {
      * @param builder
      */
     public void build(ContainerBuilder builder) {
-        this.logger.log(Level.FINEST, "building {}", this.getName());
+        this.logger.log(Level.FINEST, "building {0}", getName());
 
         // real bundles will add specific tasks here
     }
@@ -42,7 +42,7 @@ public abstract class Bundle extends ContainerAware {
      * Shutdowns the Bundle.
      */
     public void shutdown() {
-        this.logger.log(Level.FINEST, "shuting down {}", this.getName());
+        this.logger.log(Level.FINEST, "shuting down {0}", getName());
 
     }
 
@@ -98,8 +98,7 @@ public abstract class Bundle extends ContainerAware {
         try {
             return ClassUtils.forName(className, null);
         } catch (ClassNotFoundException ex) {
-            String msg = String.format("Cannot find extension %s.", className);
-            this.logger.severe(msg);
+            this.logger.log(Level.SEVERE, "Cannot find extension {0}", className);
         }
         
         return null;
@@ -108,13 +107,12 @@ public abstract class Bundle extends ContainerAware {
     protected ExtensionInterface createContainerExtension() {
         Class c = getContainerExtensionClass();
         
-        try {
-            if (c != null) {
+        if (c != null) {
+            try {
                 return (ExtensionInterface) c.newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                this.logger.log(Level.SEVERE, "Cannot instantiate extension {0}", c);
             }
-        } catch (InstantiationException | IllegalAccessException ex) {
-            String msg = String.format("Cannot instantiate extension %s.", c);
-            this.logger.severe(msg);
         }
         
         return null;

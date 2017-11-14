@@ -125,7 +125,7 @@ public class ServiceFactory {
         try {
             return constructor.newInstance(arguments);
         } catch (Exception exception) {
-            throw new IllegalArgumentException(String.format("We could not find constructor for %s", id));
+            throw new IllegalArgumentException(String.format("We could not find constructor for %s", id), exception);
         }
     }
     
@@ -161,8 +161,7 @@ public class ServiceFactory {
                     Class[] parameters = ReflectionUtils.resolveArgumentsTypes(a);
                     Method call = ReflectionUtils.findMethod(service.getClass(), name, parameters);
                     if (call == null) {
-                        System.out.println(String.format("No method found for %s (%s) (%s)", name, Arrays.toString(parameters), Arrays.toString(a)));
-                        return;
+                        throw new IllegalArgumentException(String.format("No method found for %s (%s) (%s)", name, Arrays.toString(parameters), Arrays.toString(a)));
                     }
                     applyCall(call, service, a);
                 });

@@ -5,9 +5,10 @@
  */
 package com.marvin.component.lexer;
 
-import com.marvin.component.io.IResource;
-import com.marvin.component.io.loader.DefaultResourceLoader;
-import com.marvin.component.io.loader.ResourceLoader;
+import com.marvin.component.resource.ResourceService;
+import com.marvin.component.resource.loader.ClasspathResourceLoader;
+import com.marvin.component.resource.loader.FileResourceLoader;
+import com.marvin.component.resource.reference.ResourceReference;
 import com.marvin.component.templating.lexer.Lexer;
 import com.marvin.component.templating.lexer.Syntax;
 import java.io.BufferedReader;
@@ -25,16 +26,14 @@ import java.util.logging.Logger;
 public class LexerTest {
     
     public static void main(String[] args) {
+        ResourceService resourceService = ResourceService.builder()
+                .with(ResourceReference.FILE, FileResourceLoader.instance())
+                .with(ResourceReference.CLASSPATH, new ClasspathResourceLoader(ClassLoader.getSystemClassLoader()))
+                .build();
         
-        InputStream is = null;
-        
-        try {
-            ResourceLoader loader = new DefaultResourceLoader();
-            IResource resource = loader.load("com/marvin/config/view");
-            
+        try (InputStream is = resourceService.load("com/marvin/config/view")) {
             Syntax syntax = new Syntax();
             Lexer lexer = new Lexer(syntax, null, null);
-            is = resource.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             Reader reader = new BufferedReader(isr);
             
@@ -44,13 +43,6 @@ public class LexerTest {
             
         } catch (Exception ex) {
             Logger.getLogger(LexerTest.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                Logger.getLogger(LexerTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
-        
     }
 }

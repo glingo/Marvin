@@ -1,5 +1,6 @@
 package com.marvin.component.routing;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -11,8 +12,7 @@ public class RouteCollection {
         getRoutes().putIfAbsent(id, route);
     }
 
-    public ConcurrentMap<String, Route> getRoutes() {
-
+    public Map<String, Route> getRoutes() {
         if (this.routes == null) {
             setRoutes(new ConcurrentHashMap<>());
         }

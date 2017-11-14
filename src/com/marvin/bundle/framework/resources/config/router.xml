@@ -4,7 +4,7 @@
         
         <!-- XmlRouteReader definition -->
         <service id="router.reader_xml" class="com.marvin.component.routing.xml.XmlRouteReader">
-            <argument type="service" ref="resource_loader"/>
+            <argument type="service" ref="kernel.resource_service"/>
         </service>
         
         <service id="path_matcher" class="com.marvin.component.routing.matcher.PathMatcher" />

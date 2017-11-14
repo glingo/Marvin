@@ -21,8 +21,6 @@ public abstract class ConsoleComponent {
         this.width = w;
         
         this.ansi = Ansi.ansi();
-        
-//        init();
     }
     
     public void update() {
@@ -30,12 +28,6 @@ public abstract class ConsoleComponent {
 //        borders();
     }
     
-//    private void init() {
-//        for (int i = 0; i < this.height; i++) {
-//            line(' ', i);
-//        }
-//    }
-
     protected void borders() {
         line('-', 0, height - 1);
         col('|', 0, width - 1);
@@ -75,7 +67,7 @@ public abstract class ConsoleComponent {
         update();
         writer.write(ansi.toString().getBytes());
         ansi.reset();
-        ansi.cursor(31, 49);
+//        ansi.cursor(31, 49);
         writer.flush();
 //        ansi.restoreCursorPosition();
     }

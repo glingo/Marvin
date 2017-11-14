@@ -1,7 +1,7 @@
 package com.marvin.component.routing;
 
 import com.marvin.component.routing.xml.XmlRouteReader;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Router {
@@ -38,7 +38,7 @@ public class Router {
         return this.matcher;
     }
 
-    public HashMap<String, Object> match(String matchable) {
+    public Map<String, Object> match(String matchable) {
         return getMatcher().match(getRouteCollection(), matchable);
     }
 }

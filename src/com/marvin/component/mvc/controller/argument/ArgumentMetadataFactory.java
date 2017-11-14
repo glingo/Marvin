@@ -11,11 +11,11 @@ public interface ArgumentMetadataFactory {
         List<ArgumentMetadata> arguments = new ArrayList<>();
         Parameter[] parameters = reference.getAction().getParameters();
         for (Parameter param : parameters) {
-            if (!param.isNamePresent()) {
-                // maybe throw an exception ?
-                System.err.println("No name provided !");
-            }
-            System.err.println("Name : ".concat(param.getName()));
+//            if (!param.isNamePresent()) {
+//                // maybe throw an exception ?
+//                System.err.println("No name provided !");
+//            }
+//            System.err.println("Name : ".concat(param.getName()));
             arguments.add(new ArgumentMetadata(param.getName(), param.getType(), param.isVarArgs()));
         }
         return arguments;

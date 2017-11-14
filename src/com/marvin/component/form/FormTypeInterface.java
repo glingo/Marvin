@@ -1,6 +1,7 @@
 package com.marvin.component.form;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface FormTypeInterface<T> {
     
@@ -22,6 +23,7 @@ public interface FormTypeInterface<T> {
     void addChild(FormTypeInterface child);
     
     List<FormTypeInterface> getChildren();
+    void visit(Consumer<FormTypeInterface> visitor);
     
     void buildForm(FormBuilder builder);
     

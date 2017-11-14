@@ -43,6 +43,7 @@ public interface ControllerResolver<T> extends Resolver<T, ControllerReference> 
         return null;
     }
 
+    @Override
     default ControllerReference resolve(T request) throws Exception {
         return castController(request);
     }

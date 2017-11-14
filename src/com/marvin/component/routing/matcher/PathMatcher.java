@@ -3,7 +3,7 @@ package com.marvin.component.routing.matcher;
 import com.marvin.component.routing.MatcherInterface;
 import com.marvin.component.routing.Route;
 import com.marvin.component.routing.RouteCollection;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class PathMatcher implements MatcherInterface {
@@ -13,7 +13,7 @@ public class PathMatcher implements MatcherInterface {
         return matchable != null && !matchable.equals("");
     }
     
-    protected HashMap<String, Object> matchCollection(String path, RouteCollection collection) {
+    protected Map<String, Object> matchCollection(String path, RouteCollection collection) {
         Route route = collection.getRoutes().values().stream().filter((Route filtered) -> {
             return filtered.getPattern().matcher(path).find();
         }).findFirst().orElse(null);
@@ -22,7 +22,7 @@ public class PathMatcher implements MatcherInterface {
             return null;
         }
         
-        HashMap<String, Object> parameters = route.getDefaults();
+        Map<String, Object> parameters = route.getDefaults();
         parameters.put("_route", path);
         
         Matcher matcher = route.getPattern().matcher(path);
@@ -37,8 +37,7 @@ public class PathMatcher implements MatcherInterface {
     }
     
     @Override
-    public HashMap<String, Object> match(RouteCollection collection, String path) {
+    public Map<String, Object> match(RouteCollection collection, String path) {
         return matchCollection(path, collection);
     }
-
 }

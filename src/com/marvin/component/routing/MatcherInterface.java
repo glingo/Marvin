@@ -1,11 +1,10 @@
 package com.marvin.component.routing;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface MatcherInterface {
 
     boolean support(String matchable);
     
-    HashMap<String, Object> match(RouteCollection collection, String matchable);
-    
+    Map<String, Object> match(RouteCollection collection, String matchable);
 }

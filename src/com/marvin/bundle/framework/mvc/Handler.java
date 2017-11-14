@@ -114,7 +114,7 @@ public class Handler<I, O> {
        
         this.stack.add(request);
         
-        preFilter(request, response);
+        filterRequest(request, response);
         
         // Dispatch event Request ( getModelAndView )
         GetResultEvent<I, O, R> re = new GetResultEvent(this, request, response, result);
@@ -151,9 +151,9 @@ public class Handler<I, O> {
         
         controller = argsEvent.getController();
         arguments  = argsEvent.getArguments();
-        
+
         this.logger.log(Level.FINER, String.format("Invoke %s(%s)", controller.getAction(), arguments));
-        
+
         // invoke controller
         Object controllerResult = ReflectionUtils.invokeMethod(controller.getAction(), controller.getHolder(), arguments.toArray());
         
@@ -188,10 +188,10 @@ public class Handler<I, O> {
         
         re.setResult((R) controllerResult);
         
-        return filter(request, response, re.getResult());
+        return filterResult(request, response, re.getResult());
     }
     
-    protected void preFilter(I request, O response) throws Exception {
+    protected void filterRequest(I request, O response) throws Exception {
         
         this.logger.finest("pre-filtering ...");
         
@@ -199,7 +199,7 @@ public class Handler<I, O> {
         this.dispatcher.dispatch(fe);
     }
     
-    protected <R> R filter(I request, O response, R result) throws Exception {
+    protected <R> R filterResult(I request, O response, R result) throws Exception {
         
         this.logger.finest("Filtering ...");
         
@@ -236,6 +236,6 @@ public class Handler<I, O> {
             throw new Exception(exception);
         }
 
-        return filter(request, response, exceptionEvent.getResult());
+        return filterResult(request, response, exceptionEvent.getResult());
     }
 }

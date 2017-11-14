@@ -1,15 +1,14 @@
 package com.marvin.bundle.console.resources.view.error.console;
 
 import com.marvin.bundle.console.command.Command;
-import com.marvin.bundle.console.mvc.view.Canvas;
 import com.marvin.bundle.console.mvc.view.ConsoleView;
 import com.marvin.bundle.framework.mvc.Handler;
 import com.marvin.component.mvc.model.Model;
-import java.io.OutputStream;
-import java.util.Map;
 import java.util.Objects;
-import org.fusesource.jansi.Ansi;
 import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 
 public class ErrorView extends ConsoleView {
 
@@ -23,12 +22,26 @@ public class ErrorView extends ConsoleView {
     }
     
     @Override
-    protected String getBody(Handler<Command, Terminal> handler, Model model, Command request, Terminal writer) throws Exception {
-        Canvas canvas = new Canvas(11, 11, 29, 99);
-        canvas.write(11, 11, "Exception : ", Ansi.Color.RED);
-        canvas.write(12, 15, Objects.toString(model.get("exception"), "null"), Ansi.Color.RED);
-        canvas.write(13, 15, Objects.toString(model.get("result"), "null"), Ansi.Color.RED);
-        canvas.write(14, 15, Objects.toString(model.get("request"), "null"), Ansi.Color.RED);
-        return canvas.getAnsi().toString();
+    protected String getBody(Handler<Command, Terminal> handler, Model model, Command request, Terminal terminal) throws Exception {
+        AttributedStringBuilder builder = new AttributedStringBuilder()
+                .style(AttributedStyle.DEFAULT.underline())
+                .append("Exception : ")
+                .style(AttributedStyle.DEFAULT.underlineOff())
+                .append(Objects.toString(model.get("exception"), "null"))
+                .append(AttributedString.NEWLINE)
+                .style(AttributedStyle.DEFAULT.underline())
+                .append("Message : ")
+                .style(AttributedStyle.DEFAULT.underlineOff())
+                .append(Objects.toString(model.get("message"), "null"))
+                .append(AttributedString.NEWLINE)
+                .style(AttributedStyle.DEFAULT.underline())
+                .append("Result : ")
+                .style(AttributedStyle.DEFAULT.underlineOff())
+                .append(Objects.toString(model.get("result"), "null"))
+                .append(AttributedString.NEWLINE)
+                .style(AttributedStyle.DEFAULT.underline())
+                .append("Request : ")
+                .style(AttributedStyle.DEFAULT.underlineOff());
+        return builder.toAnsi(terminal);
     }
 }

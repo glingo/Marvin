@@ -1,6 +1,7 @@
 package com.marvin.bundle.framework.subscriber;
 
 import com.marvin.bundle.framework.mvc.event.FilterResultEvent;
+import com.marvin.bundle.framework.mvc.exception.NoViewForControllerException;
 import com.marvin.component.event.dispatcher.DispatcherInterface;
 import com.marvin.component.event.handler.Handler;
 import com.marvin.component.event.subscriber.Subscriber;
@@ -34,10 +35,12 @@ public class ResponseSubscriber extends Subscriber {
             }
 
             if (view == null) {
-                throw new Exception("No view for this controller");
+                throw new NoViewForControllerException("No view for this controller");
             }
             
             mav.setView(view);
+            
+            //TODO call a renderer
 
             // render view ?
             ((ViewInterface) view).render(e.getHandler(), mav.getModel(), request, response);

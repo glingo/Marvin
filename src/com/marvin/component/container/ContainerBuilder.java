@@ -28,13 +28,13 @@ public class ContainerBuilder {
     }
 
     public Container build() {
-        this.logger.log(Level.FINEST, "building {}", this);
+        this.logger.log(Level.FINEST, "building {0}", this);
         compile();
         return getContainer();
     }
     
     private void compile(){
-        this.logger.log(Level.FINEST, "compiling {}", this);
+        this.logger.log(Level.FINEST, "compiling {0}", this);
         getCompiler().compile(this);
     }
     
@@ -57,7 +57,7 @@ public class ContainerBuilder {
     }
     
     public void merge(ContainerBuilder builder) {
-        this.logger.log(Level.FINEST, "merging {}", builder);
+        this.logger.log(Level.FINEST, "merging {0}", builder);
         addParameters(builder.getParameters());
         addDefinitions(builder.getDefinitions());
         addAliases(builder.getAliases());
@@ -249,11 +249,9 @@ public class ContainerBuilder {
     }
     
     /* static methods */
-    
     public static String underscore(String id){
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
         return id.replaceAll(regex, replacement).toLowerCase();
     }
-
 }

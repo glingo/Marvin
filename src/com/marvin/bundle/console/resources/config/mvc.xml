@@ -16,10 +16,11 @@
         </service>
         
         <!-- EXCEPTION -->
-        <service id="exception.subscriber" class="com.marvin.bundle.framework.subscriber.ErrorSubscriber">
+<!--        <service id="exception.subscriber" class="com.marvin.bundle.framework.subscriber.ErrorSubscriber">
+            <argument type="java.lang.String" value="Console:error:error" />
             <argument type="java.lang.String" value="Console:error:error" />
             <tag name="event_subscriber"/>
-        </service>
+        </service>-->
         
     </services>
 </container>

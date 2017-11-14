@@ -3,33 +3,24 @@ package com.marvin.bundle.console;
 import com.marvin.bundle.console.command.Command;
 import com.marvin.bundle.framework.Application;
 import com.marvin.component.kernel.Kernel;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.util.Calendar;
-import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.fusesource.jansi.AnsiConsole;
+import java.util.Map;
+
+import org.jline.keymap.KeyMap;
+import org.jline.reader.Binding;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.Macro;
 import org.jline.reader.ParsedLine;
+import org.jline.reader.Reference;
 import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Cursor;
-import org.jline.terminal.MouseEvent;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jline.terminal.impl.MouseSupport;
-import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.jline.utils.InfoCmp;
@@ -72,12 +63,6 @@ public abstract class ConsoleApplication extends Application {
     public void ready() {
         super.ready();
         start();
-//        try {
-//            new Example().start(new String[]{"color", "files"});
-////            new Example().start(new String[]{"timer", "foo"});
-//        } catch (IOException ex) {
-//            Logger.getLogger(ConsoleApplication.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
     
     private void start() {
@@ -85,7 +70,6 @@ public abstract class ConsoleApplication extends Application {
         String rPrompt = new AttributedStringBuilder()
             .style(AttributedStyle.DEFAULT.background(AttributedStyle.RED))
             .append(LocalDate.now().format(DateTimeFormatter.ISO_DATE))
-            .append("\n")
             .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED | AttributedStyle.BRIGHT))
             .append(LocalTime.now().format(new DateTimeFormatterBuilder()
                     .appendValue(ChronoField.HOUR_OF_DAY, 2)
@@ -96,7 +80,6 @@ public abstract class ConsoleApplication extends Application {
         
         try {
             Terminal terminal = TerminalBuilder.builder()
-                .name("Hello world")
                 .system(true)
                 .streams(System.in, System.out)
                 .build();
@@ -109,7 +92,6 @@ public abstract class ConsoleApplication extends Application {
             LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
                 .build();
-            
              while (true) {
                 String line = null;
                 try {
@@ -119,13 +101,13 @@ public abstract class ConsoleApplication extends Application {
                 } catch (EndOfFileException e) {
                     return;
                 }
-                
+
                 if (line == null) {
                     continue;
                 }
 
                 line = line.trim();
-                
+
                 if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
                     break;
                 }
@@ -138,6 +120,8 @@ public abstract class ConsoleApplication extends Application {
                         terminal.flush();
                         break;
                     default:
+//                        terminal.puts(InfoCmp.Capability.clear_screen);
+//                        terminal.flush();
                         Command command = new Command(line);
                         getHandler().handle(command, terminal, true);
                         break;
@@ -282,4 +266,43 @@ public abstract class ConsoleApplication extends Application {
 //                getHandler().handle(command, System.out, true);
 //                cmd = read();
 //            }
+            
+//                        StringBuilder sb = new StringBuilder();
+//            Map<String, KeyMap<Binding>> bound = reader.getKeyMaps();
+//                        for (Map.Entry<String, KeyMap<Binding>> entry : bound.entrySet()) {
+//                            Map<String, Binding> boundKeys = entry.getValue().getBoundKeys();
+//                            boundKeys.forEach((name, value) -> {
+//                                    sb.append("\"");
+//                                    name.chars().forEachOrdered(c -> {
+//                                        if (c < 32) {
+//                                            sb.append('^');
+//                                            sb.append((char) (c + 'A' - 1));
+//                                        } else {
+//                                            sb.append((char) c);
+//                                        }
+//                                    });
+//                                    sb.append("\"");
+//
+//                                    if (value instanceof Macro) {
+//                                        sb.append("\"");
+//                                        ((Macro) value).getSequence().chars().forEachOrdered(c -> {
+//                                            if (c < 32) {
+//                                                sb.append('^');
+//                                                sb.append((char) (c + 'A' - 1));
+//                                            } else {
+//                                                sb.append((char) c);
+//                                            }
+//                                        });
+//                                    sb.append("\"");
+//                                } else if (value instanceof Reference) {
+//                                    sb.append(((Reference) value).name().toLowerCase().replace('_', '-'));
+//                                } else {
+//                                    sb.append(entry.getValue().getBoundKeys());
+//                                }
+//                                sb.append("\n");
+//                            });
+//                        }
+//                        terminal.writer().print(sb.toString());
+//                        terminal.flush();
+            
 }

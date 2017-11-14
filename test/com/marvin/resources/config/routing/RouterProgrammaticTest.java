@@ -6,6 +6,7 @@ import com.marvin.component.routing.RouteCollection;
 import com.marvin.component.routing.Router;
 import com.marvin.component.routing.matcher.PathMatcher;
 import java.util.HashMap;
+import java.util.Map;
 
 public class RouterProgrammaticTest {
 
@@ -30,11 +31,11 @@ public class RouterProgrammaticTest {
         Router router = new Router(collection, matcher);
         
 //        Request request = Request.build("/");
-        HashMap<String, Object> result = router.match("/");
+        Map<String, Object> result = router.match("/");
         System.out.println(result);
         
 //        Request request2 = Request.build("/hello/world2");
-        HashMap<String, Object> world = router.match("/hello/world2");
+        Map<String, Object> world = router.match("/hello/world2");
         System.out.println(world);
 
     }
