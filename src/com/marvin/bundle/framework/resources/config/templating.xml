@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<container>
-    <services>
-        <!-- Templating definition -->
-        <service id="templating_engine" factory="com.marvin.component.templating.EngineBuilder" factoryMethod="build" />
-        
-    </services>
-</container>

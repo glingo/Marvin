@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<container>
-    <services>
-        <!-- Translator definition -->
-        <service id="translator" class="com.marvin.component.translation.Translator" />
-        
-    </services>
-</container>
